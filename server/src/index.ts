@@ -1,23 +1,40 @@
-import dotenv from 'dotenv';
+import "dotenv/config";
 import express from 'express';
-import useRouteUser from './route/user';
+import Database from './configs/db';
+import useRouteUser from './routes/users';
+import useRoutePatient from './routes/paitients';
+import useRouteDoctor from "./routes/doctors";
+import useRouteUnits from "./routes/units";
+import useRouteAppointment from "./routes/appointment";
+import useRouteDisease from "./routes/diseases";
+import useRouteComplaint from "./routes/complaints";
+import useServiceRouter from "./routes/services";
+import UseSettingAppoitmentRoutes from './routes/setting-appoitments';
 import swaggerJSDoc from 'swagger-jsdoc';
 import SwaggerOption from "./configs/swagger";
 import swaggerUi from 'swagger-ui-express';
-import Database  from "./configs/db/index"
-dotenv.config()
+import morgan from "morgan";
+import cors from 'cors';
 const app = express();
-const PORT = process.env.PORT || 3001;
+const port = process.env.PORT || 3000;
+const apiRoute = express.Router();
 const swaggerDocument = swaggerJSDoc(SwaggerOption);
-Database.connect()
-const routesDef = [
-  {path:"", route: useRouteUser()}
-]
+app.use(morgan('combined'));
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+Database.connect();
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-routesDef.forEach(({path,route}) => {
-  app.use(`/api/v1/${path}`,route)
-})
-
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+app.use('/users', useRouteUser());
+app.use('/patients', useRoutePatient());
+app.use('/doctors', useRouteDoctor());
+app.use('/units', useRouteUnits());
+app.use('/appointments', useRouteAppointment());
+app.use('/diseases', useRouteDisease());
+app.use('/complaints', useRouteComplaint());
+app.use('/services', useServiceRouter());
+app.use("/setting-appointment", UseSettingAppoitmentRoutes());
+app.use("/api/v1", apiRoute);
+app.listen(port, () => {
+  console.log(`Server started at http://localhost:${port}`);
 });

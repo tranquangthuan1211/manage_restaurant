@@ -1,6 +1,7 @@
 
 import 'dotenv/config'
 import mongoose, {Collection} from 'mongoose'
+import {Users} from '../../models/schemas/user'
 
 class Database {
     constructor() {
@@ -16,6 +17,8 @@ class Database {
             console.log('Database connection failed')
         }
     }
-
+    get users(): Collection<Users> {
+        return mongoose.connection.collection('users')
+    }
 }
 export default new Database();

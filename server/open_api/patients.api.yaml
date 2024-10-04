@@ -1,0 +1,63 @@
+tags:
+  - name: patient
+    description: Patient operations
+
+paths:
+  /patients:
+    get:
+      tags:
+        - patient
+      summary: Get list of patients
+      description: Retrieve a list of all patients.
+      responses:
+        '200':
+          description: A list of patients.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: The patient ID.
+                      example: "1234567890"
+                    name:
+                      type: string
+                      description: The patient's name.
+                      example: John Doe
+                    age:
+                      type: integer
+                      description: The patient's age.
+                      example: 30
+                    address:
+                      type: string
+                      description: The patient's address.
+                      example: 123 Main St.
+                    gender:
+                      type: string
+                      description: The patient
+                    phone:
+                      type: string
+                      description: The patient's phone number.
+                      example: 123-456-7890
+
+  /patients/{id}:
+    delete:
+      tags:
+        - patient
+      summary: Delete a patient
+      description: Delete a patient by ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The patient ID.
+      responses:
+        '200':
+          description: Patient deleted successfully.
+        '404':
+          description: Patient not found.
