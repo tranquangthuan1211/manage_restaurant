@@ -14,15 +14,19 @@ export default function RootLayout({
         <nav>
           <div className="font-sans grid grid-cols-12">
             <div className="col-span-full bg-gray-950 bg-opacity-80 grid grid-cols-12 text-gray-200">
-              <div className="m-2 col-span-9 flex justify-start items-center">
+              <div className="m-2 col-span-8 flex justify-start items-center">
                 
+<<<<<<< HEAD
               <Image src="/images/cuter_logo.png" alt="logo" width={64} height={64} />
+=======
+                <Image className="w-15 h-15" src="/images/logo.png" alt="logo" width={64} height={64} />
+>>>>>>> 55bafc17d21766fc9d7a2f65742b815ad0ddcda9
 
-                <span className="uppercase pl-2 text-2xl font-bold">Baby Hippo Restaurant</span>
+                <span className="uppercase pl-4 text-2xl font-bold">Baby Hippo Restaurant</span>
               </div>
-              <Link className="uppercase col-span-1 flex justify-center items-center" href="/">Home</Link>
-              <Link className="uppercase col-span-1 flex justify-center items-center" href="/about">About</Link>
-              <Link className="uppercase col-span-1 flex justify-center items-center" href="/signin">Login-Sign up</Link>
+              <Link className="uppercase col-span-1 flex justify-center items-center mx-1" href="/">Home</Link>
+              <Link className="uppercase col-span-1 flex justify-center items-center mx-1" href="/#about">About</Link>
+              <Link className="uppercase col-span-2 flex justify-center items-center mx-1" href="/signin">Login-Sign up</Link>
             </div>
 
           </div>
@@ -35,19 +39,21 @@ export default function RootLayout({
         </main>
 
         <footer>
-          <div className="bg-gray-950 bg-opacity-80 text-gray-200 grid grid-cols-12  " >
+          <div className="bg-gray-950 bg-opacity-80 text-gray-200 grid grid-cols-12 py-4" >
             <div className="col-span-4 flex flex-col justify-center items-center ">
               <Image src="/images/logo.png" alt="logo" width={64} height={64} />
               <span className="uppercase pl-2 text-2xl font-bold">Baby Hippo Restaurant</span>
             </div>
 
-            <div className="col-span-4 ">
+            <div className="col-span-2"></div>
+
+            <div className="col-span-3">
               <p>1234, Ho Chi Minh City</p>
               <p>Phone: 0900111222</p>
               <p>Email: babyhippo@gmail.com</p>
             </div>
-
-            <div className="col-span-4">
+            
+            <div className="col-span-3">
               
                 Social Media Links
                 <div className="flex items-center">

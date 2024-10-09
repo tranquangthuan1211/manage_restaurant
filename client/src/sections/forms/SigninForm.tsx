@@ -49,7 +49,7 @@ export function SigninForm() {
             <button className="w-full">Sign In</button>
           </CardFooter>
         </Card>
-        <div className="mt-4 text-center text-sm">
+        <div className="mt-4 text-center text-sm text-white">
           Don't have an account?
           <Link className="underline ml-2" href="signup">
             Sign Up
