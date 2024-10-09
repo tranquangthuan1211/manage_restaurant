@@ -20,7 +20,8 @@ const Home = () => {
         </div>
       </div>
 
-      <div className="col-span-full bg-gray-600 text-white
+      <div id="about"
+      className="col-span-full bg-gray-600 text-white
       flex justify-center items-center p-2
       border-solid border-y-2 border-y-gray-700">About us</div>
 
