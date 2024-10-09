@@ -1,3 +1,4 @@
+//import Video from "@/component/videos/Video";
 import "./globals.css";
 import Image from "next/image";
 import Link from "next/link";
@@ -15,7 +16,7 @@ export default function RootLayout({
             <div className="col-span-full bg-gray-950 bg-opacity-80 grid grid-cols-12 text-gray-200">
               <div className="m-2 col-span-9 flex justify-start items-center">
                 
-                {/* <Image src="/images/logo.png" alt="logo" width={64} height={64} /> */}
+              <Image src="/images/cuter_logo.png" alt="logo" width={64} height={64} />
 
                 <span className="uppercase pl-2 text-2xl font-bold">Baby Hippo Restaurant</span>
               </div>
