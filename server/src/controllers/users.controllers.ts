@@ -100,5 +100,21 @@ class UserController {
       });
     }
   }
+  async deleteUser(req: Request, res: Response) {
+    const id = req.params.id;
+    const result = await UsersDataBase.users.deleteOne({_id: new ObjectId(id)});
+    if(!result.acknowledged) {
+      return res.status(400).json({
+        error: 1,
+        message: "Can not delete user",
+        data: null,
+      });
+    }
+    return res.status(200).json({
+      error: 0,
+      message: "Delete user successfully",
+      data: null,
+    });
+  }
 }
 export default new UserController();

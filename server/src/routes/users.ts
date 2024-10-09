@@ -8,6 +8,7 @@ const useRouteUser = () => {
     router.post('/register', UserController.createUser);
     router.use(authMiddleware);
     router.get('/', UserController.getUser);
+    router.delete('/:id', UserController.deleteUser);
     // router.use(adminMiddleware);
     return router;
 }
