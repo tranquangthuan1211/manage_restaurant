@@ -47,13 +47,27 @@ export default function RootLayout({
             </div>
 
             <div className="col-span-4">
-              <p>
+              
                 Social Media Links
-                <p><Link href="https://www.facebook.com/"> Facebook </Link> </p>
-                <p><Link href="https://www.instagram.com/"> Instagram </Link> </p>
-                <p><Link href="https://www.youtube.com/">YouTube </Link> </p>
-              </p>
+                <div className="flex items-center">
+                 <Image src="/images/fb.png" alt="Ins" width={32} height={32} /> 
+                 <Link className="pl-1" href="https://www.facebook.com/">
+                  Facebook </Link>
+                </div>
+                
+                <div className=" flex items-center">
+                <Image src="/images/Instagram.png" alt="Ins" width={32} height={32} />
+                  <Link className="pl-1" href="https://www.instagram.com/"> Instagram </Link>
+                </div>
+
+                <div className="flex items-center">
+                <Image src="/images/youtube.png" alt="YT" width={32} height={32} />
+                  <Link className="pl-1" href="https://www.youtube.com/">YouTube </Link>
+                </div>
+              
             </div>
+            
+
           </div>
         </footer>
       </body>
