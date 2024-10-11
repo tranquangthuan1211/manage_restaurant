@@ -15,12 +15,8 @@ export default function RootLayout({
           <div className="font-sans grid grid-cols-12">
             <div className="col-span-full bg-gray-950 bg-opacity-80 grid grid-cols-12 text-gray-200">
               <div className="m-2 col-span-8 flex justify-start items-center">
-                
-<<<<<<< HEAD
-              <Image src="/images/cuter_logo.png" alt="logo" width={64} height={64} />
-=======
+       
                 <Image className="w-15 h-15" src="/images/logo.png" alt="logo" width={64} height={64} />
->>>>>>> 55bafc17d21766fc9d7a2f65742b815ad0ddcda9
 
                 <span className="uppercase pl-4 text-2xl font-bold">Baby Hippo Restaurant</span>
               </div>
