@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 
 import {
   CardTitle,
@@ -15,9 +16,47 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 
 export function SignupForm() {
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
+
+  const [message, setMessage] = useState<string | null>(null);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const response = await fetch("http://localhost:3001/api/v1/users/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        setMessage("Signup successful!");
+        window.location.href = "/";
+      } else {
+        setMessage("Signup failed. User already exists. Please try again.");
+      }
+    } catch (error) {
+      setMessage("An error occurred. Please try again later.");
+      console.error("An error occurred:", error);
+    }
+  };
+
   return (
     <div className="w-full max-w-md">
-      <form>
+      <form onSubmit={handleSubmit}>
         <Card>
           <CardHeader className="space-y-1">
             <CardTitle className="text-3xl font-bold">Sign Up</CardTitle>
@@ -33,6 +72,8 @@ export function SignupForm() {
                 name="username"
                 type="text"
                 placeholder="username"
+                value={formData.username}
+                onChange={handleChange}
               />
             </div>
             <div className="space-y-2">
@@ -42,6 +83,8 @@ export function SignupForm() {
                 name="email"
                 type="email"
                 placeholder="name@example.com"
+                value={formData.email}
+                onChange={handleChange}
               />
             </div>
 
@@ -52,13 +95,20 @@ export function SignupForm() {
                 name="password"
                 type="password"
                 placeholder="password"
+                value={formData.password}
+                onChange={handleChange}
               />
             </div>
           </CardContent>
           <CardFooter className="flex flex-col">
-            <button className="w-full">Sign Up</button>
+            <button type="submit" className="w-full">Sign Up</button>
           </CardFooter>
         </Card>
+        {message && (
+          <div className="mt-4 text-center text-sm text-red-500">
+            {message}
+          </div>
+        )}
         <div className="mt-4 text-center text-sm">
           Have an account?
           <Link className="underline ml-2" href="signin">
