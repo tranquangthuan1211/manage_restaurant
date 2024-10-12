@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 
 import {
   CardTitle,
@@ -15,9 +16,46 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 
 export function SigninForm() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const response = await fetch("http://localhost:3001/api/v1/users/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Login success:", data);
+        localStorage.setItem("token", data.token);
+        window.location.href = "/";
+      } else {
+        const errorData = await response.json();
+        if (response.status === 401) {
+          setErrorMessage("Incorrect email or password.");
+        } else {
+          setErrorMessage(errorData.message || "Login failed");
+        }
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      setErrorMessage("An error occurred. Please try again.");
+    }
+  };
+
   return (
     <div className="w-full max-w-md">
-      <form>
+      <form onSubmit={handleSubmit}>
         <Card>
           <CardHeader className="space-y-1">
             <CardTitle className="text-3xl font-bold">Sign In</CardTitle>
@@ -29,10 +67,12 @@ export function SigninForm() {
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
-                id="identifier"
-                name="identifier"
-                type="text"
+                id="email"
+                name="email"
+                type="email"
                 placeholder="username or email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             <div className="space-y-2">
@@ -42,11 +82,14 @@ export function SigninForm() {
                 name="password"
                 type="password"
                 placeholder="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
             </div>
+            {errorMessage && <p className="text-red-500">{errorMessage}</p>}
           </CardContent>
           <CardFooter className="flex flex-col">
-            <button className="w-full">Sign In</button>
+            <button type="submit" className="w-full">Sign In</button>
           </CardFooter>
         </Card>
         <div className="mt-4 text-center text-sm text-white">
