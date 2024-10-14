@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useState } from "react";
-
 import {
   CardTitle,
   CardDescription,
@@ -11,48 +10,32 @@ import {
   CardFooter,
   Card,
 } from "@/components/ui/card";
-
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 
+import { signIn } from "@/api/auth";
+
 export function SigninForm() {
+
+  // State
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
+  // Handle
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:3001/api/v1/users/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Login success:", data);
-        localStorage.setItem("token", data.token);
-        window.location.href = "/";
-      } else {
-        const errorData = await response.json();
-        if (response.status === 401) {
-          setErrorMessage("Incorrect email or password.");
-        } else {
-          setErrorMessage(errorData.message || "Login failed");
-        }
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      setErrorMessage("An error occurred. Please try again.");
+      const data = await signIn(email, password);
+      console.log("Login success:", data);
+      localStorage.setItem("token", data.token);
+      window.location.href = "/";
+    } catch (error: any) {
+      setErrorMessage(error.message);
     }
   };
 
+  // Render
   return (
     <div className="w-full max-w-md">
       <form onSubmit={handleSubmit}>
