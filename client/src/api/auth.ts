@@ -27,21 +27,28 @@ export const signIn = async (email: string, password: string) => {
 };
 
 // Signup
-export const signUp = async (formData: { username: string; email: string; password: string }) => {
+export const signUp = async (formData: {
+    name: string;
+    address: string;
+    phone: string;
+    password: string;
+    email: string;
+    role: string;
+}) => {
     const response = await fetch(`${API_URL}/api/v1/users/register`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
     });
-  
+
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Registration failed.");
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Registration failed.");
     }
-  
+
     return response.json();
-  };
-  
+};
+
 
