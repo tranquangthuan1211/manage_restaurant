@@ -15,7 +15,11 @@ import {
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 
+import { signUp } from "@/api/auth";
+
 export function SignupForm() {
+
+  // State
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -24,6 +28,7 @@ export function SignupForm() {
 
   const [message, setMessage] = useState<string | null>(null);
 
+  // Handle
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
@@ -31,29 +36,19 @@ export function SignupForm() {
     });
   };
 
+  // Submit
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:3001/api/v1/users/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        setMessage("Signup successful!");
-        window.location.href = "/";
-      } else {
-        setMessage("Signup failed. User already exists. Please try again.");
-      }
-    } catch (error) {
-      setMessage("An error occurred. Please try again later.");
-      console.error("An error occurred:", error);
+      const data = await signUp(formData);
+      setMessage("Signup successful!");
+      window.location.href = "/signin";  
+    } catch (error: any) {
+      setMessage(error.message || "An error occurred. Please try again.");
     }
   };
 
+  // Render
   return (
     <div className="w-full max-w-md">
       <form onSubmit={handleSubmit}>
