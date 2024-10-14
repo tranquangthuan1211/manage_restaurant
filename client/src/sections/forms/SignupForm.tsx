@@ -21,9 +21,12 @@ export function SignupForm() {
 
   // State
   const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    password: "",
+    name: '',
+    address: '',
+    phone:'',
+    password: '',
+    email: '',
+    role: 'customer',
   });
 
   const [message, setMessage] = useState<string | null>(null);
@@ -61,13 +64,35 @@ export function SignupForm() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="username">Username</Label>
+              <Label htmlFor="name">Name</Label>
               <Input
-                id="username"
-                name="username"
+                id="name"
+                name="name"
                 type="text"
-                placeholder="username"
-                value={formData.username}
+                placeholder="name"
+                value={formData.name}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="address">Address</Label>
+              <Input
+                id="address"
+                name="address"
+                type="text"
+                placeholder="address"
+                value={formData.address}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="phone">Phone</Label>
+              <Input
+                id="phone"
+                name="phone"
+                type="text"
+                placeholder="phone"
+                value={formData.phone}
                 onChange={handleChange}
               />
             </div>
