@@ -1,3 +1,4 @@
+import { pad } from "lodash";
 import Document, {Html, NextScript, Main, Head} from "next/document";
 
 
@@ -7,7 +8,12 @@ class MyDocument extends Document {
             <Html lang="en">
                 <Head>
                 </Head>
-                <body>
+                <body
+                    style={{
+                    padding: 0,
+                    margin: 0,
+                    }}
+                >
                     <Main />
                     <NextScript />
                 </body>
