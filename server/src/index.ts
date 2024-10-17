@@ -3,6 +3,7 @@ import express from 'express';
 import Database from './configs/db';
 import useRouteUser from './routes/users';
 import useRouteMenu from './routes/menu';
+import useRouteCategory from './routes/category';
 import swaggerJSDoc from 'swagger-jsdoc';
 import SwaggerOption from "./configs/swagger";
 import swaggerUi from 'swagger-ui-express';
@@ -19,7 +20,8 @@ app.use(express.urlencoded({ extended: true }));
 Database.connect();
 const routesDef = [
   {path:"users", route: useRouteUser()},
-  {path:"menus", route: useRouteMenu()}
+  {path:"menus", route: useRouteMenu()},
+  {path: "categories", route: useRouteCategory()}
 ]
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 routesDef.forEach(({path,route}) => {

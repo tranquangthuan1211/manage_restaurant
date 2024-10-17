@@ -195,3 +195,34 @@ paths:
                   message:
                     type: string
                     example: "Internal server error"
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "614b1b7754d1f90012345678"
+        name:
+          type: string
+          example: Pizza
+        address:
+          type: string
+          example: 123 Main St
+        phone:
+          type: string
+          example: 0905123455
+        emaile:
+          type: string
+          example: "tranquanthuan132@gmail.com"
+        role:
+          type: string
+          example: "admin"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2024-10-16T12:34:56Z"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2024-10-16T12:34:56Z"
