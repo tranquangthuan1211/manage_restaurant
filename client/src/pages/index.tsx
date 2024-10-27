@@ -47,7 +47,7 @@ const Page: PageType= () => {
                 <CardMedia
                   component="img"
                   height="200"
-                  image="/images/homepage_bg.jpg" 
+                  image="/images/western1.png" 
                   alt="Dish 1"
                 />
               </Card>
@@ -57,7 +57,7 @@ const Page: PageType= () => {
                 <CardMedia
                   component="img"
                   height="200"
-                  image="/images/chicken.jepg"
+                  image="/images/western3.png"
                   alt="Dish 2"
                 />
               </Card>
@@ -67,7 +67,7 @@ const Page: PageType= () => {
                 <CardMedia
                   component="img"
                   height="200"
-                  image="/path_to_image3.jpg"
+                  image="/images/western4.png"
                   alt="Dish 3"
                 />
               </Card>

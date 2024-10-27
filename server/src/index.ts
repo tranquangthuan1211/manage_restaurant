@@ -9,6 +9,7 @@ import SwaggerOption from "./configs/swagger";
 import swaggerUi from 'swagger-ui-express';
 import morgan from "morgan";
 import cors from 'cors';
+import { rateLimit } from 'express-rate-limit'
 const app = express();
 const port = process.env.PORT || 3000;
 const apiRoute = express.Router();
@@ -18,6 +19,13 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 Database.connect();
+const limiter = rateLimit({
+	windowMs: 15 * 60 * 1000,
+	limit: 100, 
+  message: "Too many requests from this IP, please try again after an hour",
+	standardHeaders: 'draft-7', 
+	legacyHeaders: false, 
+})
 const routesDef = [
   {path:"users", route: useRouteUser()},
   {path:"menus", route: useRouteMenu()},
