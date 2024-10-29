@@ -1,0 +1,21 @@
+@urlDev=http://localhost:3001
+
+### checkStatus
+
+GET {{urlDev}}/checkstatus
+
+
+### checkStatus
+Put {{urlDev}}/v1/user
+Content-Type: application/json
+
+{
+    "key": "value",
+    "payload": {
+        "key": "value",
+        "name":"Thuan"
+    }
+}
+### checkStatus
+
+GET {{urlDev}}/v1/user/value
