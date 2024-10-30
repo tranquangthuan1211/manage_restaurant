@@ -4,6 +4,7 @@ import { Request, Response, NextFunction } from "express";
 import Database from "../configs/db";
 import {signToken, verifyToken} from "../securities/jwt";
 import { error } from "console";
+import { Users } from "../models/schemas/user";
 
 
 export const authMiddleware = async(req:Request, res:Response, next: NextFunction) => {
@@ -23,6 +24,7 @@ export const authMiddleware = async(req:Request, res:Response, next: NextFunctio
                 data: null
             });
         }
+        req.body.user = user;
         next();
     } catch (error) {
         return res.status(400).json({ 

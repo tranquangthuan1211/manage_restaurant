@@ -48,6 +48,19 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 routesDef.forEach(({path,route}) => {
   app.use(`/api/v1/${path}`,route)
 })
+app.use((req: Request, res: Response, next: NextFunction) => {
+  const error = new Error("Not found") as any;
+  error.status = 404;
+  next(error);
+});
+app.use((error: any, req: Request, res: Response, next: NextFunction) => {
+  res.status(error.status || 500).send({
+      error: {
+          status: error.status || 500,
+          message: error.message || 'Internal Server Error',
+      },
+  });
+});
 app.listen(port, () => {
   console.log(`Server started at http://localhost:${port}`);
 });

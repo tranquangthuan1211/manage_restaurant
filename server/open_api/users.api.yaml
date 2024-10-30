@@ -50,12 +50,21 @@ paths:
               schema:
                 type: object
                 properties:
-                  access_token:
+                  error:
+                    type: boolean
+                    example: false
+                  message:
                     type: string
-                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-                  refresh_token:
-                    type: string
-                    example: "eyJhbGciOi..."
+                    example: "User registered successfully"
+                  data:
+                    type: object
+                    properties:
+                      access_token:
+                        type: string
+                        example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                      refresh_token:
+                        type: string
+                        example: "eyJhbGciOi..."
         '400':
           description: Invalid input data
           content:
@@ -63,9 +72,13 @@ paths:
               schema:
                 type: object
                 properties:
+                  error:
+                    type: boolean
+                    example: true
                   message:
                     type: string
                     example: "Invalid input data"
+                  data: null
         '500':
           description: Server error
           content:
@@ -73,9 +86,13 @@ paths:
               schema:
                 type: object
                 properties:
+                  error:
+                    type: boolean
+                    example: true
                   message:
                     type: string
                     example: "Internal server error"
+                  data: null
 
   /users/login:
     post:
@@ -108,12 +125,21 @@ paths:
               schema:
                 type: object
                 properties:
-                  access_token:
+                  error:
+                    type: boolean
+                    example: false
+                  message:
                     type: string
-                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-                  refresh_token:
-                    type: string
-                    example: "eyJhbGciOi..."
+                    example: "User logged in successfully"
+                  data:
+                    type: object
+                    properties:
+                      access_token:
+                        type: string
+                        example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                      refresh_token:
+                        type: string
+                        example: "eyJhbGciOi..."
         '401':
           description: Invalid credentials
           content:
@@ -121,9 +147,13 @@ paths:
               schema:
                 type: object
                 properties:
+                  error:
+                    type: boolean
+                    example: true
                   message:
                     type: string
                     example: "Invalid username or password"
+                  data: null
         '500':
           description: Server error
           content:
@@ -131,9 +161,13 @@ paths:
               schema:
                 type: object
                 properties:
+                  error:
+                    type: boolean
+                    example: true
                   message:
                     type: string
                     example: "Internal server error"
+                  data: null
 
   /users:
     get:
@@ -192,9 +226,13 @@ paths:
               schema:
                 type: object
                 properties:
+                  error:
+                    type: boolean
+                    example: true
                   message:
                     type: string
                     example: "Internal server error"
+                  data: null
 components:
   schemas:
     User:

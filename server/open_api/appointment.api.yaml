@@ -16,9 +16,18 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Appointment'
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: "Appointments retrieved successfully"
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Appointment'
         '500':
           description: Server error
           content:
@@ -26,9 +35,13 @@ paths:
               schema:
                 type: object
                 properties:
+                  error:
+                    type: boolean
+                    example: true
                   message:
                     type: string
                     example: "Internal server error"
+                  data: null
 
     post:
       summary: Create a new appointment
@@ -59,7 +72,16 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Appointment'
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: "Appointment created"
+                  data: 
+                    $ref: '#/components/schemas/Appointment'
         '400':
           description: Invalid input data
           content:
@@ -67,9 +89,13 @@ paths:
               schema:
                 type: object
                 properties:
+                  error:
+                    type: boolean
+                    example: true
                   message:
                     type: string
                     example: "Invalid input data"
+                  data: null
         '500':
           description: Server error
           content:
@@ -77,9 +103,13 @@ paths:
               schema:
                 type: object
                 properties:
+                  error:
+                    type: boolean
+                    example: true
                   message:
                     type: string
                     example: "Internal server error"
+                  data: null
 
   /appointments/{id}:
     get:
@@ -101,7 +131,16 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Appointment'
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: "Appointment retrieved successfully"
+                  data:
+                    $ref: '#/components/schemas/Appointment'
         '404':
           description: Appointment not found
           content:
@@ -109,9 +148,13 @@ paths:
               schema:
                 type: object
                 properties:
+                  error:
+                    type: boolean
+                    example: true
                   message:
                     type: string
                     example: "Appointment not found"
+                  data: null
         '500':
           description: Server error
           content:
@@ -119,9 +162,13 @@ paths:
               schema:
                 type: object
                 properties:
+                  error:
+                    type: boolean
+                    example: true
                   message:
                     type: string
                     example: "Internal server error"
+                  data: null
 
     put:
       summary: Update an appointment by ID
@@ -156,7 +203,16 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Appointment'
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: "Appointment updated"
+                  data:
+                    $ref: '#/components/schemas/Appointment'
         '404':
           description: Appointment not found
           content:
@@ -164,9 +220,13 @@ paths:
               schema:
                 type: object
                 properties:
+                  error:
+                    type: boolean
+                    example: true
                   message:
                     type: string
                     example: "Appointment not found"
+                  data: null
         '400':
           description: Invalid input data
           content:
@@ -174,9 +234,13 @@ paths:
               schema:
                 type: object
                 properties:
+                  error:
+                    type: boolean
+                    example: true
                   message:
                     type: string
                     example: "Invalid input data"
+                  data: null
         '500':
           description: Server error
           content:
@@ -184,9 +248,13 @@ paths:
               schema:
                 type: object
                 properties:
+                  error:
+                    type: boolean
+                    example: true
                   message:
                     type: string
                     example: "Internal server error"
+                  data: null
 
     delete:
       summary: Delete an appointment by ID
@@ -209,9 +277,13 @@ paths:
               schema:
                 type: object
                 properties:
+                  error:
+                    type: boolean
+                    example: false
                   message:
                     type: string
                     example: "Appointment deleted"
+                  data: null
         '404':
           description: Appointment not found
           content:
@@ -219,9 +291,13 @@ paths:
               schema:
                 type: object
                 properties:
+                  error:
+                    type: boolean
+                    example: true
                   message:
                     type: string
                     example: "Appointment not found"
+                  data: null
         '500':
           description: Server error
           content:
@@ -229,9 +305,13 @@ paths:
               schema:
                 type: object
                 properties:
+                  error:
+                    type: boolean
+                    example: true
                   message:
                     type: string
                     example: "Internal server error"
+                  data: null
 
 components:
   schemas:

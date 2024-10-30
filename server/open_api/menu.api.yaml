@@ -16,9 +16,18 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Food'
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: "Food items retrieved successfully"
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Food'
         '500':
           description: Server error
           content:
@@ -26,9 +35,13 @@ paths:
               schema:
                 type: object
                 properties:
+                  error:
+                    type: boolean
+                    example: true
                   message:
                     type: string
                     example: "Internal server error"
+                  data: null
 
     post:
       summary: Create a new food
@@ -70,7 +83,16 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Food'
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: "Food created successfully"
+                  data:
+                    $ref: '#/components/schemas/Food'
         '400':
           description: Invalid input data
           content:
@@ -78,9 +100,13 @@ paths:
               schema:
                 type: object
                 properties:
+                  error:
+                    type: boolean
+                    example: true
                   message:
                     type: string
                     example: "Invalid input data"
+                  data: null
         '500':
           description: Server error
           content:
@@ -88,9 +114,13 @@ paths:
               schema:
                 type: object
                 properties:
+                  error:
+                    type: boolean
+                    example: true
                   message:
                     type: string
                     example: "Internal server error"
+                  data: null
 
   /menus/{id}:
     get:
@@ -112,7 +142,16 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Food'
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: "Food retrieved successfully"
+                  data:
+                    $ref: '#/components/schemas/Food'
         '404':
           description: Food not found
           content:
@@ -120,9 +159,13 @@ paths:
               schema:
                 type: object
                 properties:
+                  error:
+                    type: boolean
+                    example: true
                   message:
                     type: string
                     example: "Food not found"
+                  data: null
         '500':
           description: Server error
           content:
@@ -130,9 +173,13 @@ paths:
               schema:
                 type: object
                 properties:
+                  error:
+                    type: boolean
+                    example: true
                   message:
                     type: string
                     example: "Internal server error"
+                  data: null
 
     put:
       summary: Update a food by ID
@@ -169,7 +216,16 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Food'
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: "Food updated"
+                  data:
+                    $ref: '#/components/schemas/Food'
         '404':
           description: Food not found
           content:
@@ -177,9 +233,13 @@ paths:
               schema:
                 type: object
                 properties:
+                  error:
+                    type: boolean
+                    example: true
                   message:
                     type: string
                     example: "Food not found"
+                  data: null
         '400':
           description: Invalid input data
           content:
@@ -187,9 +247,13 @@ paths:
               schema:
                 type: object
                 properties:
+                  error:
+                    type: boolean
+                    example: true
                   message:
                     type: string
                     example: "Invalid input data"
+                  data: null
         '500':
           description: Server error
           content:
@@ -197,9 +261,13 @@ paths:
               schema:
                 type: object
                 properties:
+                  error:
+                    type: boolean
+                    example: true
                   message:
                     type: string
                     example: "Internal server error"
+                  data: null
 
     delete:
       summary: Delete a food by ID
@@ -222,9 +290,13 @@ paths:
               schema:
                 type: object
                 properties:
+                  error:
+                    type: boolean
+                    example: false
                   message:
                     type: string
                     example: "Food deleted"
+                  data: null
         '404':
           description: Food not found
           content:
@@ -232,9 +304,13 @@ paths:
               schema:
                 type: object
                 properties:
+                  error:
+                    type: boolean
+                    example: true
                   message:
                     type: string
                     example: "Food not found"
+                  data: null
         '500':
           description: Server error
           content:
@@ -242,9 +318,13 @@ paths:
               schema:
                 type: object
                 properties:
+                  error:
+                    type: boolean
+                    example: true
                   message:
                     type: string
                     example: "Internal server error"
+                  data: null
 
 components:
   schemas:

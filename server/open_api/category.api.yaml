@@ -16,9 +16,19 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Category'
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: "Categories retrieved successfully"
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Category'
+                
         '500':
           description: Server error
           content:
@@ -26,9 +36,13 @@ paths:
               schema:
                 type: object
                 properties:
+                  error:
+                    type: boolean
+                    example: true
                   message:
                     type: string
                     example: "Internal server error"
+                  data: null
 
     post:
       summary: Create a new category
@@ -54,7 +68,16 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Category'
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: "Category created"
+                  data:
+                    $ref: '#/components/schemas/Category'
         '400':
           description: Invalid input data
           content:
@@ -62,9 +85,13 @@ paths:
               schema:
                 type: object
                 properties:
+                  error:
+                    type: boolean
+                    example: true
                   message:
                     type: string
                     example: "Invalid input data"
+                  data: null
         '500':
           description: Server error
           content:
@@ -72,9 +99,13 @@ paths:
               schema:
                 type: object
                 properties:
+                  error:
+                    type: boolean
+                    example: true
                   message:
                     type: string
                     example: "Internal server error"
+                  data: null
 
   /{id}:
     get:
@@ -96,7 +127,16 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Category'
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: "Category retrieved successfully"
+                  data:
+                    $ref: '#/components/schemas/Category'
         '404':
           description: Category not found
           content:
@@ -104,9 +144,13 @@ paths:
               schema:
                 type: object
                 properties:
+                  error:
+                    type: boolean
+                    example: true
                   message:
                     type: string
                     example: "Category not found"
+                  data: null
         '500':
           description: Server error
           content:
@@ -114,9 +158,13 @@ paths:
               schema:
                 type: object
                 properties:
+                  error:
+                    type: boolean
+                    example: true
                   message:
                     type: string
                     example: "Internal server error"
+                  data: null
 
     patch:
       summary: Update a category by ID
@@ -147,7 +195,16 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Category'
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: "Category updated"
+                  data:
+                    $ref: '#/components/schemas/Category'
         '404':
           description: Category not found
           content:
@@ -155,9 +212,13 @@ paths:
               schema:
                 type: object
                 properties:
+                  error:
+                    type: boolean
+                    example: true
                   message:
                     type: string
                     example: "Category not found"
+                  data: null
         '400':
           description: Invalid input data
           content:
@@ -165,9 +226,13 @@ paths:
               schema:
                 type: object
                 properties:
+                  error:
+                    type: boolean
+                    example: true
                   message:
                     type: string
                     example: "Invalid input data"
+                  data: null
         '500':
           description: Server error
           content:
@@ -175,9 +240,13 @@ paths:
               schema:
                 type: object
                 properties:
+                  error:
+                    type: boolean
+                    example: true
                   message:
                     type: string
                     example: "Internal server error"
+                  data: null
 
     delete:
       summary: Delete a category by ID
@@ -200,9 +269,13 @@ paths:
               schema:
                 type: object
                 properties:
+                  error:
+                    type: boolean
+                    example: false
                   message:
                     type: string
                     example: "Category deleted"
+                  data: null
         '404':
           description: Category not found
           content:
@@ -210,9 +283,13 @@ paths:
               schema:
                 type: object
                 properties:
+                  error:
+                    type: boolean
+                    example: true
                   message:
                     type: string
                     example: "Category not found"
+                  data: null
         '500':
           description: Server error
           content:
@@ -220,9 +297,13 @@ paths:
               schema:
                 type: object
                 properties:
+                  error:
+                    type: boolean
+                    example: true
                   message:
                     type: string
                     example: "Internal server error"
+                  data: null
 
 components:
   schemas:
