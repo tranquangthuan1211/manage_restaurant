@@ -20,10 +20,10 @@ export const neutral: NeutralColors = {
   300: '#D2D6DB',
   400: '#FFFFFF',
   500: '#6C737F',
-  600: '#4D5761',
+  600: '#3D4044',
   700: '#2F3746',
   800:  '#1064B3',
-  900: '#111927'
+  900: '#111927',
 };
 
 export const black = withAlphas({

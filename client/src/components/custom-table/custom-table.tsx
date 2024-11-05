@@ -122,7 +122,11 @@ export function CustomTable<P, T extends { id: P; [key: string]: any }>(
   }, []);
 
   return (
-    <Stack {...stackProps}>
+    <Stack {...stackProps}
+      sx = {{
+        backgroundColor:"white",
+      }}
+    >
       {children}
       <Scrollbar {...scrollbarProps} ref={scrollBar}>
         <Table
@@ -252,6 +256,9 @@ export function CustomTable<P, T extends { id: P; [key: string]: any }>(
           position="sticky"
           left={0}
           top={props.loading ? 12 : undefined}
+          sx = {{
+            backgroundColor:"white",
+          }}
         >
           {loading ? (
             <CircularProgress />
@@ -262,16 +269,19 @@ export function CustomTable<P, T extends { id: P; [key: string]: any }>(
           )}
         </Stack>
       )}
-      {/* {pagination && (
+      {pagination && (
         <Pagination
-          sx={{ p: 2, "& .MuiPagination-ul": { justifyContent: "center" } }}
+          sx={{ 
+            p: 2, "& .MuiPagination-ul": { justifyContent: "center" }, 
+            marginTop: 2,
+          }}
           page={pagination.page}
           count={pagination.totalPages}
           onChange={pagination.onPageChange}
           size="large"
           color="primary"
         />
-      )} */}
+      )}
     </Stack>
   );
 }

@@ -103,11 +103,12 @@ export const MobileNavSection: FC<MobileNavSectionProps> = (props) => {
     <Stack
       component="ul"
       spacing={0.5}
-      flexDirection={'row'}
+      flexDirection={'column'}
       sx={{
         listStyle: 'none',
         m: 0,
         p: 0,
+        alignItems:'center'
 
       }}
       {...other}

@@ -52,7 +52,7 @@ export const initialSettings: Settings = {
   contrast: "normal",
   direction: "ltr",
   layout: "vertical",
-  navColor: "blue",
+  navColor: "black",
   paletteMode: "light",
   responsiveFontSizes: true,
   stretch: false,

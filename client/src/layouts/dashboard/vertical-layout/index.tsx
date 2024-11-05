@@ -7,10 +7,8 @@ import type { DashboardSection } from "../configs/config";
 import { SideNav } from "./side-nav";
 import { useMediaQuery } from "@mui/material";
 import {useMobileNav} from "./use-mobile-nav";
-import { MobileNav } from "../mobile-nav";
-import {TopNav} from "./top-nav";
 import { useAuth } from "src/hooks/use-auth";
-import {MobileNavPatient} from "../mobile-nav-patient"
+import {MobileNavCustomer} from "../mobile-nav-patient"
 
 const SIDE_NAV_WIDTH: number = 280;
 
@@ -21,6 +19,12 @@ const VerticalLayoutRoot = styled("div")(({ theme }) => ({
   [theme.breakpoints.up("lg")]: {
     paddingLeft: SIDE_NAV_WIDTH,
   },
+  [theme.breakpoints.down("md")]: {
+    marginLeft: "50px"
+  },
+  [theme.breakpoints.down("sm")]: {
+    marginLeft: "50px"
+  }
 }));
 
 const VerticalLayoutContainer = styled("div")({
@@ -43,23 +47,16 @@ export const VerticalLayout: FC<VerticalLayoutProps> = (props) => {
   const {user} = useAuth();
   return (
     <>
-      {/* {!lgUp && user?.role === "patient" &&
-        (<MobileNavPatient  
+      {!lgUp &&
+        (<MobileNavCustomer 
           color={navColor} 
           onClose={mobileNav.handleClose} 
           open={mobileNav.open} 
-          sections={sections} />)} */}
+          sections={sections} />)}
       {lgUp && (<SideNav color={navColor} sections={sections} />)}
-      {/* {!lgUp && user?.role !== "patient" && (<TopNav onMobileNavOpen={mobileNav.handleOpen} />)}
-      {!lgUp && user?.role !== "patient" && (
-          <MobileNav
-            color={navColor}
-            onClose={mobileNav.handleClose}
-            open={mobileNav.open}
-            sections={sections}
-          />
-        )} */}
-        <VerticalLayoutRoot>
+        <VerticalLayoutRoot
+
+        >
           <VerticalLayoutContainer>{children}</VerticalLayoutContainer>
         </VerticalLayoutRoot>
     </>
@@ -68,6 +65,6 @@ export const VerticalLayout: FC<VerticalLayoutProps> = (props) => {
 
 VerticalLayout.propTypes = {
   children: PropTypes.node,
-  navColor: PropTypes.oneOf<NavColor>(["blend-in", "discreet", "evident"]),
+  navColor: PropTypes.oneOf<NavColor>(["blend-in", "discreet", "evident","blue","black"]),
   sections: PropTypes.array,
 };

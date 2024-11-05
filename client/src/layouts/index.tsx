@@ -12,7 +12,7 @@ interface PageProps {
 export const Layout:FC<PageProps> = (props) => {
     const {children} = props;
     const settings = useSettings();
-    console.log(settings);
+    // console.log(settings);
     return (
         <IssuerGuard issuer={Issuer.JWT}>
                 <VerticalLayout 

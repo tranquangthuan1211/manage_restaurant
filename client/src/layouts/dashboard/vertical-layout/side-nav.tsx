@@ -2,7 +2,7 @@
 import {FC, ReactNode, useMemo, useState} from "react"
 import {NavColor} from "src/types/settings"
 import {DashboardSection} from "../configs/config"
-import { Drawer,Stack, Box} from "@mui/material"
+import { Drawer,Stack, Box, Typography} from "@mui/material"
 import { SideNavSection } from "./side-nav-section"
 import { useTheme } from "@mui/material/styles";
 import { Scrollbar } from "src/components/scroll-bar"
@@ -137,6 +137,44 @@ const useCssVars = (color: NavColor): Record<string, string> => {
             "--nav-scrollbar-color": theme.palette.neutral[400],
           };
         }
+        case "black":
+          if (theme.palette.mode === "dark") {
+            return {
+              "--nav-bg": theme.palette.neutral[800],
+              "--nav-color": theme.palette.common.black,
+              "--nav-border-color": "transparent",
+              "--nav-logo-border": theme.palette.neutral[700],
+              "--nav-section-title-color": theme.palette.neutral[400],
+              "--nav-item-color": theme.palette.neutral[400],
+              "--nav-item-hover-bg": "rgba(255, 255, 255, 0.04)",
+              "--nav-item-active-bg": "rgba(255, 255, 255, 0.04)",
+              "--nav-item-active-color": theme.palette.common.white,
+              "--nav-item-disabled-color": theme.palette.neutral[500],
+              "--nav-item-icon-color": theme.palette.neutral[400],
+              "--nav-item-icon-active-color": theme.palette.primary.main,
+              "--nav-item-icon-disabled-color": theme.palette.neutral[500],
+              "--nav-item-chevron-color": theme.palette.neutral[600],
+              "--nav-scrollbar-color": theme.palette.neutral[400],
+            };
+          } else {
+            return {
+              "--nav-bg": theme.palette.neutral[600],
+              "--nav-color": theme.palette.common.white,
+              "--nav-border-color": "transparent",
+              "--nav-logo-border": theme.palette.neutral[700],
+              "--nav-section-title-color": theme.palette.neutral[400],
+              "--nav-item-color": theme.palette.neutral[400],
+              "--nav-item-hover-bg": "rgba(255, 255, 255, 0.04)",
+              "--nav-item-active-bg": "rgba(255, 255, 255, 0.04)",
+              "--nav-item-active-color": theme.palette.common.white,
+              "--nav-item-disabled-color": theme.palette.neutral[500],
+              "--nav-item-icon-color": theme.palette.neutral[400],
+              "--nav-item-icon-active-color": theme.palette.primary.main,
+              "--nav-item-icon-disabled-color": theme.palette.neutral[500],
+              "--nav-item-chevron-color": theme.palette.neutral[600],
+              "--nav-scrollbar-color": theme.palette.neutral[400],
+            };
+          }
 
       default:
         return {};
@@ -144,8 +182,8 @@ const useCssVars = (color: NavColor): Record<string, string> => {
   }, [theme, color]);
 };
 export const SideNav:FC<SideNavProps> = (props) => {
-  const { color = "blue"} = props;
-    const cssVars = useCssVars(color)
+  const { color} = props;
+    const cssVars = useCssVars(color || "blue")
     const pathname = usePathname()
     const sections = useSections()
     // const [open, setOpen] = useState(false);
@@ -196,25 +234,14 @@ export const SideNav:FC<SideNavProps> = (props) => {
               }}
             >
               <img
-                src="/logo.png"
+                src="/images/logo.png"
                 alt="logo"
                 width="100%"
                 height="100%"
                 style={{ objectFit: "contain" }}
               />
             </Box>
-            {/* {open ? (
-              <KeyboardBackspaceIcon
-                onClick={() => setOpen(false)}
-                sx={{ cursor: "pointer" }}
-              />
-            ) : (
-              <ArrowRightAltIcon
-                onClick={() => setOpen(true)}
-                sx={{ cursor: "pointer" }}
-              />
-            
-            )} */}
+            <Typography>Ha ma con</Typography>
           </Stack>
 
           <Stack
