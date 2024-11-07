@@ -1,44 +1,42 @@
 import {DashboardSection} from "./config"
 import {Paths} from 'src/types/paths';
 import LineAxisIcon from '@mui/icons-material/LineAxis';
-import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
 import FlagIcon from '@mui/icons-material/Flag';
-import SystemUpdateAltIcon from '@mui/icons-material/SystemUpdateAlt';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import DesignServicesIcon from '@mui/icons-material/DesignServices';
 import { FaUserDoctor } from "react-icons/fa6";
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
 export const getDashboardAdminConfigs: DashboardSection[] = [
     {
         subheader:'Admin', 
         items:[
             {
-                title:"Dashboard",
-                path: Paths.dashboard["thong-ke"],
+                title:"Tổng quan",
+                path: Paths.dashboard["tong-quan"],
                 icon: <LineAxisIcon sx = {{
                     width: 20,
                 }}/>
             },
             {
-                title: "Quản lý tài khoản",
-                path: Paths.dashboard["quan-ly-tai-khoan"],
-                icon: <AccountTreeIcon sx = {{
-                    width: 20,
-                }}/>    
-            }, 
-            {
-                title: "Bệnh nhân",
-                path: Paths.dashboard["benh-nhan"],
-                icon: <AccountBoxIcon sx = {{
+                title: "Menu",
+                path: Paths.dashboard["thong-tin-menu"],
+                icon: <RestaurantMenuIcon sx = {{
                     width: 20,
                 }}/>
             }, 
             {
-                title: "Bác sĩ",
-                path: Paths.dashboard["bac-si"],
-                icon: <FaUserDoctor width={20}/>
+                title: "Quản lý nhân viên",
+                path: Paths.dashboard["quan-ly-nhan-vien"],
+                icon: <PermContactCalendarIcon
+                    sx = {{
+                        width:20,
+                    }}
+                />
             },
             {
                 title:"Thiết lập lịch",
@@ -53,19 +51,12 @@ export const getDashboardAdminConfigs: DashboardSection[] = [
                 }}/>    
             },
             {
-                title:"Dịch vụ",
-                path: Paths.dashboard["dich-vu"],
-                icon: <DesignServicesIcon sx = {{
+                title:"Xuất danh sách",
+                path: Paths.dashboard["xuat-danh-sach"],
+                icon: <FileDownloadIcon sx = {{
                     width: 20,
-                }}/>    
-            },
-            // {
-            //     title:"Xuất danh sách",
-            //     path: Paths.dashboard["xuat-danh-sach"],
-            //     icon: <SystemUpdateAltIcon sx = {{
-            //         width: 20,
-            //     }}/>
-            // }
+                }}/>
+            }
         ]
     }, 
     {

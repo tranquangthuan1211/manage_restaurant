@@ -156,6 +156,7 @@ const Page: PageType = () => {
                         width: "100%",
                         backgroundColor: "#ccc",
                         padding: "16px 0",
+                        overflow: "hidden",
 
                     }}
                 >
@@ -179,7 +180,7 @@ const Page: PageType = () => {
                     >
                         <Chart
                             height={240}
-                            width={"400px"}
+                            width={"500px"}
                             options={optionsPie}
                             series={optionsPie.series}
                             type="pie"
