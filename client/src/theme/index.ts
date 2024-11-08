@@ -43,7 +43,7 @@ declare module '@mui/material/styles' {
   }
 }
 
-export type ColorPreset = 'blue' | 'green' | 'indigo' | 'purple' | 'black';
+export type ColorPreset = 'blue' | 'green' | 'indigo' | 'purple' | 'black'|'yellow';
 
 export type Contrast = 'normal' | 'high';
 

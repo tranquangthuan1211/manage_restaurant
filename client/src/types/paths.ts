@@ -8,7 +8,7 @@ export const Paths = {
     logout: "/dang-xuat",
     chat: "/tu-van",
     dashboard: {
-      "tong-quan": "/dashboard/satistical",
+      "tong-quan": "/dashboard/statistical",
       "thong-tin-menu": "/dashboard/menu",
       "thiet-lap-lich":'/dashboard/table',
       "quan-ly-nhan-vien": "/dashboard/employee",

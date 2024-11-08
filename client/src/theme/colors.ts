@@ -34,7 +34,14 @@ export const black = withAlphas({
   darkest: neutral[900],
   contrastText: '#FFFFFF'
 });
-
+export const yellow = withAlphas({
+  lightest: '#FFFDF5',
+  light: '#FFF8D9',
+  main: '#FFCC00',
+  dark: '#BAA600',
+  darkest: '#7A6E00',
+  contrastText: '#FFFFFF'
+});
 export const blue = withAlphas({
   lightest: '#F5F8FF',
   light: '#EBEFFF',

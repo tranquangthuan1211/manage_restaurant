@@ -48,7 +48,7 @@ const storeSettings = (value: Record<string, any>): void => {
 };
 
 export const initialSettings: Settings = {
-  colorPreset: "purple",
+  colorPreset: "yellow",
   contrast: "normal",
   direction: "ltr",
   layout: "vertical",
