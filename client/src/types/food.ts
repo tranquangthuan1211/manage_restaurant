@@ -14,7 +14,7 @@ export const initialFood: Food = {
     id: "",
     name: "",
     price: 0,
-    category: "",
+    category: "Món chính",
     status: "",
     description: "",
     image: "",

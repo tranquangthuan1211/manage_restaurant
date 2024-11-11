@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useMemo } from "react"
 import {Page as PageType} from "src/types/page"
 import { Layout } from "src/layouts/index"
 import ContentHeader from 'src/sections/dashboard/content-header';
@@ -9,6 +9,8 @@ import {FoodTabel} from "src/sections/menu/table-food";
 import FoodEditDrawer from "src/sections/menu/drawer-add-food";
 import { useDrawer } from "src/hooks/use-drawer";
 import { Food } from "src/types/food";
+import MenuProvider, {useMenu} from "src/contexts/menu/menu-context";
+import { get } from "lodash";
 let tabs = [
   {
     label: "Đồ ĂN",
@@ -22,6 +24,10 @@ let tabs = [
 const Page:PageType = () => {
     const [tab, setTab] = useState(tabs[0].key);
     const editDrawer = useDrawer<Food>();
+    const {getMenu} = useMenu();
+    const foods = useMemo(() => {
+      return getMenu.data;
+    },[getMenu.data]);
     return (
         <Stack spacing={2}>
             <ContentHeader 
@@ -81,7 +87,9 @@ const Page:PageType = () => {
                   backgroundColor:"#ccc"
                 }}
               >
-                <FoodTabel/>
+                <FoodTabel
+                  foods={foods?.data || []}
+                />
               </Stack>
             )}  
             {tab === tabs[1].key && (
@@ -99,6 +107,11 @@ const Page:PageType = () => {
     )
 }
 
-Page.getLayout = (page) => <Layout>{page}</Layout>
+Page.getLayout = (page) => 
+<Layout>
+  <MenuProvider>
+    {page}
+  </MenuProvider>
+</Layout>
 
 export default Page;

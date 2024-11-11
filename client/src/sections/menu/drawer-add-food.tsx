@@ -17,6 +17,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import useFunction from "src/hooks/use-function";
 import { useFormik } from "formik";
+import { ca } from "date-fns/locale";
 // import { useCategoriesContext } from "src/contexts/danh-muc/categories-context";
 // import { useAccountContext } from "src/contexts/tai-khoan/accounts-context";
 // import { UploadArea } from "./upload-area";
@@ -47,7 +48,6 @@ function FoodEditDrawer({
   onClose: () => void;
   food?: Food;
 }) {
-//   const { getUnitsApi } = useCategoriesContext();
 
   const [tab, setTab] = useState(tabs[0].key);
   const onClose = () => {
@@ -68,7 +68,12 @@ function FoodEditDrawer({
   const handleSubmitHelper = useFunction(handleSubmit, {
     successMessage: food ? "Cập nhật thành công!" : "Thêm thành công!",
   });
-
+  const categories = [
+    {label: "Món chính", value: "Món chính"},
+    {label: "Món phụ", value: "Món phụ"},
+    {label: "Món tráng miệng", value: "Món tráng miệng"},
+    {label: "Món uống", value: "Món uống"},
+  ]
   const formik = useFormik<Food>({
     initialValues: food || initialFood,
     onSubmit: async (values) => {
@@ -196,16 +201,27 @@ function FoodEditDrawer({
                   justifyContent={"space-between"}
                 >
                   <Stack direction={"column"} spacing={"8px"} width={1}>
-                    <Typography fontSize={"12px"} fontWeight={500}>
-                        Loại đồ ăn
-                    </Typography>
-                    <TextField
-                      fullWidth
-                      placeholder="Nhập loại đồ ăn..."
-                      name="category"
-                      value={formik.values.category}
-                      onChange={formik.handleChange}
-                    />
+                    {categories && (
+                      <>
+                        <Typography fontSize={"12px"} fontWeight={500}>
+                          Loại món
+                        </Typography>
+                        <TextField
+                          fullWidth
+                          select
+                          name="category"
+                          value={formik.values.category}
+                          onChange={formik.handleChange}
+                        >
+                          {categories.map((category) => (
+                            <MenuItem key={category.value} value={category.value}>
+                              {category.label}
+                            </MenuItem>
+                          ))}
+                        </TextField>
+                      </>
+                    )}
+                    
                   </Stack>
                   <Stack direction={"column"} spacing={"8px"} width={1}>
                     <Typography fontSize={"12px"} fontWeight={500}>
@@ -221,18 +237,14 @@ function FoodEditDrawer({
                   </Stack>
                 </Stack>
                 <Stack>
-                    {formik.values.image && (
-                        <img
-                            src={formik.values.image}
-                            alt="food"
-                            style={{
-                                width: "100%",
-                                height: "200px",
-                                objectFit: "cover",
-                                borderRadius: "8px",
-                            }}
-                        />
-                    )}
+                    <TextField
+                      type="file"
+                      fullWidth
+                      placeholder="Link ảnh..."
+                      name="image"
+                      value={formik.values.image}
+                      onChange={formik.handleChange}
+                    />
                 </Stack>
 
               </>
