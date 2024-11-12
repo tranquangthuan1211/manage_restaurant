@@ -1,0 +1,98 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Sansita, Arial, Helvetica, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@layer base{
+  @font-face {
+    font-family: 'SansitaOne';
+    font-style: normal;
+    font-weight: 400;
+    src: url('/fonts/sansita-one/SansitaOne.ttf') format('truetype');
+  }
+  @font-face {
+    font-family: 'Sansita';
+    font-style: normal;
+    font-weight: 400;
+    src: url('/fonts/sansita/Sansita-Regular.ttf') format('truetype');
+  }
+  @font-face {
+    font-family: 'Sansita';
+    font-style: bold;
+    font-weight: 400;
+    src: url('/fonts/sansita/Sansita-Bold.ttf') format('truetype');
+  }
+  @font-face {
+    font-family: 'Sansita';
+    font-style: italic;
+    font-weight: 400;
+    src: url('/fonts/sansita/Sansita-Italic.ttf') format('truetype');
+  }
+  @font-face {
+    font-family: 'Satisfy';
+    font-style: normal;
+    font-weight: 400;
+    src: url('/fonts/satisfy/Satisfy-Regular.ttf') format('truetype');
+  }
+}
+
+@layer utilities{
+  .button-orange{
+    @apply bg-gradient-to-r from-orange-400 to-orange-500
+    hover:from-orange-500 hover:to-orange-600
+    hover:-translate-y-1 transform transition-transform
+    text-white font-bold py-2 px-4 rounded-3xl shadow-lg
+    text-xl;
+  }
+  .button-green{
+    @apply bg-gradient-to-r from-green-400 to-green-500
+    hover:from-green-500 hover:to-green-600
+    hover:-translate-y-1 transform transition-transform
+    text-white font-bold py-2 px-4 rounded-3xl shadow-lg
+    text-xl;
+  }
+  .button-red{
+    @apply bg-gradient-to-r from-red-400 to-red-500
+    hover:from-red-500 hover:to-red-600
+    hover:-translate-y-1 transform transition-transform
+    text-white font-bold py-2 px-4 rounded-3xl shadow-lg
+    text-xl;
+  }
+  .icon-button{
+    @apply bg-gray-200
+    w-14 h-14 mx-1 my-2 p-1
+    hover:bg-gray-300
+    text-white font-bold rounded-full shadow-lg
+    hover:scale-105 transform transition-all
+    text-xl flex items-center justify-center;
+  }
+  .text-primary{
+    @apply text-amber-400 font-bold font-sansita-one text-2xl;
+  }
+  .text-secondary{
+    @apply text-gray-400 font-bold text-xl;
+  }
+}
