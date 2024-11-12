@@ -25,7 +25,7 @@ export const TabBar: FC<TabBarProps> = ({children}) => {
                     </Typography>
                     <Button color="inherit" href="/">Home</Button>
                     <Button color="inherit" href="/about">About</Button>
-                    <Button color="inherit" href="/auth/login">Sign In & Sign Up</Button>
+                    <Button color="inherit" href="/auth">Sign In & Sign Up</Button>
 
                 </Toolbar>
             </AppBar>

@@ -1,31 +1,22 @@
 import { CustomTable } from "src/components/custom-table";
-import { getFoodConfig } from "src/sections/menu/table-config-food";
+import { getEmployeeConfig } from "src/sections/employee/table-config-employee";
 import usePagination from 'src/hooks/use-pagination';
-import {Stack, styled, TableCell, TablePagination, TableRow, TextField, TextFieldProps} from "@mui/material"
-import {Food} from "src/types/food";
+import {styled, TableCell, TablePagination, TableRow, TextField, TextFieldProps} from "@mui/material"
 
 const NoLabelTextField = styled(TextField)<TextFieldProps>(() => ({
     "& .MuiInputBase-input.MuiFilledInput-input": {
       paddingTop: "8px",
     },
   }));
-export const FoodTabel = ({
-    // filter,
-    // onChangeFilter,
-    foods
-  }: {
-    // filter: FoodFilter;
-    // onChangeFilter: (filter: FoodFilter) => void;
-    foods: Food[];
-}) => {
-    const configs = getFoodConfig();
-    const pagination = usePagination({ count: foods.length });
-    console.log(foods);
+export const EmployeeTable = () => {
+    const configs = getEmployeeConfig();
+    const pagination = usePagination({ count: 0 });
+    
     return (
-        <Stack>
+        <>
             <CustomTable
                 configs={configs}
-                rows={foods}
+                rows={[]}
                 pagination={pagination}
                 additionalTopRow = {
                     <TableRow
@@ -82,6 +73,11 @@ export const FoodTabel = ({
                             fullWidth
                             ></NoLabelTextField>
                         </TableCell>
+                        <TableCell align="center">
+                            <NoLabelTextField
+                            fullWidth
+                            ></NoLabelTextField>
+                        </TableCell>
                     </TableRow>
                 }
             />
@@ -92,19 +88,17 @@ export const FoodTabel = ({
                 onPageChange={pagination.onPageChange} 
                 rowsPerPage={pagination.rowsPerPage} 
                 onRowsPerPageChange={pagination.onRowsPerPageChange} 
-                rowsPerPageOptions={[2, 10, 25, 100]}
+                rowsPerPageOptions={[5, 10, 25, 100]}
                 sx={{
                     position: "fixed",
                     bottom: 0,
                     right: 0,
                     left: 0,
-                    marginTop:"100px",
                     bgcolor: "secondary.lightest",
                     borderTop: "1px solid",
                     borderColor: "divider",
-                    zIndex: 0,
                 }}
             />
-        </Stack>
+        </>
     )
 }

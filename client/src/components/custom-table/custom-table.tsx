@@ -125,10 +125,12 @@ export function CustomTable<P, T extends { id: P; [key: string]: any }>(
     <Stack {...stackProps}
       sx = {{
         backgroundColor:"white",
+        overflowY: 'auto',
+        padding: 2,
       }}
     >
       {children}
-      <Scrollbar {...scrollbarProps} ref={scrollBar}>
+      <Stack {...scrollbarProps} ref={scrollBar}>
         <Table
           {...tableProps}
           sx={{
@@ -245,7 +247,7 @@ export function CustomTable<P, T extends { id: P; [key: string]: any }>(
           </TableBody>
         </Table>
         {(loading || rows.length == 0) && <Stack height={104} />}
-      </Scrollbar>
+      </Stack>
       {(loading || rows.length == 0) && (
         <Stack
           marginTop={-30}
@@ -269,19 +271,22 @@ export function CustomTable<P, T extends { id: P; [key: string]: any }>(
           )}
         </Stack>
       )}
-      {pagination && (
-        <Pagination
-          sx={{ 
-            p: 2, "& .MuiPagination-ul": { justifyContent: "center" }, 
-            marginTop: 2,
-          }}
-          page={pagination.page}
-          count={pagination.totalPages}
-          onChange={pagination.onPageChange}
-          size="large"
-          color="primary"
-        />
-      )}
+      <Stack>
+        {pagination && (
+          <Pagination
+            sx={{ 
+              p: 2, "& .MuiPagination-ul": { justifyContent: "center" }, 
+              marginTop: 2,
+              height: 50,
+            }}
+            page={pagination.page}
+            count={pagination.totalPages}
+            onChange={pagination.onPageChange}
+            size="large"
+            color="primary"
+          />
+        )}
+      </Stack>
     </Stack>
   );
 }
