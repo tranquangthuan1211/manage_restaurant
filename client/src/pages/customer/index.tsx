@@ -1,7 +1,8 @@
 import React from 'react';
-
+import RootLayout from '../../layouts/customer/layout';
 const Customer = () => {
     return (
+        <RootLayout>
         <div>
             {/* Navbar Start */}
             <nav>
@@ -62,7 +63,9 @@ const Customer = () => {
             </div>
             {/* Hero End */}
         </div>
+    </RootLayout>
     )
+
 }
 
 export default Customer;
