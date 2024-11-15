@@ -1,7 +1,8 @@
 import React from 'react';
-
+import RootLayout from '../../../layouts/customer/layout';
 const CustomerAccountPersonalInfo = () => {
     return (
+        <RootLayout>
         <div>
             {/* Navbar Start */}
             <nav>
@@ -94,6 +95,7 @@ const CustomerAccountPersonalInfo = () => {
                 </div>
             </div>
         </div>
+        </RootLayout>
     )
 }
 
