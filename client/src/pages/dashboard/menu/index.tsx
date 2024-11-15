@@ -24,10 +24,11 @@ let tabs = [
 const Page:PageType = () => {
     const [tab, setTab] = useState(tabs[0].key);
     const editDrawer = useDrawer<Food>();
-    const {getMenu} = useMenu();
+    const {getMenu,updateFood} = useMenu();
     const foods = useMemo(() => {
       return getMenu.data;
     },[getMenu.data]);
+
     return (
         <Stack spacing={2}>
             <ContentHeader 
@@ -49,7 +50,7 @@ const Page:PageType = () => {
                           color="primary"
                           startIcon={<UploadFileIcon  />}
                         >
-                          Import danh sách TK
+                          Import danh sách món ăn
                         </Button>
         
                         <Button
@@ -60,7 +61,7 @@ const Page:PageType = () => {
                             editDrawer.handleOpen();
                           }}
                         >
-                          Thêm tài khoản
+                          Thêm thức ăn
                         </Button>
                       </>
                     }
@@ -89,6 +90,7 @@ const Page:PageType = () => {
               >
                 <FoodTabel
                   foods={foods?.data || []}
+                  loading={getMenu.loading}
                 />
               </Stack>
             )}  

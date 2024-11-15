@@ -9,7 +9,7 @@ const upload = multer();
 const useRouteMenu = () => {
     router.get('/', MenuController.getFoods);
     router.get('/:id', MenuController.getFood);
-    router.use(managerMiddleware);
+    // router.use(managerMiddleware);
     router.post('/', uploadCloud.single('image'),MenuController.createFood);
     router.put('/:id', MenuController.updateFood);
     router.delete('/:id', MenuController.deleteFood);

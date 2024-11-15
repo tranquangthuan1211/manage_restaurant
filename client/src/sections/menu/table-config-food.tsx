@@ -2,7 +2,15 @@ import { IconButton, Stack, Typography } from '@mui/material';
 import {CustomTableConfig } from 'src/components/custom-table';
 import { Food } from 'src/types/food';
 import { Edit, Clear, Restore } from '@mui/icons-material';
-export const getFoodConfig = (): CustomTableConfig<Food["id"], Food>[] => [
+export const getFoodConfig = (
+    {
+        editFood,
+        deleteFood,
+    }: {
+        editFood: (food:Food) => void;
+        deleteFood: (food:Food) => void;
+    }
+): CustomTableConfig<Food["id"], Food>[] => [
     {
         key: "id",
         headerLabel: "ID",
@@ -79,13 +87,16 @@ export const getFoodConfig = (): CustomTableConfig<Food["id"], Food>[] => [
                 paddingLeft="25px"
                 paddingRight="25px"
             >
-                <IconButton color="success">
+                <IconButton 
+                    color="success"
+                    onClick={() => editFood(data)}
+                >
                     <Edit />
                 </IconButton>
                 <IconButton color="error">
                <Clear  
                   sx={{ height: "20px", width: "20px" }} 
-                //   onClick={() => deletePatient(data)}
+                  onClick={() => deleteFood(data)}
                />
             </IconButton>
             </Stack>

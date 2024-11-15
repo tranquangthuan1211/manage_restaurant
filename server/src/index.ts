@@ -63,6 +63,7 @@ app.use((error: any, req: Request, res: Response, next: NextFunction) => {
       },
   });
 });
+
 app.listen(port, () => {
   console.log(`Server started at http://localhost:${port}`);
 });

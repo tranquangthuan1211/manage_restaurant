@@ -14,6 +14,7 @@ import {
 import {Food, initialFood} from "src/types/food"
 import { Stack, spacing, styled } from "@mui/system";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useMenu } from "src/contexts/menu/menu-context";
 
 import useFunction from "src/hooks/use-function";
 import { useFormik } from "formik";
@@ -48,21 +49,20 @@ function FoodEditDrawer({
   onClose: () => void;
   food?: Food;
 }) {
-
+  const {updateFood, createFood} = useMenu();
   const [tab, setTab] = useState(tabs[0].key);
   const onClose = () => {
     onCloseParam();
     setTab(tabs[0].key);
   };
 
-//   const { createAccount, updateAccount, getAccountsOfficerApi } =
-//     useAccountContext();
-
   const handleSubmit = useCallback(
     async (values: Food) => {
-      
+        if(values._id){
+          await updateFood({...values})
+        }
     },
-    []
+    [updateFood]
   );
 
   const handleSubmitHelper = useFunction(handleSubmit, {
@@ -78,6 +78,7 @@ function FoodEditDrawer({
     initialValues: food || initialFood,
     onSubmit: async (values) => {
         const { error } = await handleSubmitHelper.call(values);
+        console.log(error);
         if (!error) {
           formik.setValues(initialFood);
           onClose();
