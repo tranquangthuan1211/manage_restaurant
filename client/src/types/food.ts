@@ -6,7 +6,7 @@ export interface Food {
     category: string;
     status: string;
     description: string;
-    image: string;
+    image: File | null | string;
     evaluate: string;
     createdAt: string;
     updatedAt: string;
@@ -20,7 +20,7 @@ export const initialFood: Food = {
     category: "Món chính",
     status: "",
     description: "",
-    image: "",
+    image: null,
     evaluate:"",
     createdAt: "",
     updatedAt: "",

@@ -4,8 +4,9 @@ import UsersDataBase from "../models/user-model";
 import {signToken, verifyToken} from "../securities/jwt";
 import { hashPassword,comparePassword } from "../securities/pass";
 import { ObjectId } from "mongodb";
-import {Users} from "../models/schemas/user"
+import {Users,initialUser} from "../models/schemas/user"
 import { access } from "fs";
+import { checkInputError } from "../securities/check_input";
 class UserController {
 
   async getUser(req: Request, res: Response) {
@@ -31,6 +32,17 @@ class UserController {
   }
   async createUser(req: Request, res: Response) {
     try {
+      const check = checkInputError<Users>({
+        ...req.body
+      }, initialUser);
+      if(check.errors.length > 0) {
+        return res.status(400).json({
+          error: 1,
+          message: "Input is invalid",
+          data: null,
+        });
+      }
+      // console.log(check)
       const newUser = req.body as Users;
       const user = await UsersDataBase.users.findOne({email: newUser.email});
       if(user) {

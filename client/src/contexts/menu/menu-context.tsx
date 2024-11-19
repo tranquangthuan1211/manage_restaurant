@@ -6,7 +6,7 @@ import { Food, initialFood } from "src/types/food";
 import useAppSnackbar from "src/hooks/use-app-snackbar";
 interface ContextValue {
     getMenu: UseFunctionReturnType<FormData,{data:Food[]}>;
-    createFood?: (request:Partial<Food>) => Promise<void>;
+    createFood: (request:Partial<Food>) => Promise<void>;
     updateFood:(request:Partial<Food>) => Promise<void>;
     deleteFood: (id:string) => Promise<void>;
 }
@@ -20,32 +20,36 @@ const MenuContext = createContext<ContextValue>({
 const MenuProvider = ({children}:{children:React.ReactNode}) => {
     const { showSnackbarError, showSnackbarSuccess } = useAppSnackbar();
     const getMenu = useFunction(MenuApi.getMenu);
-    const createFood = useCallback(async (request:Partial<Food>) => {
-        try{
-            const response = await MenuApi.createFood(request);
-            // if(response.error !== 0) {
-            //     console.log(response.message);  
-            //     showSnackbarError(response.message);
-            //     return;
-            // } 
-            if(response) {
-                    const newFood = [
-                        {
-                            ...initialFood,
-                            ...request,
-                            ...response
-                        },
-                        ...(getMenu.data?.data || [])
-                    ];
-                    getMenu.setData({
-                        data: newFood
-                    });
+    const createFood = useCallback(async (request: Partial<Food>) => {
+        try {
+            const formData = new FormData();
+            Object.entries(request).forEach(([key, value]) => {
+                if (value) {
+                    formData.append(key, value as Blob);
                 }
-            } catch (error) {
-                console.log(error);
-                showSnackbarError(error.message);
+            });
+    
+            const response = await MenuApi.createFood(formData); 
+            request.image = (request.image ? URL.createObjectURL(request.image as unknown as File) : null)  
+            if (response) {
+                const newFood = [
+                    {
+                        ...initialFood,
+                        ...request,
+                        ...response,
+                    },
+                    ...(getMenu.data?.data || []),
+                ];
+                getMenu.setData({
+                    data: newFood,
+                });
             }
-    },[getMenu]);
+        } catch (error: any) {
+            console.error(error);
+            showSnackbarError(error.message);
+        }
+    }, [getMenu]);
+    
     const updateFood = useCallback(async (request:Partial<Food>) => {
         try {
             const response = await MenuApi.updateFood(request);

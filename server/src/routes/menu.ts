@@ -5,7 +5,6 @@ import multer from 'multer';
 import {managerMiddleware} from '../middlewares/manger.middileware';
 const router = express.Router();
 const upload = multer();
-// uploadCloud.single('image')
 const useRouteMenu = () => {
     router.get('/', MenuController.getFoods);
     router.get('/:id', MenuController.getFood);

@@ -58,6 +58,7 @@ export const apiPost = async (query: string, body: any) => {
   const isFormData = body instanceof FormData;
   const headers = await getRequestHeaders("POST", isFormData);
   try {
+    console.log(body)
     return await apiFetch(getRequestUrl(query), {
       method: "POST",
       headers,

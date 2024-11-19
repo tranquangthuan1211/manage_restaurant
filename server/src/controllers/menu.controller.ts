@@ -35,7 +35,9 @@ class MenuController {
     }
     async createFood(req: Request, res: Response) {
         try{
+            console.log(req.body)
             if (!req.file) {
+                console.log("ko có file")
                 return res.status(400).json({ error: 'No file uploaded' });
             }
             const fileData = req.file;

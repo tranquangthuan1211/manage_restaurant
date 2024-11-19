@@ -5,7 +5,7 @@ class MenuApi {
     async getMenu(requests:FormData): Promise<{data:Food[]}> {
         return await apiGet("/menus");
     }
-    async createFood(request:Partial<Food>): Promise<{
+    async createFood(request:FormData): Promise<{
         error: number;
         message: string;
         data: null;

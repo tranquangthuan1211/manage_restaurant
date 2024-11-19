@@ -7,7 +7,7 @@ const useRouteStaff = () => {
     router.post("/", StaffController.createStaff);
     router.get("/:id", StaffController.getStaff);
     router.put("/:id", StaffController.updateStaff);
-    router.use(managerMiddleware);
+    // router.use(managerMiddleware);
     router.get("/", StaffController.getStaffs);
     router.delete("/:id", StaffController.deleteStaff);
     return router;
