@@ -7,11 +7,7 @@
   --foreground: #171717;
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Sansita, Arial, Helvetica, sans-serif;
-}
+
 
 @media (prefers-color-scheme: dark) {
   :root {
@@ -27,6 +23,20 @@ body {
 }
 
 @layer base{
+  body {
+    color: var(--foreground);
+    background: var(--background);
+    font-family: Sansita, Arial, Helvetica, sans-serif;
+  }
+  table, th, td {
+    @apply border border-solid border-black;
+  }
+  th{
+    @apply text-center text-slate-800 text-lg bg-slate-400 font-bold py-2;
+  }
+  td {
+    @apply text-center text-slate-700 text-sm py-2;
+  }
   @font-face {
     font-family: 'SansitaOne';
     font-style: normal;
@@ -81,18 +91,42 @@ body {
     text-white font-bold py-2 px-4 rounded-3xl shadow-lg
     text-xl;
   }
-  .icon-button{
+  .button-icon{
     @apply bg-gray-200
-    w-14 h-14 mx-1 my-2 p-1
+    w-10 h-10 mx-1 my-2 p-2
     hover:bg-gray-300
     text-white font-bold rounded-full shadow-lg
     hover:scale-105 transform transition-all
     text-xl flex items-center justify-center;
   }
   .text-primary{
-    @apply text-amber-400 font-bold font-sansita-one text-2xl;
+    @apply text-olive-green-300 font-bold font-sansita-one text-2xl;
   }
   .text-secondary{
     @apply text-gray-400 font-bold text-xl;
   }
+  .tab-item {
+    @apply w-full flex justify-items-start pl-5 text-slate-800 transition-all hover:text-slate-700 hover:underline pt-2 pb-3;
+  }
+  .tab-item-active {
+    @apply w-full flex justify-items-start pl-5 text-olive-green-400 hover:text-olive-green-300 hover:underline bg-slate-200 shadow-md pt-2 pb-3;
+  }
+  .tab-link {
+    @apply flex flex-row items-center;
+  }
+  .tab-icon {
+    @apply w-8 h-8 mr-2 fill-slate-50;
+  }
+  .input-field {
+    @apply w-full bg-gray-200 p-2 rounded-md mb-4;
+  }
+  .button-dark-gray {
+    @apply bg-gradient-to-b from-gray-500 to-zinc-600
+    hover:from-zinc-600 hover:to-zinc-700
+     text-white font-bold py-2 px-4 rounded-lg shadow-lg;
+  }
+  .button-outline-light {
+    @apply bg-transparent text-gray-500 font-bold py-2 px-4 rounded-lg border border-solid border-gray-500
+    hover:bg-gray-500 hover:text-white transition-all;
+  } 
 }
