@@ -6,16 +6,16 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        "gray-teal-50": "#F0F4F8",
-        "gray-teal-100": "#D9E2EC",
-        "gray-teal-200": "#BCCCDC",
-        "gray-teal-300": "#9FB3C8",
-        "gray-teal-400": "#829AB1",
-        "gray-teal-500": "#627D98",
+        "gray-teal-50": "#F0F8F4",
+        "gray-teal-100": "#D9ECE2",
+        "gray-teal-200": "#BCECDC",
+        "gray-teal-300": "#9FC8C8",
+        "gray-teal-400": "#82B1AB",
+        "gray-teal-500": "#629898",
         "gray-teal-600": "#486581",
-        "gray-teal-700": "#334E68",
-        "gray-teal-800": "#243B53",
-        "gray-teal-900": "#102A43",
+        "gray-teal-700": "#336868",
+        "gray-teal-800": "#203b3b",
+        "gray-teal-900": "#103A3A",
       },
       fontFamily:{
         'sans': ['Helvetica', 'Arial', 'sans-serif'],
