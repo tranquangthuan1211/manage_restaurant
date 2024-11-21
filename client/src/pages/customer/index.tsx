@@ -4,38 +4,6 @@ const Customer = () => {
     return (
         <RootLayout>
         <div>
-            {/* Navbar Start */}
-            <nav>
-                <div className="grid grid-cols-12">
-                    <div className="col-span-full bg-gray-teal-900 bg-opacity-80 grid grid-cols-12 shadow-xl">
-                        {/* Logo & Restaurant Name */}
-                        <a href="#" className="m-2 col-span-3 flex justify-start items-center">
-                            <img src="/images/logo.png" alt="logo" width={52} height={52} />
-                            <span className="uppercase pl-2 text-2xl font-bold text-white font-sansita-one">Baby Hippo</span>
-                        </a>
-                        {/* Search bar */}
-                        <div className="col-span-6 pl-2 flex items-center justify-center hover:scale-105 transfrom transition-transform">
-                            <input type="text" placeholder="Search..." size={40} className="bg-gray-200 pl-2 rounded-l-md h-8" />
-                            <button className="bg-gray-300 p-1 rounded-r-md h-8 hover:bg-gray-500 transition-colors">
-                                <img className='px-4 h-6' src="/images/search_icon.png"></img>
-                            </button>
-                        </div>
-                        {/* Home, Cart & Account */}
-                        <div className="col-span-3 flex justify-end items-center">
-                            <a href="/" className='icon-button'>
-                                <img width={32} height={32} src="/images/home_icon.png"></img>
-                            </a>
-                            <a href="/customer/cart" className='icon-button'>
-                                <img width={32} height={32} src="/images/cart_icon.png"></img>
-                            </a>
-                            <a href="/customer/account" className='icon-button'>
-                                <img width={32} height={32} src="/images/male_avatar.png"></img>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </nav>
-            {/* Navbar End */}
             {/* Hero Start */}
             <div className="col-span-full bg-[url('/images/customer_bg1.jpg')] bg-cover bg-center h-[36rem] grid grid-cols-2">
                 {/* Gretting */}
