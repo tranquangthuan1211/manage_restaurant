@@ -115,7 +115,7 @@ export const FoodTabel = ({
                 color="error"
                 onConfirm={async () => {
                     if (deleteDialog.data) {
-                        await deleteFood(deleteDialog.data.id);
+                        await deleteFood(deleteDialog.data._id);
                     }
                     deleteDialog.handleClose();
                 }}

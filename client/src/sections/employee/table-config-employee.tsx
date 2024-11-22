@@ -1,7 +1,17 @@
+import { Clear, Edit } from "@mui/icons-material";
+import { IconButton, Stack } from "@mui/material";
 import { CustomTableConfig } from "src/components/custom-table";
 import { Employee } from "src/types/employee";
 
-export const getEmployeeConfig = (): CustomTableConfig<Employee["id"], Employee>[] => [
+export const getEmployeeConfig = (
+    {
+        editEmployee,
+        deleteEmployee,
+    }: {
+        editEmployee?: (food:Employee) => void;
+        deleteEmployee?: (food:Employee) => void;
+    }
+): CustomTableConfig<Employee["id"], Employee>[] => [
     {
         key: "id",
         headerLabel: "ID",
@@ -38,13 +48,31 @@ export const getEmployeeConfig = (): CustomTableConfig<Employee["id"], Employee>
         type: "number",
     },
     {
-        key: "createdAt",
-        headerLabel: "Created At",
-        type: "date",
-    },
-    {
-        key: "updatedAt",
-        headerLabel: "Updated At",
-        type: "date",
-    },
+        key:"edit",
+        headerLabel: "Edit",
+        type: "string",
+        renderCell:(data) => (
+            <Stack
+                direction="row"
+                alignItems="center"
+                justifyContent="center"
+                spacing="auto"
+                paddingLeft="25px"
+                paddingRight="25px"
+            >
+                <IconButton 
+                    color="success"
+                    // onClick={() => editEmployee(data)}
+                >
+                    <Edit />
+                </IconButton>
+                <IconButton color="error">
+               <Clear  
+                  sx={{ height: "20px", width: "20px" }} 
+                //   onClick={() => deleteEmployee(data)}
+               />
+            </IconButton>
+            </Stack>
+        )
+    }
 ]

@@ -82,7 +82,8 @@ class MenuController {
 
     async deleteFood(req: Request, res: Response) {
         try {
-            const {id} = req.params;
+            const id = req.params.id;
+            console.log(id)
             const result = await MenuDataBase.menu.deleteOne({_id: new ObjectId(id)});
             if(!result.acknowledged) {
                 throw new Error("Can not delete food");

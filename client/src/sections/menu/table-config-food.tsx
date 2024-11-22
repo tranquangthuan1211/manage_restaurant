@@ -70,7 +70,7 @@ export const getFoodConfig = (
                 paddingLeft="25px"
                 paddingRight="25px"
             >
-                <img src={data.image} alt="food" style={{width: "90px", height: "90px"}}/>
+                {data.image && <img src={typeof data.image === 'string' ? data.image : URL.createObjectURL(data.image)} alt="food" style={{width: "90px", height: "90px"}}/>}
             </Stack>
         )
     },

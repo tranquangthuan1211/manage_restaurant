@@ -27,6 +27,8 @@ class AppointmentController {
     async getAppointmentUser(req: Request, res: Response) {
         try {
             const data = await getAppointmentUser(req.params.id)
+            const value = await RedisService.REDIS_GET("tableBooking1")
+            console.log(value)
             return res.status(200).json({
                 error: 0,
                 message:"Success",

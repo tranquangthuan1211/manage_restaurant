@@ -78,6 +78,23 @@ class RedisService {
             throw new Error(`Redis setNX error: ${err}`);
         }
     }
+    async REDIS_PUBLISH(channel: string, message: string): Promise<number> {
+        try {
+            const result = await client.publish(channel, message);
+            return result;
+        } catch (err) {
+            throw new Error(`Redis publish error: ${err}`);
+        }
+    }
+    async REDIS_SUBSCRIBE(channel: string): Promise<void> {
+        try {
+            await client.subscribe(channel, (message) => {
+                console.log(`Received message from ${channel}: ${message}`);
+            });
+        } catch (err) {
+            throw new Error(`Redis subscribe error: ${err}`);
+        }
+    }
     async disconnect() {
         try {
             await client.disconnect();

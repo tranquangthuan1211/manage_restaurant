@@ -74,8 +74,9 @@ const MenuProvider = ({children}:{children:React.ReactNode}) => {
     const deleteFood = useCallback(async (id:string) => {
         try {
             await MenuApi.deleteFood(id);
+            const updatedData = (getMenu.data?.data || []).filter((item) => item._id != id);
             getMenu.setData({
-                data: (getMenu.data?.data || []).filter((food: Food) => food._id !== id)
+                data: updatedData,
             });
             showSnackbarSuccess("Xóa thành công!");
         } catch (error) {

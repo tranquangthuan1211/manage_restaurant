@@ -4,7 +4,7 @@ import {Employee} from "src/types/employee";
 
 class EmployeeApi {
     async getEmployee():Promise<{data:Employee[]}> {
-        return await apiGet("/employees");
+        return await apiGet("/staffs");
     }
     async createEmployee(request:Partial<Employee>):Promise<{
         error: number;
@@ -12,7 +12,7 @@ class EmployeeApi {
         data: null;
     }> {
         try {
-            return await apiPost("/menus", request);
+            return await apiPost("/staffs", request);
         } catch (error) {
             // console.log(error)
             throw new Error(error.message);
