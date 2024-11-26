@@ -91,11 +91,6 @@ export const EmployeeTable = ({
                             fullWidth
                             ></NoLabelTextField>
                         </TableCell>
-                        <TableCell align="center">
-                            <NoLabelTextField
-                            fullWidth
-                            ></NoLabelTextField>
-                        </TableCell>
                     </TableRow>
                 }
             />

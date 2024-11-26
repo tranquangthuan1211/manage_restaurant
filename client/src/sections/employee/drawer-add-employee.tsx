@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { use, useState,useEffect } from "react";
 import { Box, Button, Drawer, Paper, Stack, styled, Tab, Tabs, TextField, TextFieldProps, Typography } from "@mui/material";
 import { Employee,initialEmployee } from "src/types/employee";
 import { useFormik } from "formik";
 import { ArrowBack } from "@mui/icons-material";
+import { useEmployee } from "src/contexts/employee/employee-context";
 const NoLabelTextField = styled(TextField)<TextFieldProps>(() => ({
     "& .MuiInputBase-input.MuiFilledInput-input": {
       paddingTop: "8px",
@@ -17,19 +18,20 @@ function EmployeeDrawerAdd ({
     onClose: () => void;
     employee?: Employee;
 }) {
+    const { createEmployee, updateEmployee } = useEmployee();
     const formik = useFormik({
-        initialValues: employee || initialEmployee,
+        initialValues: initialEmployee,
         onSubmit: async (values) => {
-            // try {
-            //     if (employee) {
-            //         await updateEmployee(values);
-            //     } else {
-            //         await createEmployee(values);
-            //     }
-            //     onClose();
-            // } catch (error) {
-            //     console.error(error);
-            // }
+            try {
+                if (employee) {
+                    await updateEmployee(values);
+                } else {
+                    await createEmployee(values);
+                }
+                onClose();
+            } catch (error) {
+                console.error(error);
+            }
         },
     });
     const tabs = [
@@ -37,6 +39,9 @@ function EmployeeDrawerAdd ({
         { label: "Sửa nhân viên", key: "Sửa nhân viên" },
     ];
     const [tab, setTab] = useState(tabs[0].key);
+    useEffect(() => {
+        formik.setValues(employee || initialEmployee);
+    }, [employee]);
     return (
         <Drawer
             anchor="right"

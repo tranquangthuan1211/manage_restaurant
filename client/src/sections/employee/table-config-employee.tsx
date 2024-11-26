@@ -8,8 +8,8 @@ export const getEmployeeConfig = (
         editEmployee,
         deleteEmployee,
     }: {
-        editEmployee?: (food:Employee) => void;
-        deleteEmployee?: (food:Employee) => void;
+        editEmployee: (employee:Employee) => void;
+        deleteEmployee?: (employee:Employee) => void;
     }
 ): CustomTableConfig<Employee["id"], Employee>[] => [
     {
@@ -62,7 +62,7 @@ export const getEmployeeConfig = (
             >
                 <IconButton 
                     color="success"
-                    // onClick={() => editEmployee(data)}
+                    onClick={() => editEmployee(data)}
                 >
                     <Edit />
                 </IconButton>

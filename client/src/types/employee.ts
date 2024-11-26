@@ -1,4 +1,5 @@
 export interface Employee {
+    _id: string;
     id: number;
     name: string;
     email: string;
@@ -10,6 +11,7 @@ export interface Employee {
     updatedAt: string;
 }
 export const initialEmployee: Employee = {
+    _id: "",
     id: 0,
     name: "",
     email: "",

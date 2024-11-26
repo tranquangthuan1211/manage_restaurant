@@ -3,11 +3,12 @@ import useFunction,{UseFunctionReturnType, DEFAULT_FUNCTION_RETURN} from "src/ho
 import { Employee,initialEmployee } from "src/types/employee";
 import EmployeeApi from "src/api/employee";
 import useAppSnackbar from "src/hooks/use-app-snackbar";
+import employee from "src/api/employee";
 
 interface ContextValue {
     getEmployee: UseFunctionReturnType<FormData,{data:Employee[]}>
-    createEmployee?: (request:Partial<Employee>) => Promise<void>;
-    updateEmployee?:(request:Partial<Employee>) => Promise<void>;
+    createEmployee: (request:Partial<Employee>) => Promise<void>;
+    updateEmployee:(request:Partial<Employee>) => Promise<void>;
     deleteEmployee?: (id:string) => Promise<void>;
 }
 
@@ -43,7 +44,28 @@ const EmployeeProvider = ({children}:{children:React.ReactNode}) => {
             showSnackbarError(error.message);
         }
         
-    },[getEmployee]);    
+    },[getEmployee]);
+    const updateEmployee = useCallback(async (request:Partial<Employee>) => {
+        try {
+            const response = await EmployeeApi.updateEmployee(request);
+            if (response) {
+               
+                getEmployee.setData({
+                        data: (getEmployee.data?.data || []).map((employee: Employee) => {
+                            if(employee._id === request._id) {
+                                return {...employee, ...request};
+                            }
+                            return employee;
+                        })                 
+                           
+                });
+                showSnackbarSuccess("Update employee success");
+            }
+        } catch (error: any) {
+            console.error(error);
+            showSnackbarError(error.message);
+        }
+    },[getEmployee]);
     useEffect(() => {
         getEmployee.call(new FormData());
     },[]);
@@ -52,7 +74,8 @@ const EmployeeProvider = ({children}:{children:React.ReactNode}) => {
             value={
                 {
                     getEmployee,
-                    createEmployee
+                    createEmployee,
+                    updateEmployee
                 }
             }
         >
