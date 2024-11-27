@@ -9,7 +9,7 @@ export const getEmployeeConfig = (
         deleteEmployee,
     }: {
         editEmployee: (employee:Employee) => void;
-        deleteEmployee?: (employee:Employee) => void;
+        deleteEmployee: (employee:Employee) => void;
     }
 ): CustomTableConfig<Employee["id"], Employee>[] => [
     {
@@ -69,7 +69,7 @@ export const getEmployeeConfig = (
                 <IconButton color="error">
                <Clear  
                   sx={{ height: "20px", width: "20px" }} 
-                //   onClick={() => deleteEmployee(data)}
+                  onClick={() => deleteEmployee(data)}
                />
             </IconButton>
             </Stack>

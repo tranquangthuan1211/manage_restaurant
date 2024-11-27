@@ -25,10 +25,11 @@ export const EmployeeTable = ({
 }) => {
 
     const editEmployee = useDrawer<Employee>();
-    const deleteEmployee = useDialog<Employee>();
+    const deleteEmployeeDialog = useDialog<Employee>();
+    const {deleteEmployee} = useEmployee();
     const configs = getEmployeeConfig({
         editEmployee: (employee: Employee) => editEmployee.handleOpen(employee),
-        deleteEmployee: (employee: Employee) => deleteEmployee.handleOpen(employee),
+        deleteEmployee: (employee: Employee) => deleteEmployeeDialog.handleOpen(employee),
     });
     const pagination = usePagination({ count: employees.length });
     return (
@@ -118,14 +119,17 @@ export const EmployeeTable = ({
                 employee={editEmployee.data}
             />
             <ConfirmDialog
-                open={deleteEmployee.open}
-                onCancel={deleteEmployee.handleClose}
+                open={deleteEmployeeDialog.open}
+                onCancel={deleteEmployeeDialog.handleClose}
                 title="Xác nhận xóa nhân viên"
                 content="Bạn có chắc chắn muốn xóa nhân viên này?"
-                onConfirm={() => {
-                    // deleteEmployee(deleteEmployee.data);
-                    deleteEmployee.handleClose();
+                onConfirm={async() => {
+                    if(deleteEmployeeDialog.data) {
+                        await deleteEmployee(deleteEmployeeDialog.data._id);
+                    }
+                    deleteEmployeeDialog.handleClose();
                 }}
+                color="error"
             />
         </>
     )

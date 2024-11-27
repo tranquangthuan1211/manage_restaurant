@@ -129,6 +129,18 @@ function EmployeeDrawerAdd ({
                                     onChange={formik.handleChange}
                                 />
                             </Stack>
+                            <Stack>
+                                <Typography fontSize={"12px"} fontWeight={500}>
+                                    Luơng
+                                </Typography>
+                                <NoLabelTextField
+                                    fullWidth
+                                    placeholder="Nhập lương..."
+                                    name="salary"
+                                    value={formik.values.salary}
+                                    onChange={formik.handleChange}
+                                />
+                            </Stack>
                         </Stack>
                         <Stack>
                             <Stack>

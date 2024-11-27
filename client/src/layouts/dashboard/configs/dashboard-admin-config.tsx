@@ -44,6 +44,13 @@ export const getDashboardAdminConfigs: DashboardSection[] = [
                 icon: <CalendarMonthIcon width = {20}/>
             },
             {
+                title:"Lịch làm việc",
+                path:Paths.dashboard["lich-lam-viec"],
+                icon: <DesignServicesIcon sx = {{
+                    width: 20,
+                }}/>
+            },
+            {
                 title:"Quản lý khiếu nại",
                 path: Paths.dashboard["quan-ly-khieu-nai"],
                 icon: <FlagIcon sx = {{

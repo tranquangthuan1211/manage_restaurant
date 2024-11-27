@@ -14,6 +14,7 @@ export const Paths = {
       "quan-ly-nhan-vien": "/dashboard/employee",
       "xuat-danh-sach":"dashboard/export",
       "lich-hen": "/dashboard/appointment",
+      "lich-lam-viec":"/dashboard/schedule",
       "quan-ly-khieu-nai":"/dashboard/khieu-nai",
       "settings":'/cai-dat'
     },

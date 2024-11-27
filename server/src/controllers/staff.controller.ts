@@ -44,7 +44,6 @@ class StaffController {
     async createStaff(req: Request, res: Response) {
         try {
             const newStaff = req.body ;
-            newStaff.schedule_id = "111111"
             newStaff.role = "staff";
             newStaff.password = await hashPassword("tranquanthuan@1211");
             const check = checkInputError<StaffDetails>({...req.body}, initialStaff);

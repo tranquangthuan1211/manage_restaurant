@@ -9,7 +9,7 @@ interface ContextValue {
     getEmployee: UseFunctionReturnType<FormData,{data:Employee[]}>
     createEmployee: (request:Partial<Employee>) => Promise<void>;
     updateEmployee:(request:Partial<Employee>) => Promise<void>;
-    deleteEmployee?: (id:string) => Promise<void>;
+    deleteEmployee: (id:string) => Promise<void>;
 }
 
 const EmployeeContext = createContext<ContextValue>({
@@ -66,6 +66,20 @@ const EmployeeProvider = ({children}:{children:React.ReactNode}) => {
             showSnackbarError(error.message);
         }
     },[getEmployee]);
+    const deleteEmployee = useCallback(async (id:string) => {
+        try {
+            const response = await EmployeeApi.deleteEmployee(id);
+            if (response) {
+                getEmployee.setData({
+                    data: (getEmployee.data?.data || []).filter((employee: Employee) => employee._id !== id),
+                });
+                showSnackbarSuccess("Delete employee success");
+            }
+        } catch (error: any) {
+            console.error(error);
+            showSnackbarError(error.message);
+        }
+    },[getEmployee]);
     useEffect(() => {
         getEmployee.call(new FormData());
     },[]);
@@ -75,7 +89,8 @@ const EmployeeProvider = ({children}:{children:React.ReactNode}) => {
                 {
                     getEmployee,
                     createEmployee,
-                    updateEmployee
+                    updateEmployee,
+                    deleteEmployee
                 }
             }
         >

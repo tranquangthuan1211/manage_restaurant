@@ -31,6 +31,7 @@ export async function handleGetStaff() {
                 _id: 1,
                 name: 1,
                 phone: 1,
+                email:1,
                 birthdate: 1,
                 gender:1,
                 address:1,

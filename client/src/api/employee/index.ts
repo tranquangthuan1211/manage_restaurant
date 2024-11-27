@@ -33,6 +33,21 @@ class EmployeeApi {
             };
         }
     }
+    async deleteEmployee(id:string):Promise<{
+        error: number;
+        message: string;
+        data: null;
+    }> {
+        try {
+            return await apiDelete(`/staffs/${id}`,{});
+        } catch (error) {
+            return {
+                error: 1,
+                message: error.message,
+                data: null
+            };
+        }
+    }
 }
 
 export default new EmployeeApi();
