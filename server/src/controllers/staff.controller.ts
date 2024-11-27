@@ -4,7 +4,10 @@ import { StaffDetails } from "../models/schemas/staff";
 import { handleGetStaff } from "../services/staff";
 import UsersDataBase  from "../models/user-model";
 import ScheduleDataBase from "../models/schedule-model";
-
+import { hashPassword } from "../securities/pass";
+import { checkInputError } from "../securities/check_input";
+import { initialUser, Users } from "../models/schemas/user";
+import {initialStaff} from "../models/schemas/staff";
 
 class StaffController {
     async getStaffs(req: Request, res: Response) {
@@ -41,7 +44,13 @@ class StaffController {
     async createStaff(req: Request, res: Response) {
         try {
             const newStaff = req.body ;
+            newStaff.schedule_id = "111111"
             newStaff.role = "staff";
+            newStaff.password = await hashPassword("tranquanthuan@1211");
+            const check = checkInputError<StaffDetails>({...req.body}, initialStaff);
+            if(check.errors.length > 0) {
+                throw new Error("Input is invalid");
+            }
             const result = await UsersDataBase.users.insertOne(newStaff);
             if(!result.acknowledged) {
                 throw new Error("Can not create staff");

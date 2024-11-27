@@ -4,20 +4,19 @@ export interface Users {
     phone:string;
     gender: string;
     birthdate: string;
-    schedule_id: string;
-    password: string;
+    schedule_id?: string;
     email: string;
     role: string;
+    password: string;
 }
 export const initialUser: Users = {
-    name: "",
-    address: "",
-    phone:"",
-    gender: "",
-    birthdate: "",
-    schedule_id: "",
-    password: "",
-    email: "",
-    role: ""
+    name: "string",
+    address: "string",
+    phone:"string",
+    gender: "string",
+    birthdate: "string",
+    email: "string",
+    role: "string",
+    password: "string"
 }
 
