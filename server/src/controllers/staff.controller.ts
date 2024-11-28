@@ -12,7 +12,7 @@ import {initialStaff} from "../models/schemas/staff";
 class StaffController {
     async getStaffs(req: Request, res: Response) {
         try {
-            const staffs = await handleGetStaff();
+            const staffs = await UsersDataBase.users.find({role: "staff"}).toArray();
             res.status(200).json({
                 error: 0,
                 message: "Get Staffs",

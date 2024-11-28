@@ -1,110 +1,228 @@
-import React from 'react';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Page as PageType } from "src/types/page";
+import React, { useState } from "react";
+import {Page as PageType} from "src/types/page"
+import {Layout} from "src/layouts/index"
+import ContentHeader from 'src/sections/dashboard/content-header';
+import CustomDatePicker from "src/components/custome-date-picker";
+import dayjs from "dayjs";
 import {
-  Grid,
-  Paper,
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import {
+  Box,
+  Typography,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-} from '@mui/material';
-import { Layout } from 'src/layouts';
-import ContentHeader from 'src/sections/dashboard/content-header';
+  Paper,
+  Button,
+} from "@mui/material";
 
-interface ScheduleData {
-  name: string;
-  shift: string;
-  mon: string;
-  tue: string;
-  wed: string;
-  thu: string;
-  fri: string;
-  sat: string;
+const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+const initialScheduleData = [
+  {
+    name: "Ahsoka Tano",
+    shifts: [
+      { id: "1", day: "Mon", time: "9am - 5pm", role: "Cashier" },
+      { id: "2", day: "Tue", time: "9am - 5pm", role: "Cashier" },
+      { id: "3", day: "Wed", time: "", role: "" },
+      { id: "4", day: "Thu", time: "9am - 5pm", role: "Cashier" },
+      { id: "5", day: "Fri", time: "9am - 5pm", role: "Cashier" },
+      { id: "6", day: "Sat", time: "", role: "" },
+    ],
+  },
+  {
+    name: "Arya Stark",
+    shifts: [
+      { id: "7", day: "Mon", time: "9am - 5pm", role: "Kitchen" },
+      { id: "8", day: "Tue", time: "9am - 5pm", role: "Kitchen" },
+      { id: "9", day: "Wed", time: "", role: "" },
+      { id: "10", day: "Thu", time: "9am - 5pm", role: "Kitchen" },
+      { id: "11", day: "Fri", time: "9am - 5pm", role: "Kitchen" },
+      { id: "12", day: "Sat", time: "", role: "" },
+    ],
+  },
+];
+
+interface Shift {
+  id: string;
+  day: string;
+  time: string;
+  role: string;
 }
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#4a47a3'
-    }
-  },
-  typography: {
-    fontFamily: 'Roboto, sans-serif',
-    fontSize: 14,
-    fontWeightRegular: 400,
-    fontWeightMedium: 500,
-    fontWeightBold: 700
-  }
-});
+const SortableItem = ({ shift }: { shift: Shift }) => {
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: shift.id });
 
-const Page: PageType = () => {
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  return (
+      <Box
+        ref={setNodeRef}
+        style={style}
+        {...attributes}
+        {...listeners}
+        sx={{
+          bgcolor: shift.time ? "#e0f7fa" : "#f4f4f4",
+          borderRadius: 1,
+          p: 1,
+          textAlign: "center",
+          cursor: "grab",
+          userSelect: "none",
+        }}
+      >
+        {shift.time ? (
+          <>
+            <Typography variant="body2">{shift.time}</Typography>
+            <Typography variant="caption" sx={{ color: "text.secondary" }}>
+              {shift.role}
+            </Typography>
+          </>
+        ) : (
+          "-"
+        )}
+      </Box>
+  );
+};
+
+const Page:PageType  = () => {
+  const [scheduleData, setScheduleData] = useState(initialScheduleData);
+  const [filterDate, setFilterDate] = useState(dayjs().startOf("week").add(1, "day"));
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 10,
+      },
+    })
+  );
+
+  const handleDragEnd = ({ active, over }: { active: any; over: any }) => {
+    if (!over || active.id === over.id) return;
+
+    setScheduleData((prev) =>
+      prev.map((person) => {
+        const activeIndex = person.shifts.findIndex((shift) => shift.id === active.id);
+        const overIndex = person.shifts.findIndex((shift) => shift.id === over.id);
+
+        if (activeIndex !== -1 && overIndex !== -1) {
+          return {
+            ...person,
+            shifts: arrayMove(person.shifts, activeIndex, overIndex),
+          };
+        }
+
+        return person;
+      })
+    );
+  };
 
   return (
     <>
-      <ContentHeader title="Schedule" />
-      <Grid container spacing={2} sx={{ p: 2 }}>
-        <Grid item xs={12}>
-        </Grid>
-        <Grid item xs={12}>
-        </Grid>
-        <Grid item xs={12}>
+      <ContentHeader
+        title="Schedule"
+        rightSection={
+          <Box
+              sx={{
+              display: "flex",
+              gap: 2,
+              alignItems: "center",
+              height: "40px",
+              padding: "0 16px",
+              }}
+          >
+          {
+            <>
+              <Button
+                variant="contained"
+                color="primary"
+              >
+                Lập lịch nhân viên
+              </Button>
+
+              <CustomDatePicker
+                filterDate={filterDate}
+                onChangeDate={setFilterDate}
+              />
+            </>
+          }
+          </Box>
+        }
+          
+      />
+      <Box
+        sx = {{
+          display: "flex",
+          justifyContent: "flex-end",
+          gap: 2,
+          padding: "16px"
+        }}
+      >
+        <Button
+          variant="contained"
+          color="primary"
+        >
+          Lưu lịch làm việc
+        </Button>
+      </Box>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+      >
+        <Box sx={{ p: 1 }}>
           <TableContainer component={Paper}>
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell variant="head" align="center">
-                    Mon 19
-                  </TableCell>
-                  <TableCell variant="head" align="center">
-                    Tue 20
-                  </TableCell>
-                  <TableCell variant="head" align="center">
-                    Wed 21
-                  </TableCell>
-                  <TableCell variant="head" align="center">
-                    Thu 22
-                  </TableCell>
-                  <TableCell variant="head" align="center">
-                    Fri 23
-                  </TableCell>
-                  <TableCell variant="head" align="center">
-                    Sat 24
-                  </TableCell>
+                  <TableCell>Name</TableCell>
+                  {daysOfWeek.map((day) => (
+                    <TableCell key={day}>{day}</TableCell>
+                  ))}
                 </TableRow>
               </TableHead>
-                <TableBody>
-                    {(() => {
-                        const rows = [];
-                        for (let i = 0; i < 8; i++) {
-                        const cells = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat'].map((day, dayIndex) => (
-                            <TableCell
-                            key={dayIndex}
-                            align="center"
-                            sx={{
-                                backgroundColor: 'transparent',
-                                color:  'inherit'
-                            }}
-                            >
-                                {/* {row[day as keyof ScheduleData]} */}
-                            </TableCell>
-                        ));
-
-                        rows.push(<TableRow key={i}>{cells}</TableRow>);
-                        }
-                        return rows;
-                    })()}
-                </TableBody>
+              <TableBody>
+                {scheduleData.map((row) => (
+                  <SortableContext
+                    key={row.name}
+                    items={row.shifts.map((shift) => shift.id)}
+                    strategy={verticalListSortingStrategy}
+                  >
+                    <TableRow>
+                      <TableCell>{row.name}</TableCell>
+                      {row.shifts.map((shift) => (
+                        <TableCell key={shift.id}>
+                          <SortableItem shift={shift} />
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  </SortableContext>
+                ))}
+              </TableBody>
             </Table>
           </TableContainer>
-        </Grid>
-      </Grid>
+        </Box>
+      </DndContext>
     </>
   );
 };
-
 Page.getLayout = (page) => <Layout>{page}</Layout>;
-
 export default Page;
