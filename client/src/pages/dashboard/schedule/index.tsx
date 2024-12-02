@@ -1,8 +1,12 @@
-import React, { useState } from "react";
+import React, { use, useEffect, useMemo, useState } from "react";
 import {Page as PageType} from "src/types/page"
 import {Layout} from "src/layouts/index"
 import ContentHeader from 'src/sections/dashboard/content-header';
 import CustomDatePicker from "src/components/custome-date-picker";
+import ScheduleSettingWorkDrawer from "src/sections/schedule/drawer-setting-work";
+import { useDrawer } from "src/hooks/use-drawer"
+import EmployeeProvider,{useEmployee} from "src/contexts/employee/employee-context";
+import {convertToSchedule,convertToEmployee} from "src/types/employee";
 import dayjs from "dayjs";
 import {
   DndContext,
@@ -30,6 +34,7 @@ import {
   Paper,
   Button,
 } from "@mui/material";
+import { Employee } from "src/types/employee";
 
 const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -73,7 +78,6 @@ const SortableItem = ({ shift }: { shift: Shift }) => {
     transform: CSS.Transform.toString(transform),
     transition,
   };
-
   return (
       <Box
         ref={setNodeRef}
@@ -104,9 +108,14 @@ const SortableItem = ({ shift }: { shift: Shift }) => {
 };
 
 const Page:PageType  = () => {
-  const [scheduleData, setScheduleData] = useState(initialScheduleData);
+  const {getEmployee} = useEmployee();
+  const employees = useMemo(() => getEmployee.data?.data || [], [getEmployee.data]);
+  const [scheduleData, setScheduleData] = useState(convertToEmployee(employees));
+  useEffect(() => {
+    setScheduleData(convertToEmployee(employees));
+  }, [employees]);
   const [filterDate, setFilterDate] = useState(dayjs().startOf("week").add(1, "day"));
-
+  const addSettingDrawer = useDrawer<Employee>();
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -114,7 +123,6 @@ const Page:PageType  = () => {
       },
     })
   );
-
   const handleDragEnd = ({ active, over }: { active: any; over: any }) => {
     if (!over || active.id === over.id) return;
 
@@ -134,7 +142,6 @@ const Page:PageType  = () => {
       })
     );
   };
-
   return (
     <>
       <ContentHeader
@@ -154,6 +161,7 @@ const Page:PageType  = () => {
               <Button
                 variant="contained"
                 color="primary"
+                onClick={() => addSettingDrawer.handleOpen()}
               >
                 Lập lịch nhân viên
               </Button>
@@ -221,8 +229,18 @@ const Page:PageType  = () => {
           </TableContainer>
         </Box>
       </DndContext>
+      <ScheduleSettingWorkDrawer
+        open = {addSettingDrawer.open}
+        onClose = {addSettingDrawer.handleClose}
+        employees={employees}
+      />
     </>
   );
 };
-Page.getLayout = (page) => <Layout>{page}</Layout>;
+Page.getLayout = (page) => 
+  <Layout>
+    <EmployeeProvider>
+      {page}  
+    </EmployeeProvider>
+  </Layout>;
 export default Page;

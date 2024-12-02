@@ -11,7 +11,7 @@ import {
   Tab,
   MenuItem,
 } from "@mui/material";
-import { Food, initialFood } from "src/types/food";
+import {Employee, initialEmployee,addSchedule} from "src/types/employee";
 import { Stack, styled } from "@mui/system";
 import React, { useCallback, useEffect, useState } from "react";
 import { useMenu } from "src/contexts/menu/menu-context";
@@ -19,97 +19,43 @@ import useFunction from "src/hooks/use-function";
 import { useFormik } from "formik";
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import dayjs, { Dayjs } from "dayjs";
-// Styled component for consistent TextField styling
+import { useEmployee } from "src/contexts/employee/employee-context";
 const NoLabelTextField = styled(TextField)<TextFieldProps>(() => ({
   "& .MuiInputBase-input.MuiFilledInput-input": {
     paddingTop: "8px",
   },
 }));
 
-// Tabs for single or multiple food addition
-const tabs = [
-  { label: "Thêm 1 món", key: "Thêm 1 món" },
-  { label: "Thêm nhiều món", key: "Thêm nhiều món" },
-];
-const isInCurrentMonth = (date: Dayjs) => date.get('month') === dayjs().get('month');
+const isInCurrentMonth = (date: Dayjs) => date.get('month') !== dayjs().get('month');
 function ScheduleSettingWorkDrawer({
   open,
-  onClose: onCloseParam,
-  food,
+  onClose,
+  employees,
 }: {
   open: boolean;
   onClose: () => void;
-  food?: Food;
+  employees: Employee[];
 }) {
-  const { updateFood, createFood } = useMenu();
-  const [preview, setPreview] = useState<string | null>(null);
-  const [file, setFile] = useState<File | null>(null); // State to store selected file
-  const [tab, setTab] = useState(tabs[0].key);
-
-  const onClose = () => {
-    onCloseParam();
-    setTab(tabs[0].key);
-  };
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = event.target.files?.[0];
-    if (selectedFile) {
-      setFile(selectedFile);
-      const reader = new FileReader();
-      reader.onload = () => setPreview(reader.result as string);
-      reader.readAsDataURL(selectedFile);
-      formik.setFieldValue("image", selectedFile); 
+  const {updateEmployee} = useEmployee();
+  const [date,setDate] = useState<string>(dayjs().toString());
+  const handleSubmit = useCallback(async () => {
+    if (employees) {
+      console.log(addSchedule(employees,date,formik.values._id));
+      await updateEmployee(addSchedule(employees,date,formik.values._id));
     }
-  };
-
-  const handleSubmit = useCallback(
-    async (values: Food) => {
-      if (values._id) {
-        await updateFood(values);
-      } else {
-        // Ensure `image` is updated from `file`
-        if (!values.image && file) {
-          values.image = file;
-        }
-        console.log(values)
-        await createFood(values);
-      }
-    },
-    [updateFood, createFood, file]
-  );
-
-  const handleSubmitHelper = useFunction(handleSubmit, {
-    successMessage: food ? "Cập nhật thành công!" : "Thêm thành công!",
+  }, [employees, date, updateEmployee]);
+  const handleSubmitHelper = useFunction(handleSubmit,{
+    successMessage: "Cập nhật thành công",
   });
-
-  const categories = [
-    { label: "Món chính", value: "Món chính" },
-    { label: "Món phụ", value: "Món phụ" },
-    { label: "Món tráng miệng", value: "Món tráng miệng" },
-    { label: "Món uống", value: "Món uống" },
-  ];
-
-  const formik = useFormik<Food>({
-    initialValues: food || initialFood,
+  const formik = useFormik<Employee>({
+    initialValues: initialEmployee,
     onSubmit: async (values) => {
-      const { error } = await handleSubmitHelper.call(values);
+      const {error} = await handleSubmitHelper.call(values);
       if (!error) {
-        formik.setValues(initialFood);
-        setFile(null); // Reset file
-        setPreview(null); // Reset preview
         onClose();
       }
     },
   });
-
-  useEffect(() => {
-    if (food) {
-      formik.setValues(food);
-      setPreview(food.image ? URL.createObjectURL(food.image as unknown as File) : null);
-    } else {
-      formik.setValues(initialFood);
-    }
-  }, [food]);
 
   return (
     <Drawer
@@ -130,7 +76,7 @@ function ScheduleSettingWorkDrawer({
                 </Typography>
               </Box>
               <Typography variant="h6">
-                {food ? "Sửa tài khoản" : "Thêm tài khoản mới"}
+                {employees ? "Sửa tài khoản" : "Thêm tài khoản mới"}
               </Typography>
             </Box>
 
@@ -139,28 +85,55 @@ function ScheduleSettingWorkDrawer({
                 Hủy bỏ
               </Button>
               <Button variant="contained" color="primary" type="submit">
-                {food ? "Cập nhật" : "Thêm"}
+                {employees ? "Cập nhật" : "Thêm"}
               </Button>
             </Box>
           </Box>
         </Paper>
-
-        <Stack spacing={"16px"} direction={"column"} px={"24px"}>
-          <Tabs
-            indicatorColor="primary"
-            textColor="primary"
-            value={tab}
-            onChange={(_, value) => setTab(value)}
-          >
-            {tabs.map((tabItem) => (
-              <Tab key={tabItem.key} label={tabItem.label} value={tabItem.key} />
-            ))}
-          </Tabs>
-          <DateTimePicker
-            defaultValue={dayjs()}
-            shouldDisableMonth={isInCurrentMonth}
-            views={['year', 'month', 'day', 'hours', 'minutes']}
-          />
+        <Stack
+          padding={"16px"}
+        >
+          <Stack spacing={"8px"} direction={"column"} width={1}>
+            <Typography fontSize={"12px"} fontWeight={500}>
+              Thời gian bắt đầu
+            </Typography>
+            <DateTimePicker
+              defaultValue={dayjs()}
+              onChange={(date) => setDate(date ? date.toString(): "")}
+              shouldDisableMonth={isInCurrentMonth}
+              views={['year', 'month', 'day', 'hours', 'minutes']}
+            />
+          </Stack>
+          <Stack spacing={"8px"} direction={"column"} width={1}>
+            <Typography fontSize={"12px"} fontWeight={500}>
+              Thời gian kết thúc
+            </Typography>
+            <DateTimePicker
+              defaultValue={dayjs()}
+              shouldDisableMonth={isInCurrentMonth}
+              views={['year', 'month', 'day', 'hours', 'minutes']}
+            />
+          </Stack>
+          <Stack spacing={"8px"} direction={"column"} width={1}>
+            <Typography fontSize={"12px"} fontWeight={500}>
+              Chọn nhân viên
+            </Typography>
+            <NoLabelTextField
+              fullWidth
+              select
+              variant="filled"
+              label="Chọn nhân viên"
+              value={formik.values._id}
+              onChange={formik.handleChange}
+              name="_id"
+            >
+              {employees.map((employee) => (
+                <MenuItem key={employee._id} value={employee._id}>
+                  {employee.name}
+                </MenuItem>
+              ))}
+            </NoLabelTextField>
+          </Stack>
         </Stack>
       </form>
     </Drawer>

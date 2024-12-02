@@ -66,6 +66,7 @@ class StaffController {
     async updateStaff(req: Request, res: Response) {
         try {
             const {id} = req.params;
+            console.log(req.body);
             const { _id, ...rest } = req.body;
             const result = await UsersDataBase.users.updateOne({_id: new ObjectId(id)}, {$set: rest});
             if(!result.acknowledged) {
