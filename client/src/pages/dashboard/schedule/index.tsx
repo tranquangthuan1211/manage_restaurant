@@ -6,7 +6,7 @@ import CustomDatePicker from "src/components/custome-date-picker";
 import ScheduleSettingWorkDrawer from "src/sections/schedule/drawer-setting-work";
 import { useDrawer } from "src/hooks/use-drawer"
 import EmployeeProvider,{useEmployee} from "src/contexts/employee/employee-context";
-import {convertToSchedule,convertToEmployee} from "src/types/employee";
+import {convertToSchedule,convertToEmployee,fileterEmployeeByDate} from "src/types/employee";
 import dayjs from "dayjs";
 import {
   DndContext,
@@ -37,31 +37,6 @@ import {
 import { Employee } from "src/types/employee";
 
 const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-const initialScheduleData = [
-  {
-    name: "Ahsoka Tano",
-    shifts: [
-      { id: "1", day: "Mon", time: "9am - 5pm", role: "Cashier" },
-      { id: "2", day: "Tue", time: "9am - 5pm", role: "Cashier" },
-      { id: "3", day: "Wed", time: "", role: "" },
-      { id: "4", day: "Thu", time: "9am - 5pm", role: "Cashier" },
-      { id: "5", day: "Fri", time: "9am - 5pm", role: "Cashier" },
-      { id: "6", day: "Sat", time: "", role: "" },
-    ],
-  },
-  {
-    name: "Arya Stark",
-    shifts: [
-      { id: "7", day: "Mon", time: "9am - 5pm", role: "Kitchen" },
-      { id: "8", day: "Tue", time: "9am - 5pm", role: "Kitchen" },
-      { id: "9", day: "Wed", time: "", role: "" },
-      { id: "10", day: "Thu", time: "9am - 5pm", role: "Kitchen" },
-      { id: "11", day: "Fri", time: "9am - 5pm", role: "Kitchen" },
-      { id: "12", day: "Sat", time: "", role: "" },
-    ],
-  },
-];
 
 interface Shift {
   id: string;
@@ -108,13 +83,13 @@ const SortableItem = ({ shift }: { shift: Shift }) => {
 };
 
 const Page:PageType  = () => {
+  const [filterDate, setFilterDate] = useState(dayjs().startOf("week").add(1, "day"));
   const {getEmployee} = useEmployee();
-  const employees = useMemo(() => getEmployee.data?.data || [], [getEmployee.data]);
+  const employees = useMemo(() => fileterEmployeeByDate(getEmployee.data?.data ?? [], filterDate.toISOString()) || [], [getEmployee.data,filterDate]);
   const [scheduleData, setScheduleData] = useState(convertToEmployee(employees));
   useEffect(() => {
     setScheduleData(convertToEmployee(employees));
   }, [employees]);
-  const [filterDate, setFilterDate] = useState(dayjs().startOf("week").add(1, "day"));
   const addSettingDrawer = useDrawer<Employee>();
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -123,6 +98,10 @@ const Page:PageType  = () => {
       },
     })
   );
+  useEffect(() => {
+    const text = fileterEmployeeByDate(getEmployee.data?.data ?? [], filterDate.toISOString());
+    console.log(text);
+  }, [filterDate, getEmployee.data]);
   const handleDragEnd = ({ active, over }: { active: any; over: any }) => {
     if (!over || active.id === over.id) return;
 

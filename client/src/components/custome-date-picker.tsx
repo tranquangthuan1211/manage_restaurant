@@ -26,8 +26,8 @@ const CustomDatePicker = (
     onChangeDate((prev) => prev.add(7, "day"));
   };
 
-  const startOfWeek = currentDate.startOf("week").add(1, "day"); // Bắt đầu từ thứ 2
-  const endOfWeek = startOfWeek.add(6, "day"); // Kết thúc vào Chủ nhật
+  const startOfWeek = currentDate.startOf("week").add(1, "day");
+  const endOfWeek = startOfWeek.add(6, "day"); 
 
   return (
     <Box

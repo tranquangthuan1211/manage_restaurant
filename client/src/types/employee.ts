@@ -67,3 +67,17 @@ export const addSchedule = (employees:Employee[], date:string,_id:string):Employ
     }
     return initialEmployee;
 }
+export const fileterEmployeeByDate = (employees: Employee[], date: string): Employee[] => {
+  const startDate = new Date(date); 
+  const endDate = new Date(startDate);
+  endDate.setDate(startDate.getDate() + 7); 
+
+  return employees.map((employee) => {
+      const filteredSchedule = employee.schedule.filter((scheduleStr) => {
+          const scheduleDate = new Date(scheduleStr); 
+          return scheduleDate >= startDate && scheduleDate <= endDate;
+      });
+
+      return { ...employee, schedule: filteredSchedule };
+  }).filter((employee) => employee.schedule.length > 0); // Loại bỏ những nhân viên không có lịch trình sau khi lọc
+};

@@ -15,7 +15,7 @@ export const Paths = {
       "xuat-danh-sach":"dashboard/export",
       "lich-hen": "/dashboard/appointment",
       "lich-lam-viec":"/dashboard/schedule",
-      "quan-ly-khieu-nai":"/dashboard/khieu-nai",
+      "quan-ly-khieu-nai":"/dashboard/complaint",
       "settings":'/cai-dat'
     },
     patient:{

@@ -10,6 +10,7 @@ import useRouteAppointment from './routes/appointment';
 import useRouteAssess from "./routes/assess"
 import useRouteStaff from "./routes/staff"
 import usePaymentRoute from "./routes/payment"
+import useRouteComplaint from "./routes/complaint"
 import swaggerJSDoc from 'swagger-jsdoc';
 import SwaggerOption from "./configs/swagger";
 import swaggerUi from 'swagger-ui-express';
@@ -44,7 +45,8 @@ const routesDef = [
   {path:"appointments", route: useRouteAppointment()},
   {path:"assess", route: useRouteAssess()},
   {path : "staffs", route: useRouteStaff()},
-  {path:"payments",route: usePaymentRoute()}
+  {path:"payments",route: usePaymentRoute()},
+  {path:"complaints", route: useRouteComplaint()}
 ]
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 routesDef.forEach(({path,route}) => {
