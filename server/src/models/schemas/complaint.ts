@@ -1,3 +1,5 @@
+
+
 export interface Complaint {
     title: string;
     description: string;
@@ -8,12 +10,22 @@ export interface Complaint {
     deletedAt: Date;
 }
 
-export interface DetailComplaint {
+export interface ComplaintDetails {
     title: string;
     description: string;
     status: string;
-    name_user: string;
+    user_name: string;
     createdAt: Date;
     updatedAt: Date;
     deletedAt: Date;
+}
+
+export const initialComplaint: Complaint = {
+    title: "",
+    description: "",
+    status: "",
+    user_id: "",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    deletedAt: new Date()
 }

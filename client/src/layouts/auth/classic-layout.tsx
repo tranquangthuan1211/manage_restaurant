@@ -17,42 +17,8 @@ export const Layout:FC<LayoutProps> = (props) => {
     const {children} = props;
     return (
         <LayoutRoot>
-            <Box
-                sx  = {{
-                    display: "flex",
-                    flex: "1 1 auto",
-                    height: "100%",
-                    justifyContent: "center",
-                    alignItems: "center",
-
-                    "&::before": {
-                        content: '""',
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        width: "100%",
-                        height: "140%",
-                        backgroundImage: "url(/background.jpg)",
-                        backgroundSize: "cover",
-                        backgroundRepeat: "no-repeat",
-                        zIndex: 0,
-                    }
-                }}
-            >
-                <Container
-                    maxWidth = "sm"
-                    sx = {{
-                        py :{
-                            xs: 3,
-                            sm: 8
-                        },
-                        px:"6px",
-                        zIndex: 1,
-                        width: "640px",
-                    }}
-                >
-                    {children}
-                </Container>
+            <Box>
+                {children}
             </Box>
         </LayoutRoot>
     );

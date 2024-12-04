@@ -100,6 +100,7 @@ class UserController {
       return res.status(200).json({
         error: 0,
         message: "Login successfully",
+        data:user,
         access_token: token,
         refresh_token: refreshToken
       });

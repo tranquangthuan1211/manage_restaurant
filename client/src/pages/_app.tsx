@@ -6,15 +6,32 @@ import {initialSettings} from 'src/contexts/settings-context';
 import {SnackbarProvider} from 'notistack';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { AuthConsumer, AuthProvider } from 'src/contexts/auth/jwt-context';
 function App({ Component, pageProps }: AppProps){
   const getLayout = Component.getLayout ?? ((page) => page);
-  const theme = createTheme(initialSettings);
   return (
     <SnackbarProvider>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <ThemeProvider theme={theme} >
-          {getLayout(<Component {...pageProps} />)}
-        </ThemeProvider>
+        <AuthProvider>
+          <AuthConsumer>
+                {(auth) => {
+                    // console.log(auth)
+                    const showScreen = auth.isInitialized;
+                    // console.log(auth)
+                    const theme = createTheme(initialSettings);
+                    if(!showScreen) {
+                      return <h1> loaaa</h1>
+                    }else {
+                      return (
+                        <ThemeProvider theme={theme} >
+                          {getLayout(<Component {...pageProps} />)}
+                        </ThemeProvider>
+                      )
+                    }
+                  }
+                }
+          </AuthConsumer>
+        </AuthProvider>
       </LocalizationProvider>
     </SnackbarProvider>
   )

@@ -15,11 +15,13 @@ export const Layout:FC<PageProps> = (props) => {
     // console.log(settings);
     return (
         <IssuerGuard issuer={Issuer.JWT}>
+            <AuthGuard>
                 <VerticalLayout 
                     navColor={settings.navColor}
                 >
                         {children}
                 </VerticalLayout>
+            </AuthGuard>
         </IssuerGuard>
     )
 }
