@@ -1,44 +1,84 @@
 import React from 'react';
+import RootLayout from '../../layouts/customer/layout';
 const menuItems = [
   {
     id: 1,
     name: 'Burger King',
     description: 'Lorem, ipsum, flavor, cheese, tomato',
     price: 5,
-    image: '/images/logo.png',
+    image: '/images/burger.png',
   },
   {
     id: 2,
     name: 'Spaghetti',
     description: 'Lorem, ipsum, flavor, tomato, pasta',
     price: 5,
-    image: '/images/logo.png',
+    image: '/images/spaghetti.png',
   },
   {
     id: 3,
     name: 'Greek Salad',
     description: 'Lorem, ipsum, flavor, cucumber, feta',
     price: 5,
-    image: '/images/logo.png',
+    image: '/images/greek-salad.png',
   },
   {
     id: 4,
     name: 'Pho Bo',
     description: 'Lorem, ipsum, flavor, beef, herbs',
     price: 5,
-    image: '/images/logo.png',
+    image: '/images/Pho bo.png',
   },
   {
     id: 5,
     name: 'Papaya Salad',
     description: 'Lorem, ipsum, flavor, papaya, peanuts',
     price: 5,
-    image: '/images/logo.png',
+    image: '/images/papaya.png',
   },
+  {
+    id: 6,
+    name: 'Com Tam',
+    description: 'Lorem, ipsum, flavor, papaya, peanuts',
+    price: 5,
+    image: '/images/com-tam.png',
+  },
+  {
+    id: 7,
+    name: 'Pancake',
+    description: 'Lorem, ipsum, flavor, coffee, cream',
+    price: 5,
+    image: '/images/pancake.png',
+  },
+  {
+    id:8,
+    name: 'Banh da lon',
+    description: 'Lorem, ipsum, flavor',
+    price: 5,
+    image: '/images/banhdalon.png',
+  },
+  {
+    id:9,
+    name: "Wine",
+    description: 'Lorem, ipsum, flavor',
+    price: 5,
+    image: '/images/wine.png',
+  },
+  {
+    id:10,
+    name:"Juice",
+    description: 'Lorem, ipsum, flavor',
+    price: 5,
+    image: '/images/juice.png',
+  }
+
 ];
+
+
 const MenuTabAll: React.FC = () => {
     return (
-                <div className="p-6">
+    <RootLayout>
+    <div className="p-6">
   {/* Header */}
   <div className="mb-6">
     <h2 className="text-2xl font-bold mb-2">Menu </h2>
@@ -47,7 +87,7 @@ const MenuTabAll: React.FC = () => {
     <div className="flex space-x-6 mt-4">
       {/* Link to the "All" tab */}
       <a href="/menu" className="text-yellow-600 font-bold flex items-center">
-        <img src="/images/Menu-all.png" className="w-6 h-6 mr-2" /> All
+        <img src="/images/All-icon.png" className="w-6 h-6 mr-2" /> All
       </a>
 
       {/* Link to the "Western" tab */}
@@ -94,7 +134,9 @@ const MenuTabAll: React.FC = () => {
           ))}
         </div>
       </div>
+      </RootLayout>
     );
+    
   };
   
   export default MenuTabAll;

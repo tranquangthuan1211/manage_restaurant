@@ -23,7 +23,7 @@ const menuItems = [
     image: '/images/papaya.png',
   },
 ];
-const MenuTabVietnam: React.FC = () => {
+const MenuTabDrinks: React.FC = () => {
     return (
     <RootLayout>
         <div className="p-6">
@@ -85,4 +85,4 @@ const MenuTabVietnam: React.FC = () => {
     );
   };
   
-  export default MenuTabVietnam;
+  export default MenuTabDrinks;
