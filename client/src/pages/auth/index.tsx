@@ -12,7 +12,6 @@ import { GuestGuard } from "src/guards/guest-guard";
 
 const Page: PageType = () => {
   const [showSignIn, setShowSignIn] = useState(true);
-
   const handleSignInClick = () => {
     setShowSignIn(true);
   };

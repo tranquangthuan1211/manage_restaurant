@@ -11,3 +11,7 @@ export interface User {
     num_complains: number;
     grant_role?: string[];
   }
+export type SignInRequest = {
+  email: string;
+  password: string;
+};

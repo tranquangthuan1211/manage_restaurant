@@ -128,7 +128,7 @@ export interface AuthContextType extends State {
     phone: string,
     password: string
   ) => Promise<void>;
-  signOut?: () => Promise<void>;
+  signOut: () => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextType>({
@@ -217,7 +217,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
   const signIn = useCallback(
     async (email: string, password: string): Promise<User> => {
       const accessToken = CookieHelper.getItem(CookieKeys.TOKEN);
-      const response = await UsersApi.signIn({ username: email, password });
+      const response = await UsersApi.signIn({ email: email, password });
 
       CookieHelper.setItem(CookieKeys.TOKEN, response.access_token);
 
@@ -259,11 +259,11 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
   //   []
   // );
 
-  // const signOut = useCallback(async (): Promise<void> => {
-  //   CookieHelper.removeItem(CookieKeys.TOKEN);
-  //   dispatch({ type: ActionType.SIGN_OUT });
-  //   router.push(paths.login);
-  // }, [router]);
+  const signOut = useCallback(async (): Promise<void> => {
+    CookieHelper.removeItem(CookieKeys.TOKEN);
+    dispatch({ type: ActionType.SIGN_OUT });
+    router.push(Paths.auth["login"]);
+  }, [router]);
 
   return (
     <AuthContext.Provider
@@ -273,7 +273,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
         updateUser,
         signIn,
         // signUp,
-        // signOut,
+        signOut,
       }}
     >
       {children}

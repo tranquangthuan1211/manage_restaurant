@@ -78,8 +78,9 @@ class UserController {
   }
   async login(req: Request, res: Response) {
     try {
+      console.log(req.body)
       const {email, password} = req.body;
-      const user = await UsersDataBase.users.findOne({email: email});
+      const user = await UsersDataBase.users.findOne({email: "hamacon@gmail.com"});
       if(!user) {
         return res.status(400).json({
           error: 1,

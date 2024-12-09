@@ -1,23 +1,17 @@
 import { apiGet,apiPost,apiDelete,apiPatch,apiPut } from "../api-requests";
-import { User } from "src/types/user";
+import { SignInRequest, User } from "src/types/user";
 class UserApi {
     async me():Promise<{data:User}> {
-        return await apiGet("/users/");
+        return await apiGet("/users");
     }
-    async signIn({
-        username,
-        password
-    }:{
-        username:string;
-        password:string;
-    }):Promise<{
+    async signIn(request: SignInRequest):Promise<{
         error: number;
         message: string;
         access_token:string;
         refresh_token:string;
         data:User;
     }> {
-        return await apiPost("/users/signin",{});
+        return await apiPost("/users/login",request);
     }
     async getUsers():Promise<{data:User[]}> {
         return await apiGet("/users");
