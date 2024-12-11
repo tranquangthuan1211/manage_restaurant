@@ -16,6 +16,7 @@ import SwaggerOption from "./configs/swagger";
 import swaggerUi from 'swagger-ui-express';
 import morgan from "morgan";
 import cors from 'cors';
+import rabbitMQ from "./configs/rabbit-mq";
 import { rateLimit } from 'express-rate-limit'
 const app = express();
 const port = process.env.PORT || 3001;
@@ -65,7 +66,12 @@ app.use((error: any, req: Request, res: Response, next: NextFunction) => {
       },
   });
 });
-
-app.listen(port, () => {
-  console.log(`Server started at http://localhost:${port}`);
-});
+rabbitMQ.connect()
+    .then(() => {
+        app.listen(3000, () => {
+            console.log('Producer API running on http://localhost:3000');
+        });
+    })
+    .catch((error) => {
+        console.error('Failed to start the server:', error);
+    });

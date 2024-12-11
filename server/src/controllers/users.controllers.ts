@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { Request, Response } from "express";
 import Database from "../configs/db";
 import UsersDataBase from "../models/user-model";
@@ -7,17 +8,19 @@ import { ObjectId } from "mongodb";
 import {Users,initialUser} from "../models/schemas/user"
 import { access } from "fs";
 import { checkInputError } from "../securities/check_input";
+import rabbitMQ from "../configs/rabbit-mq";
+import generateSixDigitCode from "../securities/random";
 class UserController {
 
   async getUser(req: Request, res: Response) {
     try {
-        const headerRequest = req.headers.authorization;
-        const payload = await verifyToken({ tokens:headerRequest as string});
-        const user = await UsersDataBase.users.findOne({ _id: new ObjectId(payload._id)});
-        if(!user) {
+        if(!req.body.user) {
           throw new Error("User not found");
         }
+        const user = req.body.user;
         return res.status(200).json({
+          error: 0,
+          message: "Get user successfully",
           data:user
         })
         
@@ -28,6 +31,31 @@ class UserController {
         message: error?.message,
         data: null,
       });
+    }
+  }
+  async createCodeNumber(req: Request, res: Response) {
+    try {
+      const email = req.body.email;
+      console.log(email)
+      const message = {
+        to: email,
+        subject: "Mã xác nhận",
+        body: generateSixDigitCode()
+      }
+      const channel = await rabbitMQ.getChannel();
+      channel.publish("emailExchange", "email.send", Buffer.from(JSON.stringify(message)));
+      console.log('Message sent:', message);
+      return res.status(200).json({
+        error: 0,
+        message: "Send code successfully",
+        data: req.body,
+      })
+    }catch (error:any) {
+      return res.status(400).json({
+        error: 1,
+        message: error?.message,
+        data: null,
+      })
     }
   }
   async createUser(req: Request, res: Response) {
@@ -44,15 +72,12 @@ class UserController {
       }
       // console.log(check)
       const newUser = req.body as Users;
+      if(!newUser.role){
+        newUser.role = "user";
+      }
       const user = await UsersDataBase.users.findOne({email: newUser.email});
       if(user) {
-        return (
-          res.status(400).json({
-            error: 0,
-            message: "User alreadly exits",
-            data: null,
-          })
-        )
+        throw new Error("Email is already exist");
       }
       newUser.password = await hashPassword(newUser.password as string);
       const {password, ...dataUser} = newUser; 
@@ -114,6 +139,31 @@ class UserController {
       });
     }
   }
+  async updateUser(req: Request, res: Response) {
+    try {
+      const id = req.params.id;
+      const {_id,...rest} = req.body ;
+      const user = await UsersDataBase.users.findOne({_id: new ObjectId(id)});
+      if(!user) {
+        throw new Error("User not found");
+      }
+      const result = await UsersDataBase.users.updateOne({_id: new ObjectId(id)}, {$set: rest});
+      if(!result.acknowledged) {
+        throw new Error("Can not update user");
+      }
+      return res.status(200).json({
+        error: 0,
+        message: "Update user successfully",
+        data: null,
+      });
+    }catch (error:any) {
+      return res.status(400).json({
+        error: 1,
+        message: error?.message,
+        data: null,
+      });
+    }
+  }
   async deleteUser(req: Request, res: Response) {
     const id = req.params.id;
     const result = await UsersDataBase.users.deleteOne({_id: new ObjectId(id)});
@@ -129,6 +179,30 @@ class UserController {
       message: "Delete user successfully",
       data: null,
     });
+  }
+  async changePassword(req: Request, res: Response) {
+    try {
+      const {old_password, new_password} = req.body;
+      const user = req.body.user;
+      if(!await comparePassword(old_password, user.password as string)) {
+        throw new Error("Old password is incorrect");
+      }
+      const result = await UsersDataBase.users.updateOne({_id: user._id}, {$set: {password: await hashPassword(new_password)}});
+      if(!result.acknowledged) {
+        throw new Error("Can not change password");
+      }
+      return res.status(200).json({
+        error: 0,
+        message: "Change password successfully",
+        data: null,
+      });
+    } catch (error:any) {
+      return res.status(400).json({
+        error: 1,
+        message: error?.message,
+        data: null,
+      });
+    }
   }
 }
 export default new UserController();

@@ -81,6 +81,26 @@ class StaffController {
             res.status(500).json({ error: error.message });
         }
     }
+    async updateStaffById(req: Request, res: Response) {
+        try {
+            const id = req.query.id
+            if(!id){
+                throw new Error("Id is required");
+            }
+            const { _id, ...rest } = req.body;
+            const result = await UsersDataBase.users.updateOne({_id: new ObjectId(id as string)}, {$set: rest});
+            if(!result.acknowledged) {
+                throw new Error("Can not update food");
+            }
+            return res.status(200).json({
+                error: 0,
+                message: "Food updated successfully",
+                data: null,
+            });
+        } catch (error: any) {
+            res.status(500).json({ error: error.message });
+        }
+    }
     async deleteStaff(req: Request, res: Response) {
         try {
             const {id} = req.params;

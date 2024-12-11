@@ -6,10 +6,12 @@ const router = express.Router();
 const useRouteUser = () => {
     router.post('/login', UserController.login);
     router.post('/register', UserController.createUser);
+    router.post('/check-email', UserController.createCodeNumber);
     router.use(authMiddleware);
     router.get('/', UserController.getUser);
+    router.patch('/:id', UserController.updateUser);
+    router.patch("/change-password",UserController.changePassword);
     router.delete('/:id', UserController.deleteUser);
-    // router.use(adminMiddleware);
     return router;
 }
 

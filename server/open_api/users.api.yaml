@@ -20,6 +20,8 @@ paths:
                 - name
                 - address
                 - phone
+                - gender
+                - birthdate
                 - email
                 - password
                 - role
@@ -33,6 +35,12 @@ paths:
                 phone:
                   type: string
                   example: 0905123455
+                gender:
+                  type: string
+                  example: male
+                birthdate:
+                  type: string
+                  example: "1999-10-16"
                 email:
                   type: string
                   example: tranquanthuan132@gmail.com
@@ -93,7 +101,7 @@ paths:
                     type: string
                     example: "Internal server error"
                   data: null
-
+  
   /users/login:
     post:
       summary: User Login
@@ -131,15 +139,13 @@ paths:
                   message:
                     type: string
                     example: "User logged in successfully"
+                  token:
+                    type: string
+                    example: "eyJhbGciOi...."
                   data:
                     type: object
-                    properties:
-                      access_token:
-                        type: string
-                        example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-                      refresh_token:
-                        type: string
-                        example: "eyJhbGciOi..."
+                    properties: "#/components/schemas/User"
+                      
         '401':
           description: Invalid credentials
           content:
@@ -169,16 +175,16 @@ paths:
                     example: "Internal server error"
                   data: null
 
-  /users:
+  /users/info:
     get:
-      summary: Get of users
-      description: Get users
-      operationId: getUsers
+      summary: Get user information
+      description: Get user information
+      operationId: getUserInfor
       tags:
         - users
       responses:
         '200':
-          description: List of users
+          description: User information
           content:
             application/json:
               schema:
@@ -189,36 +195,9 @@ paths:
                     example: 200
                   message:
                     type: string
-                    example: "Users retrieved successfully"
+                    example: "User information retrieved successfully"
                   data:
-                    type: object
-                    properties:
-                      name:
-                        type: string
-                        example: "Thuan"
-                      address:
-                        type: string
-                        example: "123 Main St, HCM City"
-                      phone:
-                        type: string
-                        example: "0905123455"
-                      email:
-                        type: string
-                        example: "johndoe@example.com"
-                      password:
-                        type: string
-                        example: "securepassword"
-                      role:
-                        type: string
-                        example: "user"
-                      created_at:
-                        type: string
-                        format: date-time
-                        example: "2024-01-01T12:00:00Z"
-                      updated_at:
-                        type: string
-                        format: date-time
-                        example: "2024-01-10T12:00:00Z"
+                    $ref: '#/components/schemas/User'
         '500':
           description: Server error
           content:
@@ -233,6 +212,216 @@ paths:
                     type: string
                     example: "Internal server error"
                   data: null
+
+  /users/{id}:
+    put:
+      summary: Update user by ID
+      description: Update the details of a specific user
+      operationId: updateUserById
+      tags:
+        - users
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the user to update
+          schema:
+            type: string
+            example: "614b1b7754d1f90012345678"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Thuan Updated
+                address:
+                  type: string
+                  example: 456 Main St
+                phone:
+                  type: string
+                  example: 0905123456
+                email:
+                  type: string
+                  example: updatedemail@gmail.com
+                gender:
+                  type: string
+                  example: male
+                birthdate:
+                  type: string
+                  example: "1999-10-16"
+      responses:
+        '200':
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: "User updated successfully"
+                  data:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        example: Thuan Updated
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "User not found"
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Internal server error"
+                  data: null
+
+    delete:
+      summary: Delete user by ID
+      description: Delete a user by their ID
+      operationId: deleteUserById
+      tags:
+        - users
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the user to delete
+          schema:
+            type: string
+            example: "614b1b7754d1f90012345678"
+      responses:
+        '200':
+          description: User deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: "User deleted successfully"
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "User not found"
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Internal server error"
+                  data: null
+  
+  /users/change-password:
+    patch:
+      summary: Change user password
+      description: Change user password
+      operationId: changePassword
+      tags:
+        - users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - oldPassword
+                - newPassword
+              properties:
+                oldPassword:
+                  type: string
+                  example: securepassword
+                newPassword:
+                  type: string
+                  example: newsecurepassword
+      responses:
+        '200':
+          description: Password changed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: "Password changed successfully"
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Invalid password"
+                  data: null
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Internal server error"
+                  data: null  
 components:
   schemas:
     User:
@@ -250,7 +439,13 @@ components:
         phone:
           type: string
           example: 0905123455
-        emaile:
+        gender:
+          type: string
+          example: male
+        birthdate:
+          type: string
+          example: "1999-10-16"
+        email:
           type: string
           example: "tranquanthuan132@gmail.com"
         role:

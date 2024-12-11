@@ -18,11 +18,7 @@ export const authMiddleware = async(req:Request, res:Response, next: NextFunctio
         const email = tokenData.email;
         const user = await Database.users.findOne({ email: email});
         if(!user){
-            return res.status(404).json({
-                error: 1,
-                message: 'User not found',
-                data: null
-            });
+            throw new Error("User not found");
         }
         req.body.user = user;
         next();

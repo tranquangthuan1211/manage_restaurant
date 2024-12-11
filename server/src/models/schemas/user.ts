@@ -6,8 +6,8 @@ export interface Users {
     birthdate: string;
     schedule_id?: string;
     email: string;
-    role: string;
     password: string;
+    role: string;
 }
 export const initialUser: Users = {
     name: "string",

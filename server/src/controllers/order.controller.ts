@@ -3,6 +3,7 @@ import OrderDataBase from '../models/order-model'
 import { Order, OrderDetail } from '../models/schemas/order'
 import { ObjectId } from 'mongodb'
 import {getOrderDetails,getOderUser} from "../services/order"
+import { error } from 'console'
 class OrderController {
     async getOrders(req: Request, res: Response) {
         try {
@@ -48,7 +49,25 @@ class OrderController {
             res.status(500).json({ message: error.message })
         }
     }
-
+    async finishingOrder(req:Request,res:Response){
+        try {
+            const id = req.query.id;
+            if(!id) {
+                throw new Error("order id is required")
+            }
+            const result = await OrderDataBase.orders.updateOne({ _id: new ObjectId(id as string)}, {$set: {status: "finish"}})
+            return res.status(200).json({
+                error:0,
+                message: "finishing order",
+            })
+        }catch(err:any){
+            return res.status(500).json({
+                error:1,
+                message: err.message
+            })
+        }
+        
+    }
     async deleteOrder(req: Request, res: Response) {
         try {
             await OrderDataBase.orders.deleteOne({ _id: new ObjectId(req.params.id) })

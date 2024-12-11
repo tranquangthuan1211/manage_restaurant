@@ -20,11 +20,7 @@ export const managerMiddleware = async(req:Request, res:Response, next: NextFunc
             });
         }
         if(user.role !== 'admin' && user.role !== 'manager'){
-            return res.status(403).json({
-                error: 1,
-                message: 'Permission denied',
-                data: null
-            });
+            throw new Error("You are not authorized to access this route");
         }
         next();
     } catch (error) {
