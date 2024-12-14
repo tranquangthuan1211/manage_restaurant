@@ -1,8 +1,15 @@
 import React from 'react';
 import RootLayout from '../../layouts/customer/layout';
 import CustomerSideBar from './sidebar';
+import { useUser } from 'src/contexts/users/user-context';
 
 const CustomerBookingHistory = () => {
+    const user = useUser();
+
+    if (!user) {
+        return <div>Loading...</div>;
+    }
+
     return (
         <RootLayout>
             <div>

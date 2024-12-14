@@ -33,7 +33,6 @@ const Customer = () => {
         </div>
     </RootLayout>
     )
-
 }
 
 export default Customer;

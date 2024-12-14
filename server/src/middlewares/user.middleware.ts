@@ -19,7 +19,8 @@ export const userMiddleware = async(req:Request, res:Response, next: NextFunctio
                 data: null
             });
         }
-        if(user.role !== 'customer'){
+        console.log(`User role: ${user.role}`);
+        if(user.role !== 'customer' && user.role !== 'user'){ // Should be only user.role !== 'user'? since the model only have 'user' 'admin' & 'staff'
             return res.status(403).json({
                 error: 1,
                 message: 'Permission denied',
