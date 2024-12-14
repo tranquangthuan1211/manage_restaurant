@@ -1,6 +1,9 @@
 import { Box, Button, Stack, TextField, Typography } from "@mui/material"
+import {useState, useEffect} from 'react';
+import {apiPost} from 'src/api/api-requests';
 
 export const ConfirmPassword = () => {
+
     return (
         <Box>
             <Stack
@@ -84,7 +87,7 @@ export const ConfirmPassword = () => {
                         <TextField
                             label="Confirm password"
                             variant="filled"
-                            type="Address"
+                            type="password"
                             fullWidth
                             sx={{
                                 mb: 2,
@@ -107,6 +110,7 @@ export const ConfirmPassword = () => {
                             backgroundColor: '#FFC107',
                         },
                         }}
+                        onClick={() => console.log("Next")}
                     >
                     Next
             </Button>

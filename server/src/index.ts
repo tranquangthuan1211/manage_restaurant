@@ -26,7 +26,7 @@ app.use(express.urlencoded({ extended: true }));
 Database.connect();
 const limiter = rateLimit({
 	windowMs: 2 * 60 * 1000,
-	limit: 3, 
+	limit: 1000, 
   message: "Too many requests from this IP, please try again after an hour",
 })
 app.use("/api/", limiter);

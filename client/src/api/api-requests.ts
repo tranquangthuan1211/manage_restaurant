@@ -44,6 +44,7 @@ const apiFetch = async (
   try {
     const response = await fetch(input, init);
     const result = await response.json();
+    console.log("apiFetch", result);
     if (!response.ok) {
       const message = `Lỗi: ${result.message || response.status}`;
       throw new Error(message);
