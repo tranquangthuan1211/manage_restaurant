@@ -1,5 +1,6 @@
 import React from 'react';
 import RootLayout from '../../layouts/customer/layout';
+
 const menuItems = [
   {
     id: 1,

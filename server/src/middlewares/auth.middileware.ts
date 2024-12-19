@@ -9,8 +9,16 @@ import { Users } from "../models/schemas/user";
 
 export const authMiddleware = async(req:Request, res:Response, next: NextFunction) => {
     const token = req.headers["authorization"];
+    console.log(req.headers);
+    console.log(req.method);
+    console.log(req.baseUrl + req.url);
     if (!token) {
-        throw new Error("Token is required");
+        return res.status(401).json({ 
+            error: 1,
+            message: 'Unauthorized',
+            data: null
+        });
+        //throw new Error("Token is required");
     }
     try {
 
