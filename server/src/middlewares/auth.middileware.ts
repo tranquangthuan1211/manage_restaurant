@@ -9,7 +9,6 @@ import { Users } from "../models/schemas/user";
 
 export const authMiddleware = async(req:Request, res:Response, next: NextFunction) => {
     const token = req.headers["authorization"];
-    console.log("Trying to authenticate user before making API call: " + req.url);
     if (!token) {
         throw new Error("Token is required");
     }
