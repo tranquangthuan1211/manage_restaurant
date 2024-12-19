@@ -29,7 +29,6 @@ export const AuthLogin = () => {
             }
             if (response.error === 0) {
                 console.log("Login successful:", response.message);
-                console.log("User data:", response.data);
                 CookieHelper.setItem('token', response.access_token);
                 return; 
             }
