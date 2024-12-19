@@ -6,37 +6,116 @@ import { apiGet } from 'src/api/api-requests';
 import { User } from 'src/types/user';
 import { useUser } from 'src/contexts/users/user-context';
 
-
 const CustomerPersonalInfo = () => {
     const user = useUser();
+    const [isEditing, setIsEditing] = useState(false);
+    const [formData, setFormData] = useState({
+        username: user ? user.username : '',
+        phone: user ? user.phone : '',
+        address: user ? user.address : '',
+    });
+
+    useEffect(() => {
+        if (user) {
+            setFormData({
+                username: user.username,
+                phone: user.phone,
+                address: user.address,
+            });
+        }
+    }, [user]);
+
     if (!user) {
         return <div>Loading...</div>;
     }
 
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
+    };
+
+    const handleEditToggle = () => {
+        setIsEditing(!isEditing);
+    };
+
+    const handleSave = () => {
+        console.log('Saving data:', formData);
+        // Placeholder for API call
+        alert('Changes saved!');
+        setIsEditing(false);
+    };
+
     return (
         <RootLayout>
             <div>
-                <CustomerSideBar>
+                <CustomerSideBar user={user}>
                     {/* Personal Information */}
                     <div className="bg-slate-300 shadow-lg p-8 grid grid-cols-2 gap-4 animate-fadeIn border border-solid">
+                        <div className="flex justify-between items-center col-span-2">
+                            <h2 className="text-xl font-bold">Personal Information</h2>
+                            <div>
+                                {!isEditing ? (
+                                    <button
+                                        className="button-outline-primary"
+                                        onClick={handleEditToggle}
+                                    >
+                                        Edit
+                                    </button>
+                                ) : (
+                                    <button
+                                        className="button-outline-primary"
+                                        onClick={handleSave}
+                                    >
+                                        Save
+                                    </button>
+                                )}
+                            </div>
+                        </div>
                         {/* First Name, Last Name, Phone number, Email & Address */}
                         <div>
                             <span>Your Name</span>
-                            <input type="text" className="input-field" placeholder="Your Name" defaultValue={user.username} />
+                            <input
+                                type="text"
+                                name="username"
+                                className="input-field"
+                                placeholder="Your Name"
+                                value={formData.username}
+                                onChange={handleInputChange}
+                                disabled={!isEditing}
+                            />
                         </div>
                         <div>
                             <span>Phone Number</span>
-                            <input type="text" className="input-field" placeholder="Your Phone Number" defaultValue={user.phone} />
+                            <input
+                                type="text"
+                                name="phone"
+                                className="input-field"
+                                placeholder="Your Phone Number"
+                                value={formData.phone}
+                                onChange={handleInputChange}
+                                disabled={!isEditing}
+                            />
                         </div>
                         <div>
                             <span>Address</span>
-                            <input type="text" className="w-full bg-gray-200 p-2 rounded-md mb-4" placeholder="Your Address" defaultValue={user.address} />
+                            <input
+                                type="text"
+                                name="address"
+                                className="w-full bg-gray-200 p-2 rounded-md mb-4"
+                                placeholder="Your Address"
+                                value={formData.address}
+                                onChange={handleInputChange}
+                                disabled={!isEditing}
+                            />
                         </div>
                     </div>
                 </CustomerSideBar>
             </div>
         </RootLayout>
-    )
-}
+    );
+};
 
 export default CustomerPersonalInfo;

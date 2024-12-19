@@ -2,30 +2,101 @@ import React from 'react';
 import RootLayout from '../../layouts/customer/layout';
 import CustomerSideBar from './sidebar';
 import { useUser } from 'src/contexts/users/user-context';
+import { useState } from 'react';
 
 const CustomerSecurity = () => {
     const user = useUser();
+    const [isEditing, setIsEditing] = useState(false);
+    const [formData, setFormData] = useState({
+        username: user ? user.username : '',
+        email: user ? user.email : '',
+    });
+
+    React.useEffect(() => {
+        if (user) {
+            setFormData({
+                username: user.username,
+                email: user.email,
+            });
+        }
+    }, [user]);
 
     if (!user) {
         return <div>Loading...</div>;
     }
 
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
+    };
+
+    const handleEditToggle = () => {
+        setIsEditing(!isEditing);
+    };
+
+    const handleSave = () => {
+        console.log('Saving data:', formData);
+        // Placeholder for API call
+        alert('Changes saved!');
+        setIsEditing(false);
+    };
+
     return (
         <RootLayout>
             <div>
-                <CustomerSideBar>
-                    {/* Personal Information */}
+                <CustomerSideBar user={user}>
                     <div className="bg-slate-300 p-8 shadow-lg grid gap-4 animate-fadeIn">
-                        {/* Username & Email */}
-                        <div>
-                            <span>Username</span>
-                            <input type="text" className="input-field" placeholder="Your username" defaultValue={user.username} />
+                        <div className="flex justify-between items-center">
+                            <h2 className="text-xl font-bold">Account Security</h2>
+                            <div>
+                                {!isEditing ? (
+                                    <button
+                                        className="button-outline-primary"
+                                        onClick={handleEditToggle}
+                                    >
+                                        Edit
+                                    </button>
+                                ) : (
+                                    <button
+                                        className="button-outline-primary"
+                                        onClick={handleSave}
+                                    >
+                                        Save
+                                    </button>
+                                )}
+                            </div>
                         </div>
                         <div>
-                            <span>Email</span>
-                            <input type="email" className="input-field" placeholder="Your Email" defaultValue={user.email} />
+                            <label>Username</label>
+                            <input
+                                type="text"
+                                name="username"
+                                className="input-field"
+                                placeholder="Your username"
+                                value={formData.username}
+                                onChange={handleInputChange}
+                                disabled={!isEditing}
+                            />
                         </div>
-                        <button className='button-outline-light'>
+                        <div>
+                            <label>Email</label>
+                            <input
+                                type="email"
+                                name="email"
+                                className="input-field"
+                                placeholder="Your email"
+                                value={formData.email}
+                                onChange={handleInputChange}
+                                disabled={!isEditing}
+                            />
+                        </div>
+                        <button
+                            className="button-outline-light"
+                            disabled={!isEditing}
+                        >
                             Reset password
                         </button>
                     </div>
@@ -33,6 +104,6 @@ const CustomerSecurity = () => {
             </div>
         </RootLayout>
     );
-}
+};
 
 export default CustomerSecurity;

@@ -14,13 +14,17 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     const fetchUser = async () => {
       try {
         const response = await apiGet("/users");
+        if (response.error === 1) {
+          setUser(null);
+          return;
+        };
         const data: User = response.data;
         setUser(data);
       }
       catch (error) {
         setUser(null);
         // It is usual for some guest pages, don't print error 
-        //console.error("Error fetching user data. User couldn't be authenticated", error);
+        // console.error("Error fetching user data. User couldn't be authenticated", error);
       }
     };
     fetchUser();

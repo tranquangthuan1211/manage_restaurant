@@ -5,232 +5,74 @@ import { useUser } from 'src/contexts/users/user-context';
 
 const CustomerBookingHistory = () => {
     const user = useUser();
+    const bookingData = [
+        { date: '2021-09-01', time: '12:00', preOrder: ['1 x Beef Steak', '1 x Chicken Salad'], review: 'No' },
+        { date: '2021-09-05', time: '18:30', preOrder: ['2 x Spaghetti Carbonara', '1 x Caesar Salad', '2 x Pizza'], review: 'Yes' },
+        { date: '2021-09-10', time: '20:00', preOrder: ['1 x Margherita Pizza', '2 x Garlic Bread', '1 x Tiramisu'], review: 'No' },
+        { date: '2021-09-15', time: '19:00', preOrder: ['1 x Grilled Salmon', '1 x Greek Salad'], review: 'Yes' },
+        { date: '2021-09-20', time: '13:00', preOrder: ['1 x BBQ Ribs', '1 x Coleslaw'], review: 'No' },
+        { date: '2021-09-25', time: '17:00', preOrder: ['1 x Lobster Bisque', '1 x House Salad'], review: 'Yes' },
+        { date: '2021-10-01', time: '14:00', preOrder: ['1 x Sushi Platter'], review: 'No' },
+        { date: '2021-10-05', time: '19:30', preOrder: ['2 x Pad Thai', '1 x Spring Rolls'], review: 'Yes' },
+        { date: '2021-10-10', time: '12:30', preOrder: ['1 x Cheeseburger', '1 x Fries', '1 x Milkshake'], review: 'No' },
+        { date: '2021-10-15', time: '18:00', preOrder: ['1 x Chicken Alfredo', '1 x Garlic Bread'], review: 'Yes' },
+        { date: '2021-10-20', time: '20:30', preOrder: ['1 x Beef Tacos', '1 x Nachos', '1 x Margarita'], review: 'No' },
+        { date: '2021-10-25', time: '13:30', preOrder: ['1 x Fish and Chips'], review: 'Yes' },
+        { date: '2021-11-01', time: '17:30', preOrder: ['1 x Veggie Burger', '1 x Sweet Potato Fries'], review: 'No' },
+        { date: '2021-11-05', time: '19:00', preOrder: ['1 x Shrimp Scampi', '1 x Caesar Salad'], review: 'Yes' },
+        { date: '2021-11-10', time: '12:00', preOrder: ['1 x BLT Sandwich', '1 x Chips'], review: 'No' },
+        { date: '2021-11-15', time: '18:30', preOrder: ['1 x Chicken Curry', '1 x Naan Bread', '1 x Mango Lassi'], review: 'Yes' },
+    ];
 
-    if (!user) {
-        return <div>Loading...</div>;
-    }
+    const renderRow = (index: number, date: string, time: string, preOrder: string[], review: string) => (
+        <tr key={index}>
+            <td>{index}</td>
+            <td>{date}</td>
+            <td>{time}</td>
+            <td>
+                <ol>
+                    {preOrder.map((item, idx) => (
+                        <li key={idx}>{item}</li>
+                    ))}
+                </ol>
+            </td>
+            <td>{review}</td>
+        </tr>
+    );
+
+    const renderTable = () => (
+        <table>
+            <thead>
+                <tr>
+                    <th>No.</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Pre-order</th>
+                    <th>Review</th>
+                </tr>
+            </thead>
+            <tbody>
+                {bookingData.map((booking, index) =>
+                    renderRow(index + 1, booking.date, booking.time, booking.preOrder, booking.review)
+                )}
+            </tbody>
+        </table>
+    );
 
     return (
         <RootLayout>
             <div>
-                <CustomerSideBar>
+                <CustomerSideBar user={user} >
                     {/* Personal Information */}
                     <div className="bg-slate-300 p-8 shadow-lg animate-fadeIn">
                         <div className='overflow-y-scroll grid max-h-96'>
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>No.</th>
-                                        <th>Date</th>
-                                        <th>Time</th>
-                                        <th>Pre-order</th>
-                                        <th>Review</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>2021-09-01</td>
-                                        <td>12:00</td>
-                                        <td>
-                                            <ol>
-                                                <li>1 x Beef Steak</li>
-                                                <li>1 x Chicken Salad</li>
-                                            </ol>
-                                        </td>
-                                        <td>No</td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>2021-09-05</td>
-                                        <td>18:30</td>
-                                        <td>
-                                            <ol>
-                                                <li>2 x Spaghetti Carbonara</li>
-                                                <li>1 x Caesar Salad</li>
-                                                <li>2 x Pizza</li>
-                                            </ol>
-                                        </td>
-                                        <td>Yes</td>
-                                    </tr>
-                                    <tr>
-                                        <td>3</td>
-                                        <td>2021-09-10</td>
-                                        <td>20:00</td>
-                                        <td>
-                                            <ol>
-                                                <li>1 x Margherita Pizza</li>
-                                                <li>2 x Garlic Bread</li>
-                                                <li>1 x Tiramisu</li>
-                                            </ol>
-                                        </td>
-                                        <td>No</td>
-                                    </tr>
-                                    <tr>
-                                        <td>4</td>
-                                        <td>2021-09-15</td>
-                                        <td>19:00</td>
-                                        <td>
-                                            <ol>
-                                                <li>1 x Grilled Salmon</li>
-                                                <li>1 x Greek Salad</li>
-                                            </ol>
-                                        </td>
-                                        <td>Yes</td>
-                                    </tr>
-                                    <tr>
-                                        <td>5</td>
-                                        <td>2021-09-20</td>
-                                        <td>13:00</td>
-                                        <td>
-                                            <ol>
-                                                <li>1 x BBQ Ribs</li>
-                                                <li>1 x Coleslaw</li>
-                                            </ol>
-                                        </td>
-                                        <td>No</td>
-                                    </tr>
-                                    <tr>
-                                        <td>6</td>
-                                        <td>2021-09-25</td>
-                                        <td>17:00</td>
-                                        <td>
-                                            <ol>
-                                                <li>1 x Lobster Bisque</li>
-                                                <li>1 x House Salad</li>
-                                            </ol>
-                                        </td>
-                                        <td>Yes</td>
-                                    </tr>
-                                    <tr>
-                                        <td>7</td>
-                                        <td>2021-10-01</td>
-                                        <td>14:00</td>
-                                        <td>
-                                            <ol>
-                                                <li>1 x Sushi Platter</li>
-                                            </ol>
-                                        </td>
-                                        <td>No</td>
-                                    </tr>
-                                    <tr>
-                                        <td>8</td>
-                                        <td>2021-10-05</td>
-                                        <td>19:30</td>
-                                        <td>
-                                            <ol>
-                                                <li>2 x Pad Thai</li>
-                                                <li>1 x Spring Rolls</li>
-                                            </ol>
-                                        </td>
-                                        <td>Yes</td>
-                                    </tr>
-                                    <tr>
-                                        <td>9</td>
-                                        <td>2021-10-10</td>
-                                        <td>12:30</td>
-                                        <td>
-                                            <ol>
-                                                <li>1 x Cheeseburger</li>
-                                                <li>1 x Fries</li>
-                                                <li>1 x Milkshake</li>
-                                            </ol>
-                                        </td>
-                                        <td>No</td>
-                                    </tr>
-                                    <tr>
-                                        <td>10</td>
-                                        <td>2021-10-15</td>
-                                        <td>18:00</td>
-                                        <td>
-                                            <ol>
-                                                <li>1 x Chicken Alfredo</li>
-                                                <li>1 x Garlic Bread</li>
-                                            </ol>
-                                        </td>
-                                        <td>Yes</td>
-                                    </tr>
-                                    <tr>
-                                        <td>11</td>
-                                        <td>2021-10-20</td>
-                                        <td>20:30</td>
-                                        <td>
-                                            <ol>
-                                                <li>1 x Beef Tacos</li>
-                                                <li>1 x Nachos</li>
-                                                <li>1 x Margarita</li>
-                                            </ol>
-                                        </td>
-                                        <td>No</td>
-                                    </tr>
-                                    <tr>
-                                        <td>12</td>
-                                        <td>2021-10-25</td>
-                                        <td>13:30</td>
-                                        <td>
-                                            <ol>
-                                                <li>1 x Fish and Chips</li>
-                                            </ol>
-                                        </td>
-                                        <td>Yes</td>
-                                    </tr>
-                                    <tr>
-                                        <td>13</td>
-                                        <td>2021-11-01</td>
-                                        <td>17:30</td>
-                                        <td>
-                                            <ol>
-                                                <li>1 x Veggie Burger</li>
-                                                <li>1 x Sweet Potato Fries</li>
-                                            </ol>
-                                        </td>
-                                        <td>No</td>
-                                    </tr>
-                                    <tr>
-                                        <td>14</td>
-                                        <td>2021-11-05</td>
-                                        <td>19:00</td>
-                                        <td>
-                                            <ol>
-                                                <li>1 x Shrimp Scampi</li>
-                                                <li>1 x Caesar Salad</li>
-                                            </ol>
-                                        </td>
-                                        <td>Yes</td>
-                                    </tr>
-                                    <tr>
-                                        <td>15</td>
-                                        <td>2021-11-10</td>
-                                        <td>12:00</td>
-                                        <td>
-                                            <ol>
-                                                <li>1 x BLT Sandwich</li>
-                                                <li>1 x Chips</li>
-                                            </ol>
-                                        </td>
-                                        <td>No</td>
-                                    </tr>
-                                    <tr>
-                                        <td>16</td>
-                                        <td>2021-11-15</td>
-                                        <td>18:30</td>
-                                        <td>
-                                            <ol>
-                                                <li>1 x Chicken Curry</li>
-                                                <li>1 x Naan Bread</li>
-                                                <li>1 x Mango Lassi</li>
-                                            </ol>
-                                        </td>
-                                        <td>Yes</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            {renderTable()}
                         </div>
                     </div>
                 </CustomerSideBar>
-            </div >
-        </RootLayout >
-    )
+            </div>
+        </RootLayout>
+    );
 }
 
 export default CustomerBookingHistory;
