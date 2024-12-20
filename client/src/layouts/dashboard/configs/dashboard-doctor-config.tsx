@@ -6,7 +6,7 @@ const getDashboardDoctorConfig:DashboardSection[] = [
         subheader:'Doctor', 
         items:[
             {
-                title:"Lịch khám",
+                title:"Lịch làm việc",
                 path: "/lich-kham",
             },
             {

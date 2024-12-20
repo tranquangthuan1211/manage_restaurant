@@ -11,48 +11,32 @@ import { FaUserDoctor } from "react-icons/fa6";
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
-export const getDashboardAdminConfigs: DashboardSection[] = [
+export const getDashboardStaffConfigs: DashboardSection[] = [
     {
-        subheader:'Admin', 
+        subheader:'Nhân viên', 
         items:[
             {
-                title:"Tổng quan",
-                path: Paths.dashboard["tong-quan"],
+                title:"Lịch làm việc",
+                path:Paths.staff["lich-lam-viec"],
+                icon:<CalendarMonthIcon width = {20}/>
+            },
+            {
+                title:"Danh sách cần phục vụ",
+                path: Paths.staff["danh-sach-phuc-vu"],
                 icon: <LineAxisIcon sx = {{
                     width: 20,
                 }}/>
             },
             {
                 title: "Menu",
-                path: Paths.dashboard["thong-tin-menu"],
+                path: Paths.staff["menu"],
                 icon: <RestaurantMenuIcon sx = {{
                     width: 20,
                 }}/>
             }, 
             {
-                title: "Quản lý nhân viên",
-                path: Paths.dashboard["quan-ly-nhan-vien"],
-                icon: <PermContactCalendarIcon
-                    sx = {{
-                        width:20,
-                    }}
-                />
-            },
-            {
-                title:"Lịch làm việc",
-                path:Paths.dashboard["lich-lam-viec"],
-                icon:<CalendarMonthIcon width = {20}/>
-            },
-            {
-                title:"Quản lý khiếu nại",
-                path: Paths.dashboard["quan-ly-khieu-nai"],
-                icon: <FlagIcon sx = {{
-                    width: 20,
-                }}/>    
-            },
-            {
                 title:"Quản lý nghỉ phép",
-                path: Paths.dashboard["quan-ly-nghi-phep"],
+                path: Paths.staff["lich-nghi"],
                 icon: <DesignServicesIcon sx = {{
                     width: 20,
                 }}/>

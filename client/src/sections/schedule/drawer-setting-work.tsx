@@ -20,6 +20,7 @@ import { useFormik } from "formik";
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import dayjs, { Dayjs } from "dayjs";
 import { useEmployee } from "src/contexts/employee/employee-context";
+import { values } from "lodash";
 const NoLabelTextField = styled(TextField)<TextFieldProps>(() => ({
   "& .MuiInputBase-input.MuiFilledInput-input": {
     paddingTop: "8px",
@@ -38,10 +39,10 @@ function ScheduleSettingWorkDrawer({
 }) {
   const {updateEmployee} = useEmployee();
   const [date,setDate] = useState<string>(dayjs().toString());
-  const handleSubmit = useCallback(async () => {
+  const handleSubmit = useCallback(async (id: string) => {
     if (employees) {
-      console.log(addSchedule(employees,date,formik.values._id));
-      await updateEmployee(addSchedule(employees,date,formik.values._id));
+      console.log(id);
+      await updateEmployee(addSchedule(employees,date,id));
     }
   }, [employees, date, updateEmployee]);
   const handleSubmitHelper = useFunction(handleSubmit,{
@@ -50,13 +51,12 @@ function ScheduleSettingWorkDrawer({
   const formik = useFormik<Employee>({
     initialValues: initialEmployee,
     onSubmit: async (values) => {
-      const {error} = await handleSubmitHelper.call(values);
+      const {error} = await handleSubmitHelper.call(values._id);
       if (!error) {
         onClose();
       }
     },
   });
-
   return (
     <Drawer
       anchor="right"
@@ -118,7 +118,7 @@ function ScheduleSettingWorkDrawer({
             <Typography fontSize={"12px"} fontWeight={500}>
               Chọn nhân viên
             </Typography>
-            <NoLabelTextField
+            <TextField
               fullWidth
               select
               variant="filled"
@@ -132,7 +132,7 @@ function ScheduleSettingWorkDrawer({
                   {employee.name}
                 </MenuItem>
               ))}
-            </NoLabelTextField>
+            </TextField>
           </Stack>
         </Stack>
       </form>

@@ -43,6 +43,8 @@ export const AuthLogin = () => {
           showSnackbarSuccess("Đăng nhập thành công");
           if (result.role === "admin") {
             router.push("/dashboard/statistical");
+          }else if(result.role === "staff"){
+            router.push("/staff/schedule");
           }
         }
       } catch (err) {

@@ -1,6 +1,7 @@
 
 import { ReactNode, use, useEffect, useState } from 'react';
 import {getDashboardAdminConfigs} from './dashboard-admin-config';
+import {getDashboardStaffConfigs} from './dashboard-staff-config';
 import {getDashboardManagerConfigs} from './dashboard-manager-config';
 import {getDashboardPatientConfigs} from "./dashboard-patient-config"
 import { useAuth } from 'src/hooks/use-auth';
@@ -26,10 +27,11 @@ export const useSections = (): DashboardSection[] => {
     async function fetchSections() {
     
       let configs: DashboardSection[] = [];
-      // if (user?.role === "admin") {
+      if (user?.role === "admin") {
         configs = getDashboardAdminConfigs;
-      // }else if(user?.role === "manager"){
-      //   configs = getDashboardManagerConfigs;
+      }else if(user?.role === "staff"){
+        configs = getDashboardStaffConfigs;
+      }
       // }else if(user?.role === "patient"){
       //   configs = getDashboardPatientConfigs;
       // }

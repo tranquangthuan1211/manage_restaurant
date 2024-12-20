@@ -86,6 +86,7 @@ const Page:PageType  = () => {
   const [filterDate, setFilterDate] = useState(dayjs().startOf("week").add(1, "day"));
   const {getEmployee} = useEmployee();
   const employees = useMemo(() => fileterEmployeeByDate(getEmployee.data?.data ?? [], filterDate.toISOString()) || [], [getEmployee.data,filterDate]);
+  const listEmployee = useMemo(() => getEmployee.data?.data || [], [getEmployee.data]);
   const [scheduleData, setScheduleData] = useState(convertToEmployee(employees));
   useEffect(() => {
     setScheduleData(convertToEmployee(employees));
@@ -211,7 +212,7 @@ const Page:PageType  = () => {
       <ScheduleSettingWorkDrawer
         open = {addSettingDrawer.open}
         onClose = {addSettingDrawer.handleClose}
-        employees={employees}
+        employees={listEmployee}
       />
     </>
   );

@@ -29,28 +29,6 @@ const Page:PageType = () => {
                         padding: "0 16px",
                         }}
                     >
-                    {
-                    <>
-                        <Button
-                            variant="outlined"
-                            color="primary"
-                            // startIcon={<UploadFileIcon  />}
-                            >
-                            Import danh sách TK Nhân viên
-                        </Button>
-        
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            // startIcon={<AddIcon />}
-                            // onClick={() => {
-                            //     addDrawer.handleOpen();
-                            // }}
-                        >
-                        Thêm tài khoản Nhân viên
-                        </Button>
-                    </>
-                    }
                     </Box>
                 }
             />

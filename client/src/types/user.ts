@@ -9,6 +9,7 @@ export interface User {
     officer_id: string;
     num_certificates: number;
     num_complains: number;
+    schedule?: string[];
     grant_role?: string[];
   }
 export type SignInRequest = {

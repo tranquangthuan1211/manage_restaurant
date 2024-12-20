@@ -176,14 +176,19 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
             user,
           },
         });
-        if (user.role == "user" && !router.pathname.startsWith("/customer")) {
+        console.log(user.role)
+        if (user.role == "user") {
           router.replace(Paths.index);
         } else if (
-          user.role == "admin" &&
-          !router.pathname.startsWith("/dashboard")
+          user.role == "admin"
         ) {
           router.replace(Paths.dashboard["tong-quan"]);
-        } else {
+        }else if(
+          user.role == "staff"
+        ) {
+          router.replace(Paths.staff["lich-lam-viec"]);
+        }
+        else {
           router.replace(Paths.index);
         }
       } else {
