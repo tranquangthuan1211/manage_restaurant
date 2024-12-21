@@ -21,10 +21,6 @@ const CustomerSecurity = () => {
         }
     }, [user]);
 
-    if (!user) {
-        return <div>Loading...</div>;
-    }
-
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
@@ -48,7 +44,7 @@ const CustomerSecurity = () => {
         <RootLayout>
             <div>
                 <CustomerSideBar user={user}>
-                    <div className="bg-slate-300 p-8 shadow-lg grid gap-4 animate-fadeIn">
+                    <div className="grid gap-4">
                         <div className="flex justify-between items-center">
                             <h2 className="text-xl font-bold">Account Security</h2>
                             <div>
@@ -74,7 +70,7 @@ const CustomerSecurity = () => {
                             <input
                                 type="text"
                                 name="username"
-                                className="input-field"
+                                className= {`input-field ${!isEditing ? 'input-field-disabled' : ''}`}
                                 placeholder="Your username"
                                 value={formData.username}
                                 onChange={handleInputChange}
@@ -86,7 +82,7 @@ const CustomerSecurity = () => {
                             <input
                                 type="email"
                                 name="email"
-                                className="input-field"
+                                className= {`input-field ${!isEditing ? 'input-field-disabled' : ''}`}
                                 placeholder="Your email"
                                 value={formData.email}
                                 onChange={handleInputChange}

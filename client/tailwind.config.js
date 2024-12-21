@@ -39,7 +39,7 @@ module.exports = {
         fadeIn: {
           "0%":{
             opacity: "0",
-            transform: "translate(0px, 50px)",
+            transform: "translate(0px, 10px)",
           },
           "100%":{
             opacity: "1",
@@ -48,7 +48,8 @@ module.exports = {
         },
       },
       animation:{
-        fadeIn: "fadeIn 0.5s ease-in-out"
+        fadeIn: "fadeIn 0.2s ease-in-out",
+        spin: "spin 2s linear infinite",
       }
     },
   },

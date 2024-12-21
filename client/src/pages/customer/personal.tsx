@@ -25,10 +25,6 @@ const CustomerPersonalInfo = () => {
         }
     }, [user]);
 
-    if (!user) {
-        return <div>Loading...</div>;
-    }
-
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
@@ -53,7 +49,7 @@ const CustomerPersonalInfo = () => {
             <div>
                 <CustomerSideBar user={user}>
                     {/* Personal Information */}
-                    <div className="bg-slate-300 shadow-lg p-8 grid grid-cols-2 gap-4 animate-fadeIn border border-solid">
+                    <div className="grid grid-cols-2 gap-4">
                         <div className="flex justify-between items-center col-span-2">
                             <h2 className="text-xl font-bold">Personal Information</h2>
                             <div>
@@ -80,7 +76,7 @@ const CustomerPersonalInfo = () => {
                             <input
                                 type="text"
                                 name="username"
-                                className="input-field"
+                                className={`input-field ${!isEditing ? 'input-field-disabled' : ''}`}
                                 placeholder="Your Name"
                                 value={formData.username}
                                 onChange={handleInputChange}
@@ -92,7 +88,7 @@ const CustomerPersonalInfo = () => {
                             <input
                                 type="text"
                                 name="phone"
-                                className="input-field"
+                                className={`input-field ${!isEditing ? 'input-field-disabled' : ''}`}
                                 placeholder="Your Phone Number"
                                 value={formData.phone}
                                 onChange={handleInputChange}
@@ -104,7 +100,7 @@ const CustomerPersonalInfo = () => {
                             <input
                                 type="text"
                                 name="address"
-                                className="w-full bg-gray-200 p-2 rounded-md mb-4"
+                                className= {`input-field ${!isEditing ? 'input-field-disabled' : ''}`}
                                 placeholder="Your Address"
                                 value={formData.address}
                                 onChange={handleInputChange}
