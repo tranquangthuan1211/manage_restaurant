@@ -56,10 +56,16 @@ const CustomerSideBar: React.FC<CustomerSideBarProps> = ({ user, children }) => 
                 Login and Security
               </Link>
             </div>
-            <div className={`tab-item ${currentPath === '/customer/booking_history' ? 'tab-item-active' : ''}`}>
-              <Link scroll={false} className="tab-link" href="/customer/booking_history">
+            <div className={`tab-item ${currentPath === '/customer/booking-history' ? 'tab-item-active' : ''}`}>
+              <Link scroll={false} className="tab-link" href="/customer/booking-history">
                 <img className="tab-icon" src="/images/calendar_icon.png" alt="Calendar Icon" />
                 Booking History
+              </Link>
+            </div>
+            <div className={`tab-item ${currentPath === '/customer/review-history'  ? 'tab-item-active' : ''}`}>
+              <Link scroll={false} className="tab-link" href="/customer/review-history">
+                <img className="tab-icon" src="/images/review_icon.png" alt="Review Icon" />
+                Review History
               </Link>
             </div>
           </div>

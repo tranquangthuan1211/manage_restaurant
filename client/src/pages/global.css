@@ -155,4 +155,37 @@
   .input-field.input-field-disabled {
     @apply bg-slate-400 text-slate-800;
   }
+
+  .link-primary {
+    @apply text-olive-green-400 hover:text-olive-green-300;
+  }
+  .link-primary:visited {
+    @apply text-olive-green-600;
+  }
+
+  .link-primary:hover {
+    @apply text-olive-green-300 underline;
+  }
+
+  .link-primary:active {
+    @apply text-olive-green-700;
+  }
+
+  .link-secondary {
+    @apply text-slate-400 hover:text-slate-300;
+  }
+
+  .link-secondary:visited {
+    @apply text-slate-600;
+  }
+
+  .link-secondary:hover {
+    @apply text-slate-300 underline;
+  }
+
+  .link-secondary:active {
+    @apply text-slate-700;
+  }
+
+  
 }

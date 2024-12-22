@@ -61,8 +61,8 @@ const CustomerSideBar: React.FC<CustomerSideBarProps> = ({ children }) => {
             </div>
 
             {/* Booking History Tab */}
-            <div className={`tab-item ${currentPath === '/customer/booking_history' ? 'tab-item-active' : ''}`}>
-              <Link scroll={false} className="tab-link" href="/customer/booking_history">
+            <div className={`tab-item ${currentPath === '/customer/booking-history' ? 'tab-item-active' : ''}`}>
+              <Link scroll={false} className="tab-link" href="/customer/booking-history">
                 <img className="tab-icon" src="/images/calendar_icon.png" alt="Calendar Icon" />
                 Booking History
               </Link>

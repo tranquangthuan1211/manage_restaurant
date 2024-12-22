@@ -8,7 +8,10 @@ import { User } from 'src/types/user';
 import {useUser} from 'src/contexts/users/user-context';
 
 const CustomerPersonalInfo = () => {
-    const user = useUser();
+    const userContext = useUser();
+    const user = userContext ? userContext.user : null;
+    const isAuthenticated = userContext ? userContext.isAuthenticated : false;
+
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState({
         username: user ? user.username : '',

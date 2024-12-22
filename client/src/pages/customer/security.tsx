@@ -5,7 +5,15 @@ import { useUser } from 'src/contexts/users/user-context';
 import { useState } from 'react';
 
 const CustomerSecurity = () => {
-    const user = useUser();
+    const userContext = useUser();
+    const user = userContext ? userContext.user : null;
+    const isAuthenticated = userContext ? userContext.isAuthenticated : false;
+
+    if (userContext == null || !isAuthenticated) {
+        window.location.href = '/auth';
+        return <div></div>;
+    }
+
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState({
         username: user ? user.username : '',
