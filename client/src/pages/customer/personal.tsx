@@ -4,7 +4,8 @@ import CustomerSideBar from './sidebar';
 import { useState, useEffect } from 'react';
 import { apiGet } from 'src/api/api-requests';
 import { User } from 'src/types/user';
-import { useUser } from 'src/contexts/users/user-context';
+
+import {useUser} from 'src/contexts/users/user-context';
 
 const CustomerPersonalInfo = () => {
     const user = useUser();
@@ -61,12 +62,20 @@ const CustomerPersonalInfo = () => {
                                         Edit
                                     </button>
                                 ) : (
-                                    <button
-                                        className="button-outline-primary"
-                                        onClick={handleSave}
-                                    >
-                                        Save
-                                    </button>
+                                    <div className='flex gap-1'>
+                                        <button
+                                            className="button-outline-primary"
+                                            onClick={handleEditToggle}
+                                        >
+                                            Cancle
+                                        </button>
+                                        <button
+                                            className="button-outline-primary"
+                                            onClick={handleSave}
+                                        >
+                                            Save
+                                        </button>
+                                    </div>
                                 )}
                             </div>
                         </div>
@@ -100,7 +109,7 @@ const CustomerPersonalInfo = () => {
                             <input
                                 type="text"
                                 name="address"
-                                className= {`input-field ${!isEditing ? 'input-field-disabled' : ''}`}
+                                className={`input-field ${!isEditing ? 'input-field-disabled' : ''}`}
                                 placeholder="Your Address"
                                 value={formData.address}
                                 onChange={handleInputChange}

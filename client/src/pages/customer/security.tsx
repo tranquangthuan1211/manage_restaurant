@@ -48,7 +48,7 @@ const CustomerSecurity = () => {
                         <div className="flex justify-between items-center">
                             <h2 className="text-xl font-bold">Account Security</h2>
                             <div>
-                                {!isEditing ? (
+                            {!isEditing ? (
                                     <button
                                         className="button-outline-primary"
                                         onClick={handleEditToggle}
@@ -56,12 +56,20 @@ const CustomerSecurity = () => {
                                         Edit
                                     </button>
                                 ) : (
-                                    <button
-                                        className="button-outline-primary"
-                                        onClick={handleSave}
-                                    >
-                                        Save
-                                    </button>
+                                    <div className='flex gap-1'>
+                                        <button
+                                            className="button-outline-primary"
+                                            onClick={handleEditToggle}
+                                        >
+                                            Cancle
+                                        </button>
+                                        <button
+                                            className="button-outline-primary"
+                                            onClick={handleSave}
+                                        >
+                                            Save
+                                        </button>
+                                    </div>
                                 )}
                             </div>
                         </div>

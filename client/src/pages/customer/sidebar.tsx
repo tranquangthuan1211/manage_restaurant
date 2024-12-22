@@ -5,7 +5,6 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { User } from 'src/types/user';
 import { apiGet } from 'src/api/api-requests';
-import Spinner from 'src/components/spinner';
 
 interface CustomerSideBarProps {
   user: User | null;
@@ -68,7 +67,7 @@ const CustomerSideBar: React.FC<CustomerSideBarProps> = ({ user, children }) => 
         {/* Content */}
         <main className='col-span-9 ml-4 bg-slate-300 p-8 shadow-lg animate-fadeIn rounded-lg'>
           <div>
-            {user ? children : <Spinner />}
+            {user ? children : <div>Loading...</div>}
           </div>
         </main>
       </div>
