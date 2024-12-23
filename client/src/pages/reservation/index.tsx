@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { AuthGuard } from "../../guards/auth-guard";
 import RootLayout from "../../layouts/customer/layout";
 import { useRouter } from "next/router";
-
+import { useUser } from "../../contexts/users/user-context";
 const ReservationForm: React.FC = () => {
     const [diners, setDiners] = useState(1);
     const [date, setDate] = useState("");
@@ -10,6 +10,19 @@ const ReservationForm: React.FC = () => {
     const [specialRequests, setSpecialRequests] = useState("");
     const [agreeTerms, setAgreeTerms] = useState(false);
     const router = useRouter();
+
+
+    //Minh Phuong added this to check if user is authenticated to access the page for reservation
+    const userContext = useUser();
+    const isAuthenticated = userContext ? userContext.isAuthenticated : false;
+    if (!isAuthenticated) {
+        window.location.href = '/auth';
+        return <div>
+            <p className='text-xl mb-10'> Please log in to access this page.
+            </p>
+        </div>;
+    }
+
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
