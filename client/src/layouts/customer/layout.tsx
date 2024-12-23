@@ -29,7 +29,7 @@ export default function RootLayout({
             {/* Home, Cart & Account */}
             <div className="col-span-3 flex justify-end items-center">
               <button type='button' className='button-icon'>
-                <a href="/customer">
+                <a href="/"> {/* Thay đổi từ thành href="/customer" to href="/" to go to the home page */}
                   <img width={32} height={32} src="/images/home_icon.png"></img>
                 </a>
               </button>
