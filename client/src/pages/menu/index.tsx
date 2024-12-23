@@ -74,8 +74,6 @@
 //   }
 
 // ];
-
-
 // const MenuTabAll: React.FC = () => {
 //     return (
 //     <RootLayout>
@@ -225,125 +223,126 @@
 
 
 //Edit to a proper format with footer
-import React, { useEffect, useState } from 'react';
-import { apiGet } from 'src/api/api-requests';
-import RootLayout from 'src/layouts/customer/layout';
 
-interface MenuItem {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  image: string;
-  category: string;
-}
+import React, { useState, useEffect } from 'react';
+import RootLayout from '../../layouts/customer/layout';
+import { useUser } from 'src/contexts/users/user-context';
 
-const MenuTabAll: React.FC = () => {
-  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
-  const [activeCuisine, setActiveCuisine] = useState<string>('all'); // Default cuisine
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+const cuisines = [
+    {
+        title: 'Western cuisine',
+        description: 'Our restaurant is a perfect place for you to enjoy a delicious western-style meal with your family and friends.',
+        mainDish: '/images/dish_1.jpg',
+        smallerDishes: ['/images/dish_2.jpg', '/images/dish_3.jpg', '/images/dish_4.jpg'],
+    },
+    {
+        title: 'Vietnam cuisine',
+        description: 'Experience the authentic flavors of Vietnam with our expertly crafted dishes, combining tradition and creativity for a delightful culinary journey.',
+        mainDish: '/images/dish_2.jpg',
+        smallerDishes: ['/images/dish_1.jpg', '/images/dish_3.jpg', '/images/dish_4.jpg'],
+    },
+    {
+        title: 'Desserts',
+        description: 'Indulge in our exquisite selection of desserts, where every bite is a celebration of sweetness and artistry.',
+        mainDish: '/images/dish_3.jpg',
+        smallerDishes: ['/images/dish_1.jpg', '/images/dish_2.jpg', '/images/dish_4.jpg'],
+    },
+    {
+        title: 'Refreshing drinks',
+        description: 'Quench your thirst with our refreshing drinks, perfectly crafted to complement your dining experience.',
+        mainDish: '/images/dish_4.jpg',
+        smallerDishes: ['/images/dish_1.jpg', '/images/dish_2.jpg', '/images/dish_3.jpg'],
+    },
+];
 
-  const fetchMenuItems = async (cuisine: string) => {
-    try {
-      setIsLoading(true);
-      const data = await apiGet(`/menus?cuisine=${cuisine}`);
-      setMenuItems(data.data || []);
-    } catch (err: any) {
-      console.log(err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+const MenuOverview = () => {
+    const userContext = useUser();
+    // const user = userContext ? userContext.user : null;
+    // const isAuthenticated = userContext ? userContext.isAuthenticated : false;
 
-  useEffect(() => {
-    fetchMenuItems(activeCuisine);
-  }, [activeCuisine]);
+    const [currentCuisineIndex, setCurrentCuisineIndex] = useState(0);
 
-  return (
-    <RootLayout>
-      <div className="p-6 min-h-screen flex flex-col">
-        {/* Header */}
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold mb-2">Menu</h2>
-          <h3 className="text-xl font-semibold text-green-600">Check Our Tasty Menu</h3>
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentCuisineIndex((prevIndex) => (prevIndex + 1) % cuisines.length);
+        }, 3000);
 
-          {/* Tabs */}
-          <div className="flex space-x-6 mt-4">
-            <button
-              onClick={() => setActiveCuisine('all')}
-              className={`font-bold flex items-center ${activeCuisine === 'all' ? 'text-yellow-600' : 'text-black'}`}
-            >
-              <img src="/images/All-icon.png" className="w-6 h-6 mr-2" /> All
-            </button>
+        return () => clearInterval(interval);
+    }, []);
 
-            <button
-              onClick={() => setActiveCuisine('western')}
-              className={`font-bold flex items-center ${activeCuisine === 'western' ? 'text-yellow-600' : 'text-black'}`}
-            >
-              <img src="/images/western-icon.png" alt="Western" className="w-6 h-6 mr-2" /> Western
-            </button>
+    // if (!isAuthenticated) {
+    //     window.location.href = '/auth';
+    //     return <div></div>;
+    // }
 
-            <button
-              onClick={() => setActiveCuisine('vietnam')}
-              className={`font-bold flex items-center ${activeCuisine === 'vietnam' ? 'text-yellow-600' : 'text-black'}`}
-            >
-              <img src="/images/vietnam-icon.png" alt="Vietnam" className="w-6 h-6 mr-2" /> Viet Nam
-            </button>
+    const currentCuisine = cuisines[currentCuisineIndex];
 
-            <button
-              onClick={() => setActiveCuisine('dessert')}
-              className={`font-bold flex items-center ${activeCuisine === 'dessert' ? 'text-yellow-600' : 'text-black'}`}
-            >
-              <img src="/images/dessert-icon.png" alt="Dessert" className="w-6 h-6 mr-2" /> Dessert
-            </button>
+    return (
+        <RootLayout>
+            <div>
+                {/* Hero Start */}
+                <div className="col-span-full bg-[url('/images/customer_bg1.jpg')] bg-cover bg-center h-[36rem] grid grid-cols-2">
+                    {/* Greeting */}
+                    <div className="col-span-1 pl-10 flex flex-col justify-center items-start">
+                        <p
+                            className="font-[Satisfy] text-6xl mb-4 transition-all duration-1000 ease-in-out"
+                            key={currentCuisine.title}
+                        >
+                            {currentCuisine.title}
+                        </p>
+                        <p className="text-xl mb-10 transition-opacity duration-1000 ease-in-out" key={currentCuisine.description}>
+                            {currentCuisine.description}
+                        </p>
+                        <div className="flex flex-row gap-4">
+                            <button
+                                className="button-green"
+                                onClick={() => (window.location.href = '/reservation')}
+                            >
+                                Book a table
+                            </button>
+                            <button
+                                className="button-orange"
+                                onClick={() => (window.location.href = '/menu/all')}
+                            >
+                                Explore our menu
+                            </button>
+                        </div>
+                    </div>
+                    {/* Yummy dishes */}
+                    <div className="col-span-1 flex justify-start pl-1 items-center drop-shadow-lg">
+                        <div className="relative w-[24rem] h-[24rem]">
+                            {/* Main dish */}
+                            <div className="absolute top-0 left-0 w-full h-full rounded-full border-2 border-dashed border-gray-400 bg-white"></div>
+                            <div className="absolute top-4 left-4 w-[22rem] h-[22rem] rounded-full bg-gray-300"></div>
+                            <img
+                                className="absolute top-0 left-0 w-full h-full rounded-full p-10 transition-transform duration-1000 ease-in-out"
+                                src={currentCuisine.mainDish}
+                                key={currentCuisine.mainDish}
+                            ></img>
 
-            <button
-              onClick={() => setActiveCuisine('drinks')}
-              className={`font-bold flex items-center ${activeCuisine === 'drinks' ? 'text-yellow-600' : 'text-black'}`}
-            >
-              <img src="/images/drinks-icon.png" alt="Drinks" className="w-6 h-6 mr-2" /> Drinks
-            </button>
-          </div>
-        </div>
-
-        {/* Menu Items */}
-        <div className="flex-grow">
-          {isLoading ? (
-            <div className="text-center text-gray-500">Loading...</div>
-          ) : (
-            <div className="grid grid-cols-2 gap-6">
-              {menuItems.map((item) => (
-                <div key={item.id} className="flex items-center border-b pb-4 last:border-none">
-                  <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded-full mr-4" />
-                  <div className="flex-1">
-                    <h4 className="text-lg font-semibold">{item.name}</h4>
-                    <p className="text-gray-500 text-sm">{item.description}</p>
-                  </div>
-                  <span className="text-lg font-bold text-green-600">${item.price}</span>
+                            {/* Smaller dishes */}
+                            <img
+                                className="absolute top-2 left-[-0.5rem] w-16 h-16 rounded-full object-cover object-center transition-transform duration-1000 ease-in-out"
+                                src={currentCuisine.smallerDishes[0]}
+                                key={currentCuisine.smallerDishes[0]}
+                            ></img>
+                            <img
+                                className="absolute top-[12rem] left-[-4.25rem] w-16 h-16 rounded-full object-cover object-center transition-transform duration-1000 ease-in-out"
+                                src={currentCuisine.smallerDishes[1]}
+                                key={currentCuisine.smallerDishes[1]}
+                            ></img>
+                            <img
+                                className="absolute top-200 bottom-0 left-[-0.5rem] w-16 h-16 rounded-full object-cover object-center transition-transform duration-1000 ease-in-out"
+                                src={currentCuisine.smallerDishes[2]}
+                                key={currentCuisine.smallerDishes[2]}
+                            ></img>
+                        </div>
+                    </div>
                 </div>
-              ))}
+                {/* Hero End */}
             </div>
-          )}
-        </div>
-
-        {/* Footer
-        <footer className="mt-6 text-center">
-          <div className="text-gray-500">
-            <p>1234, Ho Chi Minh City</p>
-            <p>Phone: 0900111222</p>
-            <p>Email: babyhippo@gmail.com</p>
-            <p>Open Hours: Mon - Fri: 8:00 AM - 9:00 PM, Sat - Sun: 8:00 AM - 10:00 PM</p>
-          </div>
-          <div className="flex justify-center space-x-4 mt-4">
-            <a href="#" className="text-black">Facebook</a>
-            <a href="#" className="text-black">Instagram</a>
-            <a href="#" className="text-black">YouTube</a>
-          </div>
-        </footer> */}
-      </div>
-    </RootLayout>
-  );
+        </RootLayout>
+    );
 };
 
-export default MenuTabAll;
-
+export default MenuOverview;
