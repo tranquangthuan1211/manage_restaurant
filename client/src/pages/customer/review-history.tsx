@@ -19,7 +19,7 @@ const StarScore: React.FC<StarScoreProps> = ({ filled }) => {
       </g>
     </svg>
   )
-};
+};  
 
 interface Review {
   reviewId: number;
