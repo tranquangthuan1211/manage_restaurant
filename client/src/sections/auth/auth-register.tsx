@@ -39,7 +39,7 @@ export const RegisterLogin = () => {
             }
             if (response.error === 0) {
                 console.log("Registration successful:", response.message);
-                console.log("User data:", response.data);
+                console.log("User data:", response);
                 return;
             }
             console.log("Registration failed with unknown error");
