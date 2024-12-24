@@ -7,7 +7,7 @@ const Customer = () => {
 
     const user = userContext ? userContext.user : null;
     const isAuthenticated = userContext ? userContext.isAuthenticated : false;
-    if (!isAuthenticated) {
+    if (false && !isAuthenticated) {
         window.location.href = '/auth';
         return <div></div>;
     }

@@ -30,6 +30,7 @@ export const AuthLogin = () => {
             if (response.error === 0) {
                 console.log("Login successful:", response.message);
                 CookieHelper.setItem('token', response.access_token);
+                window.location.href = '/customer';
                 return; 
             }
             console.log("Login failed with unknown error");

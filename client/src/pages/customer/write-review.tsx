@@ -2,7 +2,6 @@ import RootLayout from 'src/layouts/customer/layout';
 import { useUser } from 'src/contexts/users/user-context';
 import StarRating from 'src/components/star-rating';
 import { useState } from 'react';
-import { Restaurant } from '@mui/icons-material';
 
 
 const ScoreFields = {
@@ -17,7 +16,7 @@ const ScoreFields = {
 };
 
 const SectionHeader: React.FC<{ title: string }> = ({ title }) => (
-  <div className="flex items-center col-span-full my-4">
+  <div className="flex items-center w-full col-span-full my-4">
     <div className="flex-grow border-t border-olive-green-600"></div>
     <span className="flex-shrink mx-2 text-olive-green-600 text-center italic">{title}</span>
     <div className="flex-grow border-t border-olive-green-600"></div>
@@ -66,20 +65,22 @@ const CustomerWriteReview: React.FC = () => {
             <form className="flex flex-col space-y-8 px-8">
               <div>
                 <SectionHeader title="Rating" />
-                <div className="space-y-6">
+                <div className="grid grid-cols-12">
                   {Object.entries(ScoreFields).map(([key, label]) => (
-                    <div key={key} className="flex items-center justify-between hover:bg-slate-100 px-4 py-2 rounded-md">
-                      <label htmlFor={key} className="font-medium text-gray-700">
+                    <div key={key} className="col-span-full grid grid-cols-12 hover:bg-slate-100 px-4 py-2 rounded-md">
+                      <label htmlFor={key} className="mb-4 md:mb-0 col-span-full md:col-span-8">
                         {label}
                       </label>
-                      <StarRating label={key} onChange={handleScoreChange} />
+                      <div className="col-span-full md:col-span-4">
+                        <StarRating label={key} onChange={handleScoreChange} />
+                      </div>
                     </div>
                   ))}
                 </div>
               </div>
 
               <div>
-                <SectionHeader title="Detail Feedback" />
+                <SectionHeader title="Feedback" />
                 <textarea
                   id="feedback"
                   name="feedback"
