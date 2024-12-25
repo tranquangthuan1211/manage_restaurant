@@ -37,9 +37,9 @@ const MenuOverview = () => {
     const [currentCuisineIndex, setCurrentCuisineIndex] = useState(0);
     const [fade, setFade] = useState(false); // Track fade-in/out state
     const DISPLAY_INTERVAL = 3000;
-    const FADE_DURATION = 1000;
+    const FADE_DURATION = 500;
     const FADE_OFFSET = 100;
-    
+
     useEffect(() => {
         const interval = setInterval(() => {
             setFade(true); // Start fading out
@@ -58,9 +58,9 @@ const MenuOverview = () => {
         <RootLayout>
             <div>
                 {/* Hero Start */}
-                <div className="col-span-full bg-[url('/images/customer_bg1.jpg')] bg-cover bg-center h-[36rem] grid grid-cols-2">
+                <div className="col-span-full bg-[url('/images/customer_bg2.jpg')] lg:bg-[url('/images/customer_bg1.jpg')] bg-cover bg-center h-[36rem] grid grid-cols-12">
                     {/* Left Panel: Title and Description */}
-                    <div className="col-span-1 pl-10 flex flex-col justify-center items-start">
+                    <div className="col-span-full order-last lg:order-first lg:col-span-6 pl-10 flex flex-col justify-center items-start">
                         <p
                             className={`font-[Satisfy] text-6xl mb-4 transition-opacity duration-${FADE_DURATION} ${fade ? "opacity-0" : "opacity-100"}`}
                             key={currentCuisine.title}
@@ -76,40 +76,47 @@ const MenuOverview = () => {
                     </div>
 
                     {/* Right Panel: Main and Smaller Dishes */}
-                    <div className="col-span-1 flex justify-start pl-1 items-center">
-                        <div className="relative w-96 h-96">
+                    <div className="col-span-full lg:col-span-6 flex justify-center lg:justify-start px-8 lg:pl-8 items-center">
+                        <div className="relative w-full h-56 lg:w-96 lg:h-96">
                             {/* Main Dish */}
                             <img
-                                className={`absolute top-0 left-0 w-full h-full rounded-full p-10 transition-opacity duration-${FADE_DURATION} ${fade ? "opacity-0" : "opacity-100"}`}
+                                className={`object-center object-cover w-full h-full transition-all duration-${FADE_DURATION} ${fade ? "opacity-0 scale-90" : "opacity-100 scale-100"
+                                    } ${
+                                    // Rectangular on <= lg, circular on > lg
+                                    "rounded-md lg:rounded-full lg:p-10"
+                                    }`}
                                 src={currentCuisine.mainDish}
                                 key={currentCuisine.mainDish}
                                 alt="Main Dish"
                             />
                             {/* Smaller Dishes */}
-                            {currentCuisine.smallerDishes.map((dish, index) => {
-                                const totalDishes = currentCuisine.smallerDishes.length;
-                                const angle = 120  + 30 * index;
-                                const radius = 12; // Radius of the circle (rem)
-                                const centerX = "50%"; // Horizontal center of the main dish (rem)
-                                const centerY = "50%"; // Vertical center of the main dish (rem)
+                            <div className="hidden lg:block">
+                                {currentCuisine.smallerDishes.map((dish, index) => {
+                                    const totalDishes = currentCuisine.smallerDishes.length;
+                                    const angle = 120 + 30 * index;
+                                    const radius = 12; // Radius of the circle (rem)
+                                    const centerX = "50%"; // Horizontal center of the main dish
+                                    const centerY = "50%"; // Vertical center of the main dish
 
-                                const xPosition = `calc(${centerX} + ${radius * Math.cos((-angle * Math.PI) / 180)}rem)`;
-                                const yPosition = `calc(${centerY} + ${radius * Math.sin((-angle * Math.PI) / 180)}rem)`;
+                                    const xPosition = `calc(${centerX} + ${radius * Math.cos((-angle * Math.PI) / 180)}rem)`;
+                                    const yPosition = `calc(${centerY} + ${radius * Math.sin((-angle * Math.PI) / 180)}rem)`;
 
-                                return (
-                                    <img
-                                        key={dish}
-                                        className={`absolute w-16 h-16 rounded-full object-cover transition-opacity duration-${FADE_DURATION * (index + 1) / totalDishes} ${fade ? "opacity-0" : "opacity-100"}`}
-                                        src={dish}
-                                        alt={`Smaller Dish ${index + 1}`}
-                                        style={{
-                                            top: yPosition,
-                                            left: xPosition,
-                                            transform: "translate(-50%, -50%)", // Adjust for exact centering
-                                        }}
-                                    />
-                                );
-                            })}
+                                    return (
+                                        <img
+                                            key={dish}
+                                            className={`absolute w-16 h-16 rounded-full object-cover transition-opacity duration-${FADE_DURATION} ${fade ? "opacity-0" : "opacity-100"
+                                                }`}
+                                            src={dish}
+                                            alt={`Smaller Dish ${index + 1}`}
+                                            style={{
+                                                top: yPosition,
+                                                left: xPosition,
+                                                transform: "translate(-50%, -50%)", // Adjust for exact centering
+                                            }}
+                                        />
+                                    );
+                                })}
+                            </div>
                         </div>
                     </div>
 

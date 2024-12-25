@@ -6,8 +6,7 @@ import type { User } from "src/types/user";
 import { Issuer } from "src/utils/auth";
 import CookieHelper, { CookieKeys } from "src/utils/cookie-helper";
 import { useRouter } from "next/router";
-import {Paths} from 'src/types/paths';
-import UsersApi from "src/api/user";
+// import { paths } from "src/paths";
 
 interface State {
   isInitialized: boolean;
@@ -121,14 +120,14 @@ const reducer = (state: State, action: Action): State =>
 export interface AuthContextType extends State {
   issuer: Issuer.JWT;
   updateUser: (user: Partial<User>) => void;
-  signIn: (email: string, password: string) => Promise<User | undefined>;
+  signIn?: (email: string, password: string) => Promise<User | undefined>;
   signUp?: (
     email: string,
     name: string,
     phone: string,
     password: string
   ) => Promise<void>;
-  signOut: () => Promise<void>;
+  signOut?: () => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextType>({
@@ -162,53 +161,51 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
   );
 
   const initialize = useCallback(async (): Promise<void> => {
-    try {
-      const accessToken = CookieHelper.getItem(CookieKeys.TOKEN);
-      if (accessToken) {
-        const user = (await UsersApi.me()).data;
-        if (!user) {
-          throw new Error("Ger user failed.");
-        }
-        dispatch({
-          type: ActionType.INITIALIZE,
-          payload: {
-            isAuthenticated: true,
-            user,
-          },
-        });
-        console.log(user.role)
-        if (user.role == "user") {
-          router.replace(Paths.index);
-        } else if (
-          user.role == "admin"
-        ) {
-          router.replace(Paths.dashboard["tong-quan"]);
-        }else if(
-          user.role == "staff"
-        ) {
-          router.replace(Paths.staff["lich-lam-viec"]);
-        }
-        else {
-          router.replace(Paths.index);
-        }
-      } else {
-        dispatch({
-          type: ActionType.INITIALIZE,
-          payload: {
-            isAuthenticated: false,
-            user: null,
-          },
-        });
-      }
-    } catch (err) {
-      dispatch({
-        type: ActionType.INITIALIZE,
-        payload: {
-          isAuthenticated: false,
-          user: null,
-        },
-      });
-    }
+    // try {
+    //   const accessToken = CookieHelper.getItem(CookieKeys.TOKEN);
+    //   if (accessToken) {
+    //     const user = await UsersApi.me();
+    //     if (!user) {
+    //       throw new Error("Ger user failed.");
+    //     }
+    //     dispatch({
+    //       type: ActionType.INITIALIZE,
+    //       payload: {
+    //         isAuthenticated: true,
+    //         user,
+    //       },
+    //     });
+    //     if (user.role == "user" && !router.pathname.startsWith("/sinh-vien")) {
+    //       router.replace(paths["sinh-vien"].index);
+    //     } else if (
+    //       user.role == "admin" &&
+    //       !router.pathname.startsWith("/dashboard")
+    //     ) {
+    //       router.replace(paths.dashboard.index);
+    //     } else if (
+    //       user.role == "officer" &&
+    //       !router.pathname.startsWith("/can-bo")
+    //     ) {
+    //       router.replace(paths["can-bo"]["hoat-dong"].index);
+    //     }
+    //   } else {
+    //     dispatch({
+    //       type: ActionType.INITIALIZE,
+    //       payload: {
+    //         isAuthenticated: false,
+    //         user: null,
+    //       },
+    //     });
+    //   }
+    // } catch (err) {
+    //   dispatch({
+    //     type: ActionType.INITIALIZE,
+    //     payload: {
+    //       isAuthenticated: false,
+    //       user: null,
+    //     },
+    //   });
+    // }
   }, [router, dispatch]);
 
   useEffect(
@@ -219,23 +216,23 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     []
   );
 
-  const signIn = useCallback(
-    async (email: string, password: string): Promise<User> => {
-      const accessToken = CookieHelper.getItem(CookieKeys.TOKEN);
-      const response = await UsersApi.signIn({ email: email, password });
+  // const signIn = useCallback(
+  //   async (email: string, password: string): Promise<User> => {
+  //     const accessToken = CookieHelper.getItem(CookieKeys.TOKEN);
+  //     // const response = await UsersApi.signIn({ username: email, password });
 
-      CookieHelper.setItem(CookieKeys.TOKEN, response.access_token);
+  //     // CookieHelper.setItem(CookieKeys.TOKEN, response.token);
 
-      dispatch({
-        type: ActionType.SIGN_IN,
-        payload: {
-          user: response.data,
-        },
-      });
-      return response.data;
-    },
-    [dispatch]
-  );
+  //     // dispatch({
+  //     //   type: ActionType.SIGN_IN,
+  //     //   payload: {
+  //     //     user: response.data,
+  //     //   },
+  //     // });
+  //     // return response.data;
+  //   },
+  //   [dispatch]
+  // );
 
   // const signUp = useCallback(
   //   async (
@@ -264,11 +261,11 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
   //   []
   // );
 
-  const signOut = useCallback(async (): Promise<void> => {
-    CookieHelper.removeItem(CookieKeys.TOKEN);
-    dispatch({ type: ActionType.SIGN_OUT });
-    router.push(Paths.auth["login"]);
-  }, [router]);
+  // const signOut = useCallback(async (): Promise<void> => {
+  //   CookieHelper.removeItem(CookieKeys.TOKEN);
+  //   dispatch({ type: ActionType.SIGN_OUT });
+  //   router.push(paths.login);
+  // }, [router]);
 
   return (
     <AuthContext.Provider
@@ -276,9 +273,9 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
         ...state,
         issuer: Issuer.JWT,
         updateUser,
-        signIn,
+        // signIn,
         // signUp,
-        signOut,
+        // signOut,
       }}
     >
       {children}
