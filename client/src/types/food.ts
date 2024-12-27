@@ -8,6 +8,7 @@ export interface Food {
     description: string;
     image: File | string;
     evaluate: string;
+    detail_category?: string;
     createdAt: string;
     updatedAt: string;
 }

@@ -105,7 +105,7 @@ class UserController {
     try {
       console.log(req.body)
       const {email, password} = req.body;
-      const user = await UsersDataBase.users.findOne({email: "hamacon@gmail.com"});
+      const user = await UsersDataBase.users.findOne({email: req.body.email});
       if(!user) {
         return res.status(400).json({
           error: 1,
@@ -123,6 +123,7 @@ class UserController {
       const {password: _, ...dataUser} = user;
       const token = await signToken({payload: dataUser});
       const refreshToken = await signToken({payload: dataUser, secret: process.env.REFRESH_TOKEN_SECRET as string});
+      console.log(user)
       return res.status(200).json({
         error: 0,
         message: "Login successfully",

@@ -71,7 +71,9 @@ class AppointmentController {
     }
     async updateAppointment(req: Request, res: Response) {
         try {
-            const data = await AppointmentDataBase.appointment.updateOne({ _id: new ObjectId(req.params.id) }, { $set: req.body })
+            const {_id, ...rest} = req.body
+            console.log(req.params.id)
+            const data = await AppointmentDataBase.appointment.updateOne({ _id: new ObjectId(req.params.id) }, { $set: rest })
             return res.status(200).json({
                 error: 0,
                 message:"Updated successfully",

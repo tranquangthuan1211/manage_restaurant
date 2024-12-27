@@ -77,7 +77,7 @@ const Page: PageType = () => {
           width: 400,
           type: 'pie',
         },
-        labels: ['Team A', 'Team B', 'Team C', 'Team D', 'Team E'],
+        labels: ['Bánh táo', 'Gỏi trộn', 'Rượu vang', 'Vịt hầm', 'Lẩu'],
         responsive: [
           {
             breakpoint: 480,

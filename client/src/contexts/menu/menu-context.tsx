@@ -23,19 +23,21 @@ const MenuProvider = ({children}:{children:React.ReactNode}) => {
     const createFood = useCallback(async (request: Partial<Food>) => {
         try {
             const formData = new FormData();
-            Object.entries(request).forEach(([key, value]) => {
+            const {detail_category, ...rest} = request;
+            Object.entries(rest).forEach(([key, value]) => {
                 if (value) {
                     formData.append(key, value as Blob);
                 }
             });
     
             const response = await MenuApi.createFood(formData); 
-            request.image = (request.image ? URL.createObjectURL(request.image as unknown as File) : null)  
+            rest.image = (request.image ? URL.createObjectURL(request.image as unknown as File) : "")  
+            rest.category = detail_category
             if (response) {
                 const newFood = [
                     {
                         ...initialFood,
-                        ...request,
+                        ...rest,
                         ...response,
                     },
                     ...(getMenu.data?.data || []),
@@ -73,12 +75,16 @@ const MenuProvider = ({children}:{children:React.ReactNode}) => {
     },[getMenu])
     const deleteFood = useCallback(async (id:string) => {
         try {
-            await MenuApi.deleteFood(id);
+            const response = await MenuApi.deleteFood(id);
             const updatedData = (getMenu.data?.data || []).filter((item) => item._id != id);
-            getMenu.setData({
-                data: updatedData,
-            });
-            showSnackbarSuccess("Xóa thành công!");
+            if(response){
+                console.log(id)
+                getMenu.setData({
+                    data: (getMenu.data?.data || []).filter((food:Food) => food._id !== id),
+                });
+                console.log(getMenu.data)
+                showSnackbarSuccess("Xóa thành công!");
+            }
         } catch (error) {
             console.log(error);
             showSnackbarError(error.message);

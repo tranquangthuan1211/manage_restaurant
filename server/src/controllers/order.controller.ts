@@ -8,7 +8,11 @@ class OrderController {
     async getOrders(req: Request, res: Response) {
         try {
             const orders = await getOrderDetails()
-            res.status(200).json(orders)
+            res.status(200).json({
+                error: 0,
+                message: 'success',
+                data: orders
+            })
         } catch (error: any) {
             res.status(500).json({ message: error.message })
         }

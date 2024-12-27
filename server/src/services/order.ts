@@ -32,8 +32,10 @@ export async function getOrderDetails() {
                 name_product: { $arrayElemAt: ["$product.name", 0] },
                 price_product: { $arrayElemAt: ["$product.price", 0] },
                 name_user: { $arrayElemAt: ["$user.name", 0] },
+                id_user: { $arrayElemAt: ["$user._id", 0] },
                 quantity: 1,
                 status: 1,
+                total:1,
                 created_at: 1,
                 updated_at: 1
             }

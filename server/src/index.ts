@@ -11,6 +11,7 @@ import useRouteAssess from "./routes/assess"
 import useRouteStaff from "./routes/staff"
 import usePaymentRoute from "./routes/payment"
 import useRouteComplaint from "./routes/complaint"
+import useRouteLeave from "./routes/leave"
 import swaggerJSDoc from 'swagger-jsdoc';
 import SwaggerOption from "./configs/swagger";
 import swaggerUi from 'swagger-ui-express';
@@ -28,7 +29,7 @@ app.use(express.urlencoded({ extended: true }));
 Database.connect();
 const limiter = rateLimit({
 	windowMs: 2 * 60 * 1000,
-	limit: 3, 
+	limit: 10, 
   message: "Too many requests from this IP, please try again after an hour",
 })
 app.use("/api/", limiter);
@@ -47,7 +48,8 @@ const routesDef = [
   {path:"assess", route: useRouteAssess()},
   {path : "staffs", route: useRouteStaff()},
   {path:"payments",route: usePaymentRoute()},
-  {path:"complaints", route: useRouteComplaint()}
+  {path:"complaints", route: useRouteComplaint()},
+  {path:"leaves", route: useRouteLeave()}
 ]
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 routesDef.forEach(({path,route}) => {
@@ -68,8 +70,8 @@ app.use((error: any, req: Request, res: Response, next: NextFunction) => {
 });
 rabbitMQ.connect()
     .then(() => {
-        app.listen(3000, () => {
-            console.log('Producer API running on http://localhost:3000');
+        app.listen(port, () => {
+            console.log('Producer API running on http://localhost:3001');
         });
     })
     .catch((error) => {

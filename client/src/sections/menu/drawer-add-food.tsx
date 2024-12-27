@@ -13,10 +13,11 @@ import {
 } from "@mui/material";
 import { Food, initialFood } from "src/types/food";
 import { Stack, styled } from "@mui/system";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { use, useCallback, useEffect, useMemo, useState } from "react";
 import { useMenu } from "src/contexts/menu/menu-context";
 import useFunction from "src/hooks/use-function";
 import { useFormik } from "formik";
+import CategoryApi from "src/api/category";
 
 // Styled component for consistent TextField styling
 const NoLabelTextField = styled(TextField)<TextFieldProps>(() => ({
@@ -60,9 +61,16 @@ function FoodEditDrawer({
       formik.setFieldValue("image", selectedFile); 
     }
   };
-
+  const categoryApi = useFunction(CategoryApi.getCategory);
+  useEffect(() => {
+    categoryApi.call(new FormData())
+  },[])
+  const categoriesBase = useMemo(() => {
+    return categoryApi.data?.data || []
+  },[categoryApi])
   const handleSubmit = useCallback(
     async (values: Food) => {
+      values.detail_category = categoriesBase.find((category) => category._id === values.category)?.name;
       if (values._id) {
         await updateFood(values);
       } else {
@@ -81,12 +89,12 @@ function FoodEditDrawer({
     successMessage: food ? "Cập nhật thành công!" : "Thêm thành công!",
   });
 
-  const categories = [
-    { label: "Món chính", value: "Món chính" },
-    { label: "Món phụ", value: "Món phụ" },
-    { label: "Món tráng miệng", value: "Món tráng miệng" },
-    { label: "Món uống", value: "Món uống" },
-  ];
+  const categories = useMemo(() => {
+    return categoriesBase.map((category) => ({
+      value: category._id,
+      label: category.name,
+    }));
+  }, [categoriesBase]);
 
   const formik = useFormik<Food>({
     initialValues: food || initialFood,
@@ -98,6 +106,7 @@ function FoodEditDrawer({
         setPreview(null); // Reset preview
         onClose();
       }
+      // console.log(values)
     },
   });
 

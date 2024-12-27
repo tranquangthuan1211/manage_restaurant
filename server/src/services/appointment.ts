@@ -10,7 +10,7 @@ export async function getAppointments(): Promise<AppointmentDetails[]> {
                     let: { customerId: { $toObjectId: "$id_customer" } },
                     pipeline: [
                         { $match: { $expr: { $eq: ["$_id", "$$customerId"] } } },
-                        { $project: { name: 1, price: 1, _id: 1 } }
+                        { $project: { name: 1, price: 1, _id: 1,phone:1,email:1 } }
                     ],
                     as: "customer"
                 }
@@ -20,6 +20,8 @@ export async function getAppointments(): Promise<AppointmentDetails[]> {
             $project: {
                 _id: 1,
                 customer_name: { $arrayElemAt: ["$customer.name", 0] },
+                phone: { $arrayElemAt: ["$customer.phone", 0] },
+                email: { $arrayElemAt: ["$customer.email", 0] },
                 table_number: 1,
                 date: 1,
                 hours:1,
