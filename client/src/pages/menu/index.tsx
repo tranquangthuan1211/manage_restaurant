@@ -73,6 +73,20 @@ const MenuOverview = () => {
                         >
                             {currentCuisine.description}
                         </p>
+                        <div className="flex flex-row gap-4">
+                            <button
+                                className="button-green"
+                                onClick={() => (window.location.href = '/reservation')}
+                            >
+                                Book a table
+                            </button>
+                            <button
+                                className="button-orange"
+                                onClick={() => (window.location.href = '/menu/all')}
+                            >
+                                Explore our menu
+                            </button>
+                        </div>
                     </div>
 
                     {/* Right Panel: Main and Smaller Dishes */}
@@ -115,6 +129,7 @@ const MenuOverview = () => {
                                             }}
                                         />
                                     );
+
                                 })}
                             </div>
                         </div>
