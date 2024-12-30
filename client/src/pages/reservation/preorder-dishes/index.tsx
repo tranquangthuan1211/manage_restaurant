@@ -2,11 +2,14 @@ import React, { useState, useEffect } from 'react';
 import RootLayout from '../../../layouts/customer/layout';
 import { apiGet, apiPost } from "../../../api/api-requests";
 import { AuthGuard } from "../../../guards/auth-guard";
+import { useUser } from 'src/contexts/users/user-context';
 
 const PreorderDishesTabAll: React.FC = () => {
     const [menuItems, setMenuItems] = useState<any[]>([]);
     const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
     const [reservationData, setReservationData] = useState<any>(null);
+    const userContext = useUser();
+    const user = userContext ? userContext.user : null;
 
     useEffect(() => {
         const savedReservationData = localStorage.getItem("reservationData");
@@ -39,9 +42,6 @@ const PreorderDishesTabAll: React.FC = () => {
     };
 
     const handleConfirm = async () => {
-        const userId = "12345";
-        const status = "Pending";
-
         const orderDetails = menuItems
             .filter((item) => quantities[item._id] > 0)
             .map((item) => ({
@@ -59,23 +59,33 @@ const PreorderDishesTabAll: React.FC = () => {
         );
 
         const order = {
-            user_id: userId,
+            user_id: user?._id,
             product_id: menuItems
                 .filter((item) => quantities[item._id] > 0)
                 .map((item) => item._id),
-            status: status,
+            status: "Pending",
             total: total,
             created_at: new Date(),
             updated_at: new Date(),
         };
 
-        console.log("Order:", order);
-        console.log("Order Details:", orderDetails);
+        const appointment = {
+            id_customer: user?._id,
+            table_number: reservationData.diners,
+            status: "Pendding",
+            date: reservationData.date,
+            hours: reservationData.time,
+            created_at: new Date(),
+            updated_at: new Date(),
+        }
+        console.log(order)
+        console.log(appointment)
 
         await apiPost('/orders', order);
+        await apiPost('/appointments', appointment);
 
         alert('Sucessfull');
-        
+
         window.location.href = '/';
     };
 

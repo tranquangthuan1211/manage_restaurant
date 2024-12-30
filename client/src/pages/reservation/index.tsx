@@ -12,7 +12,6 @@ const ReservationForm: React.FC = () => {
     const router = useRouter();
 
 
-    //Minh Phuong added this to check if user is authenticated to access the page for reservation
     const userContext = useUser();
     const isAuthenticated = userContext ? userContext.isAuthenticated : false;
     if (!isAuthenticated) {
@@ -38,7 +37,6 @@ const ReservationForm: React.FC = () => {
     };
 
     return (
-        //<AuthGuard>
         <RootLayout>
             <div className="flex flex-col items-center justify-center min-h-screen bg-cover bg-center">
                 <div className="flex flex-col md:flex-row w-[90%] max-w-8xl bg-white rounded-lg shadow-lg overflow-hidden">
@@ -160,7 +158,6 @@ const ReservationForm: React.FC = () => {
                 </div>
             </div>
         </RootLayout>
-        //</AuthGuard>
     );
 };
 
