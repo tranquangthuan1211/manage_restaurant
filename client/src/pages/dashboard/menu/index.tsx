@@ -116,7 +116,7 @@
 
 // export default Page;
 
-// //GPT
+//update for the new version
 import React, { useState } from "react";
 import { Page as PageType } from "src/types/page";
 import { Layout } from "src/layouts/index";
