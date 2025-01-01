@@ -16,11 +16,29 @@ const MenuTabAll: React.FC = () => {
   const [activeCuisine, setActiveCuisine] = useState<string>('all'); // Default cuisine
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  // Mapping categories to cuisines
+  const categoryToCuisineMap: Record<string, string> = {
+    "Món chính": "vietnam",
+    "Món phụ": "western",
+    "Món tráng miệng": "dessert",
+    "Món uống": "drinks",
+  };
+
   const fetchMenuItems = async (cuisine: string) => {
     try {
       setIsLoading(true);
-      const data = await apiGet(`/menus?cuisine=${cuisine}`);
-      setMenuItems(data.data || []);
+      const data = await apiGet(`/menus`);
+      const allItems: MenuItem[] = data.data || [];
+
+      // Filter menu items based on the active cuisine
+      const filteredItems =
+        cuisine === 'all'
+          ? allItems // Show all items for "all" tab
+          : allItems.filter(
+            (item) => categoryToCuisineMap[item.category] === cuisine
+          );
+
+      setMenuItems(filteredItems);
     } catch (err: any) {
       console.log(err);
     } finally {
@@ -38,43 +56,70 @@ const MenuTabAll: React.FC = () => {
         {/* Header */}
         <div className="mb-6">
           <h2 className="text-2xl font-bold mb-2">Menu</h2>
-          <h3 className="text-xl font-semibold text-green-600">Check Our Tasty Menu</h3>
+          <h3 className="text-xl font-semibold text-green-600">
+            Check Our Tasty Menu
+          </h3>
 
           {/* Tabs */}
           <div className="flex space-x-6 mt-4">
             <button
               onClick={() => setActiveCuisine('all')}
-              className={`font-bold flex items-center ${activeCuisine === 'all' ? 'text-yellow-600' : 'text-black'}`}
+              className={`font-bold flex items-center ${activeCuisine === 'all' ? 'text-yellow-600' : 'text-black'
+                }`}
             >
               <img src="/images/All-icon.png" className="w-6 h-6 mr-2" /> All
             </button>
 
             <button
               onClick={() => setActiveCuisine('western')}
-              className={`font-bold flex items-center ${activeCuisine === 'western' ? 'text-yellow-600' : 'text-black'}`}
+              className={`font-bold flex items-center ${activeCuisine === 'western' ? 'text-yellow-600' : 'text-black'
+                }`}
             >
-              <img src="/images/western-icon.png" alt="Western" className="w-6 h-6 mr-2" /> Western
+              <img
+                src="/images/western-icon.png"
+                alt="Western"
+                className="w-6 h-6 mr-2"
+              />{' '}
+              Western
             </button>
 
             <button
               onClick={() => setActiveCuisine('vietnam')}
-              className={`font-bold flex items-center ${activeCuisine === 'vietnam' ? 'text-yellow-600' : 'text-black'}`}
+              className={`font-bold flex items-center ${activeCuisine === 'vietnam' ? 'text-yellow-600' : 'text-black'
+                }`}
             >
-              <img src="/images/vietnam-icon.png" alt="Vietnam" className="w-6 h-6 mr-2" /> Viet Nam
+              <img
+                src="/images/vietnam-icon.png"
+                alt="Vietnam"
+                className="w-6 h-6 mr-2"
+              />{' '}
+              Viet Nam
             </button>
 
             <button
               onClick={() => setActiveCuisine('dessert')}
-              className={`font-bold flex items-center ${activeCuisine === 'dessert' ? 'text-yellow-600' : 'text-black'}`}
+              className={`font-bold flex items-center ${activeCuisine === 'dessert' ? 'text-yellow-600' : 'text-black'
+                }`}
             >
-              <img src="/images/dessert-icon.png" alt="Dessert" className="w-6 h-6 mr-2" /> Dessert
+              <img
+                src="/images/dessert-icon.png"
+                alt="Dessert"
+                className="w-6 h-6 mr-2"
+              />{' '}
+              Dessert
             </button>
 
             <button
               onClick={() => setActiveCuisine('drinks')}
-              className={`font-bold flex items-center ${activeCuisine === 'drinks' ? 'text-yellow-600' : 'text-black'}`}
+              className={`font-bold flex items-center ${activeCuisine === 'drinks' ? 'text-yellow-600' : 'text-black'
+                }`}
             >
-              <img src="/images/drinks-icon.png" alt="Drinks" className="w-6 h-6 mr-2" /> Drinks
+              <img
+                src="/images/drinks-icon.png"
+                alt="Drinks"
+                className="w-6 h-6 mr-2"
+              />{' '}
+              Drinks
             </button>
           </div>
         </div>
@@ -86,19 +131,27 @@ const MenuTabAll: React.FC = () => {
           ) : (
             <div className="grid grid-cols-2 gap-6">
               {menuItems.map((item) => (
-                <div key={item.id} className="flex items-center border-b pb-4 last:border-none">
-                  <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded-full mr-4" />
+                <div
+                  key={item.id}
+                  className="flex items-center border-b pb-4 last:border-none"
+                >
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="w-16 h-16 object-cover rounded-full mr-4"
+                  />
                   <div className="flex-1">
                     <h4 className="text-lg font-semibold">{item.name}</h4>
                     <p className="text-gray-500 text-sm">{item.description}</p>
                   </div>
-                  <span className="text-lg font-bold text-green-600">${item.price}</span>
+                  <span className="text-lg font-bold text-green-600">
+                    ${item.price}
+                  </span>
                 </div>
               ))}
             </div>
           )}
         </div>
-
       </div>
     </RootLayout>
   );
