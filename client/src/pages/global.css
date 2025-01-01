@@ -190,5 +190,11 @@
     @apply text-slate-700;
   }
 
+  .increase-icon{
+    @apply rounded-full border border-solid bg-slate-100 border-slate-200 hover:bg-slate-200 w-16 p-2;
+  }
   
+  .decrease-icon{
+    @apply rounded-full border border-solid bg-slate-100 border-slate-200 hover:bg-slate-200 w-16 p-2;
+  }
 }

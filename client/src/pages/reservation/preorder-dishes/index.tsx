@@ -3,6 +3,7 @@ import RootLayout from '../../../layouts/customer/layout';
 import { apiGet, apiPost } from "../../../api/api-requests";
 import { AuthGuard } from "../../../guards/auth-guard";
 import { useUser } from 'src/contexts/users/user-context';
+import PageHeader from 'src/components/page-header';
 
 const PreorderDishesTabAll: React.FC = () => {
     const [menuItems, setMenuItems] = useState<any[]>([]);
@@ -59,7 +60,7 @@ const PreorderDishesTabAll: React.FC = () => {
         );
 
         const order = {
-            user_id: user?._id,
+            user_id: user?.id,
             product_id: menuItems
                 .filter((item) => quantities[item._id] > 0)
                 .map((item) => item._id),
@@ -70,7 +71,7 @@ const PreorderDishesTabAll: React.FC = () => {
         };
 
         const appointment = {
-            id_customer: user?._id,
+            id_customer: user?.id,
             table_number: reservationData.diners,
             status: "Pendding",
             date: reservationData.date,
@@ -93,68 +94,63 @@ const PreorderDishesTabAll: React.FC = () => {
         <RootLayout>
             <div className="p-6">
                 {/* Header */}
-                <div className="mb-6">
-                    <h2 className="text-2xl font-bold mb-2">Pre-order dishes</h2>
-                    <h3 className="text-3xl font-semibold text-yellow-500">
-                        Pre-order dishes for the meal
-                    </h3>
-                </div>
+                <PageHeader title="Preorder Dishes" subtitle="Prepare your dishes before hand" />
 
                 {/* Menu Items */}
-                <div className="grid grid-cols-1">
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
+                <div>
+                    <div className="grid md:grid-cols-2 grid-cols-1 gap-y-2">
                         {menuItems.map((item) => (
-                            <div key={item._id} className="flex align-middle p-4 gap-2">
-                                <div>
+                            <div key={item._id} className="grid grid-cols-12">
+                                <div className="col-span-3 flex justify-center items-center">
                                     <img
                                         src={item.image}
                                         alt={item.name}
-                                        className="w-24 h-24 object-cover rounded-full"
+                                        className="w-16 h-16 object-cover object-center rounded-full border border-solid border-slate-200"
                                     />
                                 </div>
 
-                                <div className="flex flex-col justify-center">
-                                    <div className="flex flex-col">
-                                        <h4 className="text-2xl">
-                                            {item.name}.............
-                                            <span className="text-2xl">
-                                                {item.price}$
-                                            </span>
+                                <div className="col-span-9 flex flex-col justify-center">
+                                    <div className="flex justify-between">
+                                        <h4 className="">
+                                            {item.name}
                                         </h4>
+                                        <span className="">
+                                            {item.price}$
+                                        </span>
                                     </div>
 
                                     <div className="flex items-center justify-start space-x-4 mt-2">
                                         <button
-                                            className="bg-white text-black font-extrabold w-8 h-8 flex justify-center items-center rounded-full border-4 border-black"
+                                            className="bg-white w-8 h-8 flex justify-center items-center"
                                             onClick={() => handleDecrement(item._id)}
                                         >
-                                            <span className="text-3xl mb-2">-</span>
+                                            <img src="/images/minus_icon.png" className="increase-icon" alt="plus" />
                                         </button>
-                                        <span className="text-lg font-bold bg-gray-300 px-6 italic">
+                                        <span className="text-lg font-bold bg-slate-300 px-6 italic rounded-sm">
                                             {quantities[item._id]}
                                         </span>
                                         <button
-                                            className="bg-white text-black font-extrabold w-8 h-8 flex justify-center items-center rounded-full border-4 border-black"
+                                            className="bg-white w-8 h-8 flex justify-center items-center"
                                             onClick={() => handleIncrement(item._id)}
                                         >
-                                            <span className="text-3xl mb-2">+</span>
+                                            <img src="/images/plus_icon.png" className="increase-icon" alt="plus" />
                                         </button>
                                     </div>
                                 </div>
                             </div>
                         ))}
-                        <div className="col-span-1 flex justify-center lg:col-start-3 h-fit mt-10 px-4">
-                            <button
-                                className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-6 rounded-3xl shadow-md"
-                                onClick={handleConfirm}
-                            >
-                                <span className="text-3xl">Confirm</span>
-                            </button>
-                        </div>
+                    </div>
+                    <div className="col-span-1 flex justify-center lg:col-start-3 h-fit mt-10 px-4">
+                        <button
+                            className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-6 rounded-3xl shadow-md"
+                            onClick={handleConfirm}
+                        >
+                            <span className="text-3xl">Confirm</span>
+                        </button>
                     </div>
                 </div>
             </div>
-        </RootLayout>
+        </RootLayout >
     );
 };
 

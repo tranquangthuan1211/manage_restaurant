@@ -82,9 +82,9 @@ const ReservationForm: React.FC = () => {
                                     <button
                                         type="button"
                                         onClick={() => handleDinersChange(-1)}
-                                        className="w-8 h-8 flex items-center justify-center rounded-full border-2 border-black text-lg font-bold"
+                                        className="w-8 h-8 flex items-center justify-center rounded-full"
                                     >
-                                        <img src="/images/minus_icon.png" alt="minus" width={20}/>
+                                        <img src="/images/minus_icon.png" className="decrease-icon" alt="minus"/>
                                     </button>
                                     <span className="px-4 py-1 w-10 text-center">
                                         {formData.diners}
@@ -92,9 +92,9 @@ const ReservationForm: React.FC = () => {
                                     <button
                                         type="button"
                                         onClick={() => handleDinersChange(1)}
-                                        className="w-8 h-8 flex items-center justify-center rounded-full border-2 border-black text-lg font-bold"
+                                        className="w-8 h-8 flex items-center justify-center rounded-full"
                                     >
-                                        <img src="/images/plus_icon.png" alt="plus" width={20}/>
+                                        <img src="/images/plus_icon.png" className="increase-icon"  alt="plus" />
                                     </button>
                                 </div>
                             </div>
