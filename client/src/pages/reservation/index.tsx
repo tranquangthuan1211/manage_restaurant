@@ -1,47 +1,68 @@
 import React, { useState } from "react";
-import { AuthGuard } from "../../guards/auth-guard";
-import RootLayout from "../../layouts/customer/layout";
+import RootLayout from "src/layouts/customer/layout";
 import { useRouter } from "next/router";
-import { useUser } from "../../contexts/users/user-context";
+import { useUser } from "src/contexts/users/user-context";
+import { AuthGuard } from "src/guards/auth-guard";
+import PageHeader from "src/components/page-header";
+
 const ReservationForm: React.FC = () => {
-    const [diners, setDiners] = useState(1);
-    const [date, setDate] = useState("");
-    const [time, setTime] = useState("");
-    const [specialRequests, setSpecialRequests] = useState("");
-    const [agreeTerms, setAgreeTerms] = useState(false);
+    const [formData, setFormData] = useState({
+        diners: 1,
+        date: "",
+        time: "",
+        specialRequests: "",
+        agreeTerms: false,
+    });
+
     const router = useRouter();
-
-
     const userContext = useUser();
-    const isAuthenticated = userContext ? userContext.isAuthenticated : false;
-    if (!isAuthenticated) {
-        window.location.href = '/auth';
-        return <div>
-            <p className='text-xl mb-10'> Please log in to access this page.
-            </p>
-        </div>;
+
+    // Check authentication
+    if (!userContext?.isAuthenticated) {
+        window.location.href = "/auth";
+        return (
+            <div>
+                <p className="text-xl mb-10">Please log in to access this page.</p>
+            </div>
+        );
     }
 
+    // Update form data dynamically
+    const handleChange = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    ) => {
+        const { name, value, type } = e.target as HTMLInputElement;
+        const checked = (e.target as HTMLInputElement).checked;
+        setFormData((prev) => ({
+            ...prev,
+            [name]: type === "checkbox" ? checked : value,
+        }));
+    };
+
+    const handleDinersChange = (increment: number) => {
+        setFormData((prev) => ({
+            ...prev,
+            diners: Math.max(1, prev.diners + increment),
+        }));
+    };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (!agreeTerms) {
+        if (!formData.agreeTerms) {
             alert("Please agree to the terms and conditions.");
             return;
         }
 
-        const reservationData = { diners, date, time, specialRequests };
-        localStorage.setItem("reservationData", JSON.stringify(reservationData));
-
+        localStorage.setItem("reservationData", JSON.stringify(formData));
         router.push("/reservation/preorder-dishes");
     };
 
     return (
         <RootLayout>
-            <div className="flex flex-col items-center justify-center min-h-screen bg-cover bg-center">
-                <div className="flex flex-col md:flex-row w-[90%] max-w-8xl bg-white rounded-lg shadow-lg overflow-hidden">
+            <div className="min-h-screen flex items-center justify-center bg-cover bg-center">
+                <div className="grid grid-cols-1 md:grid-cols-2 max-w-8xl bg-white">
                     {/* Left Section: Image */}
-                    <div className="w-full md:w-1/2">
+                    <div>
                         <img
                             src="/images/login_bg.jpg"
                             alt="Reservation"
@@ -50,94 +71,84 @@ const ReservationForm: React.FC = () => {
                     </div>
 
                     {/* Right Section: Form */}
-                    <div className="w-full md:w-1/2 p-12" style={{ background: "#bfbfbf" }}>
-                        <h2 className="text-4xl font-bold mb-8 text-yellow-300 text-center">
-                            Reservation Form
-                        </h2>
+                    <div className="p-8 md:p-12 bg-slate-100">
+                        <PageHeader title="Reservation" subtitle="Book a table" />
 
-                        <form onSubmit={handleSubmit} className="space-y-6">
-                            {/* Number of Diners */}
-                            <div
-                                className="flex items-center justify-between text-xl p-2 rounded-lg"
-                                style={{ background: "#a8bba0" }}
-                            >
-                                <label className="font-bold text-3xl">Number of diners</label>
-                                <div className="flex items-center space-x-3">
+                        <form onSubmit={handleSubmit} className="space-y-4">
+                            {/* People */}
+                            <div className="grid grid-cols-3 gap-4 items-center p-4 border border-solid rounded-sm">
+                                <label className="font-bold col-span-1">People</label>
+                                <div className="col-span-2 flex items-center space-x-3">
                                     <button
                                         type="button"
-                                        onClick={() => setDiners(Math.max(1, diners - 1))}
-                                        className="text-black font-bold w-10 h-10 flex justify-center items-center rounded-full border-4 border-black text-3xl"
+                                        onClick={() => handleDinersChange(-1)}
+                                        className="w-8 h-8 flex items-center justify-center rounded-full border-2 border-black text-lg font-bold"
                                     >
-                                        <span className="text-3xl mb-2 font-bold">-</span>
+                                        <img src="/images/minus_icon.png" alt="minus" width={20}/>
                                     </button>
-                                    <span
-                                        className="text-2xl font-bold bg-gray px-6 py-1"
-                                        style={{ background: "#bfbfbf" }}
-                                    >
-                                        {diners}
+                                    <span className="px-4 py-1 w-10 text-center">
+                                        {formData.diners}
                                     </span>
                                     <button
                                         type="button"
-                                        onClick={() => setDiners(diners + 1)}
-                                        className="text-black font-bold w-10 h-10 flex justify-center items-center rounded-full border-4 border-black text-3xl"
+                                        onClick={() => handleDinersChange(1)}
+                                        className="w-8 h-8 flex items-center justify-center rounded-full border-2 border-black text-lg font-bold"
                                     >
-                                        <span className="text-3xl mb-2 font-bold">+</span>
+                                        <img src="/images/plus_icon.png" alt="plus" width={20}/>
                                     </button>
                                 </div>
                             </div>
 
-                            {/* Date và Time */}
-                            <div
-                                className="flex space-x-6 mb-6 p-5 rounded-xl"
-                                style={{ background: "#a8bba0" }}
-                            >
-                                <div className="w-1/2">
-                                    <label className="block font-bold text-2xl mb-2">Date</label>
+                            {/* Date and Time */}
+                            <div className="grid grid-cols-2 gap-4 p-4 border border-solid rounded-sm">
+                                <div>
+                                    <label className="block font-bold mb-1">Date</label>
                                     <input
                                         type="date"
-                                        value={date}
-                                        onChange={(e) => setDate(e.target.value)}
-                                        className="w-full p-3 border rounded-lg text-lg"
+                                        name="date"
+                                        value={formData.date}
+                                        onChange={handleChange}
+                                        className="w-full p-2 border rounded-lg text-sm"
                                         required
                                     />
                                 </div>
-
-                                <div className="w-1/2">
-                                    <label className="block font-bold text-2xl mb-2">Time</label>
+                                <div>
+                                    <label className="block font-bold mb-1">Time</label>
                                     <input
                                         type="time"
-                                        value={time}
-                                        onChange={(e) => setTime(e.target.value)}
-                                        className="w-full p-3 border rounded-lg text-lg"
+                                        name="time"
+                                        value={formData.time}
+                                        onChange={handleChange}
+                                        className="w-full p-2 border rounded-lg text-sm"
                                         required
                                     />
                                 </div>
                             </div>
 
                             {/* Special Requests */}
-                            <div className="p-5 rounded-xl" style={{ background: "#a8bba0" }}>
-                                <label className="block font-bold text-2xl mb-2">
-                                    Special requests (optional)
-                                </label>
+                            <div className="p-4 border border-solid rounded-sm">
+                                <label className="block font-bold mb-2">Special requests (optional)</label>
                                 <textarea
-                                    value={specialRequests}
-                                    onChange={(e) => setSpecialRequests(e.target.value)}
-                                    className="w-full p-3 border rounded-lg text-lg"
-                                    rows={4}
+                                    name="specialRequests"
+                                    value={formData.specialRequests}
+                                    onChange={handleChange}
+                                    className="w-full p-2 border rounded-lg text-sm"
+                                    rows={3}
                                 />
                             </div>
 
                             {/* Terms and Conditions */}
-                            <div className="flex items-center text-lg">
+                            <div className="flex items-center space-x-2">
                                 <input
                                     type="checkbox"
-                                    checked={agreeTerms}
-                                    onChange={(e) => setAgreeTerms(e.target.checked)}
-                                    className="w-12 h-12 rounded-xl"
+                                    name="agreeTerms"
+                                    checked={formData.agreeTerms}
+                                    onChange={handleChange}
+                                    className="w-5 h-5"
                                     required
                                 />
-                                <label className="ml-3 text-2xl">
-                                    <span className="text-white">I agree to the </span>{" "}
+                                <label className="text-sm">
+                                    <span className="text-black">I agree to the </span>
                                     <a href="#" className="text-yellow-600 underline">
                                         terms and conditions
                                     </a>
@@ -145,10 +156,10 @@ const ReservationForm: React.FC = () => {
                             </div>
 
                             {/* Submit Button */}
-                            <div className="flex justify-center mt-6">
+                            <div className="text-center">
                                 <button
                                     type="submit"
-                                    className="bg-yellow-300 text-white font-bold py-3 px-6 rounded-3xl text-2xl"
+                                    className="button-yellow"
                                 >
                                     Pre-order dishes
                                 </button>
@@ -158,7 +169,9 @@ const ReservationForm: React.FC = () => {
                 </div>
             </div>
         </RootLayout>
+
     );
 };
 
 export default ReservationForm;
+

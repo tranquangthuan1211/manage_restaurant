@@ -2,6 +2,7 @@ import RootLayout from 'src/layouts/customer/layout';
 import { useUser } from 'src/contexts/users/user-context';
 import StarRating from 'src/components/star-rating';
 import { useState } from 'react';
+import PageHeader from 'src/components/page-header';
 
 
 const ScoreFields = {
@@ -15,16 +16,22 @@ const ScoreFields = {
   valueOfMoney: "Value of Money",
 };
 
+
 const SectionHeader: React.FC<{ title: string }> = ({ title }) => (
   <div className="flex items-center w-full col-span-full my-4">
-    <div className="flex-grow border-t border-olive-green-600"></div>
-    <span className="flex-shrink mx-2 text-olive-green-600 text-center italic">{title}</span>
-    <div className="flex-grow border-t border-olive-green-600"></div>
+    <div className="flex-grow border-t border-slate-400"></div>
+    <h2 className="flex-shrink mx-2 text-slate-400 text-center italic">{title}</h2>
+    <div className="flex-grow border-t border-slate-400"></div>
   </div>
-);
+)
 
 const CustomerWriteReview: React.FC = () => {
   const { user, isAuthenticated } = useUser() || { user: null, isAuthenticated: false };
+  if (user === null || !isAuthenticated) {
+    window.location.href = '/auth';
+    return <div></div>;
+  }
+
   const [formData, setFormData] = useState(
     Object.keys(ScoreFields).reduce((acc, key) => ({ ...acc, [key]: 0 }), {})
   );
@@ -37,18 +44,12 @@ const CustomerWriteReview: React.FC = () => {
     console.log(formData);
   };
 
-  if (!isAuthenticated) {
-    window.location.href = "/auth";
-    return null;
-  }
-
   return (
     <RootLayout>
       <div className="bg-gray-teal-800">
-        <div className="grid grid-cols-12 pt-8 pb-16 px-16">
-          <div className="col-span-full flex flex-col items-center mb-4">
-            <SectionHeader title="Review" />
-            <p className="text-primary text-center">Thoughts on your reservations</p>
+        <div className="grid grid-cols-12 pt-8 pb-16 px-2 md:px-16">
+          <div className="col-span-full mb-4">
+            <PageHeader title="Review" subtitle="Thoughts on our restaurant" />
           </div>
 
           <div className="col-span-full bg-slate-200 rounded-lg shadow-lg pb-8">
@@ -67,11 +68,11 @@ const CustomerWriteReview: React.FC = () => {
                 <SectionHeader title="Rating" />
                 <div className="grid grid-cols-12">
                   {Object.entries(ScoreFields).map(([key, label]) => (
-                    <div key={key} className="col-span-full grid grid-cols-12 hover:bg-slate-100 px-4 py-2 rounded-md">
-                      <label htmlFor={key} className="mb-4 md:mb-0 col-span-full md:col-span-8">
+                    <div key={key} className="col-span-full grid grid-cols-12 hover:bg-slate-100 px-4 py-4 md:py-2 rounded-md">
+                      <label htmlFor={key} className="col-span-6 md:col-span-8">
                         {label}
                       </label>
-                      <div className="col-span-full md:col-span-4">
+                      <div className="col-span-6 md:col-span-4">
                         <StarRating label={key} onChange={handleScoreChange} />
                       </div>
                     </div>

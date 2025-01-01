@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import RootLayout from 'src/layouts/customer/layout';
-import CustomerSideBar from './sidebar';
+import CustomerSideBar from '../../components/customer/sidebar';
 import { useUser } from 'src/contexts/users/user-context';
-import Spinner from 'src/components/spinner';
 
 interface Booking {
     date: string;
@@ -20,12 +19,10 @@ interface PreOrder {
 
 const CustomerBookingHistory = () => {
     const { user, isAuthenticated } = useUser() || { user: null, isAuthenticated: false };
-
-    if (!isAuthenticated) {
+    if (user === null || !isAuthenticated) {
         window.location.href = '/auth';
         return <div></div>;
     }
-
     // Placeholder data for current pages
     const placeholderData : Booking[] = [
         {
@@ -59,7 +56,6 @@ const CustomerBookingHistory = () => {
             ],
             reviewId: 2233
         }
-
     ];
 
     const [bookingData, setBookingData] = useState<Booking[]>(placeholderData); // TODO: Replace with []

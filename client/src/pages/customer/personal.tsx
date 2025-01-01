@@ -1,6 +1,6 @@
 import React from 'react';
 import RootLayout from '../../layouts/customer/layout';
-import CustomerSideBar from './sidebar';
+import CustomerSideBar from '../../components/customer/sidebar';
 import { useState, useEffect } from 'react';
 import { apiGet } from 'src/api/api-requests';
 import { User } from 'src/types/user';
@@ -8,9 +8,11 @@ import { User } from 'src/types/user';
 import {useUser} from 'src/contexts/users/user-context';
 
 const CustomerPersonalInfo = () => {
-    const userContext = useUser();
-    const user = userContext ? userContext.user : null;
-    const isAuthenticated = userContext ? userContext.isAuthenticated : false;
+    const { user, isAuthenticated } = useUser() || { user: null, isAuthenticated: false };
+    if (user === null || !isAuthenticated) {
+        window.location.href = '/auth';
+        return <div></div>;
+    }
 
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState({

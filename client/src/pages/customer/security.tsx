@@ -1,15 +1,12 @@
 import React from 'react';
 import RootLayout from '../../layouts/customer/layout';
-import CustomerSideBar from './sidebar';
+import CustomerSideBar from '../../components/customer/sidebar';
 import { useUser } from 'src/contexts/users/user-context';
 import { useState } from 'react';
 
 const CustomerSecurity = () => {
-    const userContext = useUser();
-    const user = userContext ? userContext.user : null;
-    const isAuthenticated = userContext ? userContext.isAuthenticated : false;
-
-    if (userContext == null || !isAuthenticated) {
+    const { user, isAuthenticated } = useUser() || { user: null, isAuthenticated: false };
+    if (user === null || !isAuthenticated) {
         window.location.href = '/auth';
         return <div></div>;
     }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from 'src/contexts/users/user-context';
 import RootLayout from 'src/layouts/customer/layout';
-import CustomerSideBar from './sidebar';
+import CustomerSideBar from '../../components/customer/sidebar';
 
 interface StarScoreProps {
   filled: boolean;
@@ -19,7 +19,7 @@ const StarScore: React.FC<StarScoreProps> = ({ filled }) => {
       </g>
     </svg>
   )
-};  
+};
 
 interface Review {
   reviewId: number;
@@ -94,11 +94,8 @@ const CustomerReviewHistory = () => {
   const [totalPages, setTotalPages] = useState(4); // TODO: Replace with 0
   const itemsPerPage = 3;
 
-  const userContext = useUser();
-  const user = userContext ? userContext.user : null;
-  const isAuthenticated = userContext ? userContext.isAuthenticated : false;
-
-  if (!isAuthenticated) {
+  const { user, isAuthenticated } = useUser() || { user: null, isAuthenticated: false };
+  if (user === null || !isAuthenticated) {
     window.location.href = '/auth';
     return <div></div>;
   }
@@ -116,7 +113,7 @@ const CustomerReviewHistory = () => {
 
   const MAX_SCORE = 5;
   const MAX_FEEDBACK_LENGTH = 100;
-  const renderRow = (index: number, review : Review) => (
+  const renderRow = (index: number, review: Review) => (
     <tr key={index} className="hover:bg-gray-100">
       <td className="p-4 text-center">{index}</td>
       <td className="p-4 text-center">{review.date}</td>
@@ -171,7 +168,7 @@ const CustomerReviewHistory = () => {
           </tr>
         </thead>
         <tbody>
-          {reviews.map((review : Review, index : number) =>
+          {reviews.map((review: Review, index: number) =>
             renderRow(
               (currentPage - 1) * itemsPerPage + index + 1,
               review

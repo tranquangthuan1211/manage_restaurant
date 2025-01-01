@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
+import { AuthGuard } from "src/guards/auth-guard";
 
 export default function RootLayout({
   children,
@@ -136,5 +137,6 @@ export default function RootLayout({
       {/* Footer End */}
 
     </div>
+
   );
 }

@@ -88,6 +88,12 @@
     text-white font-bold py-2 px-4 rounded-3xl shadow-lg
     text-xl;
   }
+  .button-yellow{
+    @apply bg-gradient-to-r from-yellow-400 to-yellow-500
+    hover:from-yellow-500 hover:to-yellow-600
+    text-white font-bold py-2 px-4 rounded-3xl shadow-lg
+    text-xl;
+  }
   .button-icon{
     @apply bg-gray-200
     w-10 h-10 mx-1 my-2 p-2
