@@ -60,7 +60,8 @@ async function handleGetFood(page: number = 1, limit: number = 10, categoryName:
 
         // Execute the count query
         const totalItemsResult = await MenuDataBase.menu.aggregate(totalItemsPipeline).toArray();
-        const totalItemsCount = totalItemsResult.length;
+        const totalItemsCount = totalItemsResult.length > 0 ? totalItemsResult[0].totalItems : 0;
+
         // Calculate total pages
         const totalPages = Math.ceil(totalItemsCount / limit);
 
