@@ -51,6 +51,11 @@ const MenuTabAll: React.FC = () => {
     fetchMenuItems(activeCuisine, currentPage);
   }, [activeCuisine, currentPage]);
 
+  const handleCuisineChange = (cuisine: string) => {
+    setActiveCuisine(cuisine);
+    setCurrentPage(1);
+  };
+
   const renderPagination = () => (
     <div className="flex justify-center items-center space-x-4 mt-4">
       <button
@@ -84,7 +89,7 @@ const MenuTabAll: React.FC = () => {
           {/* Tabs */}
           <div className="flex space-x-6 mt-4">
             <button
-              onClick={() => setActiveCuisine('all')}
+              onClick={() => handleCuisineChange('all')}
               className={`font-bold flex items-center ${activeCuisine === 'all' ? 'text-yellow-600' : 'text-black'
                 }`}
             >
@@ -92,7 +97,7 @@ const MenuTabAll: React.FC = () => {
             </button>
 
             <button
-              onClick={() => setActiveCuisine('western')}
+              onClick={() => handleCuisineChange('western')}
               className={`font-bold flex items-center ${activeCuisine === 'western' ? 'text-yellow-600' : 'text-black'
                 }`}
             >
@@ -105,7 +110,7 @@ const MenuTabAll: React.FC = () => {
             </button>
 
             <button
-              onClick={() => setActiveCuisine('vietnam')}
+              onClick={() => handleCuisineChange('vietnam')}
               className={`font-bold flex items-center ${activeCuisine === 'vietnam' ? 'text-yellow-600' : 'text-black'
                 }`}
             >
@@ -118,7 +123,7 @@ const MenuTabAll: React.FC = () => {
             </button>
 
             <button
-              onClick={() => setActiveCuisine('dessert')}
+              onClick={() => handleCuisineChange('dessert')}
               className={`font-bold flex items-center ${activeCuisine === 'dessert' ? 'text-yellow-600' : 'text-black'
                 }`}
             >
@@ -131,7 +136,7 @@ const MenuTabAll: React.FC = () => {
             </button>
 
             <button
-              onClick={() => setActiveCuisine('drinks')}
+              onClick={() => handleCuisineChange('drinks')}
               className={`font-bold flex items-center ${activeCuisine === 'drinks' ? 'text-yellow-600' : 'text-black'
                 }`}
             >

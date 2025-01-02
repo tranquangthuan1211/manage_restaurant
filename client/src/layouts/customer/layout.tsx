@@ -63,11 +63,11 @@ export default function RootLayout({
 
             {/* Navbar Links */}
             <div className="col-span-full md:col-span-6 grid grid-cols-12 md:grid-cols-6 text-center md:text-right">
-              <a href="/" className="text-white py-2 px-4 hover:underline col-span-full md:col-span-2">
+              {/* <a href="/" className="text-white py-2 px-4 hover:underline col-span-full md:col-span-2">
                 Home
-              </a>
-              <a href="/customer/cart" className="text-white py-2 px-4 hover:underline col-span-full md:col-span-2">
-                Cart
+              </a> */}
+              <a href="/menu" className="text-white py-2 px-4 hover:underline col-span-full md:col-span-2">
+                Menu
               </a>
               <a
                 href="/customer/personal"
