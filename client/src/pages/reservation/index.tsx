@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import RootLayout from "src/layouts/customer/layout";
 import { useRouter } from "next/router";
 import { useUser } from "src/contexts/users/user-context";
-import { AuthGuard } from "src/guards/auth-guard";
 import PageHeader from "src/components/page-header";
 
 const ReservationForm: React.FC = () => {
@@ -42,14 +41,48 @@ const ReservationForm: React.FC = () => {
     const handleDinersChange = (increment: number) => {
         setFormData((prev) => ({
             ...prev,
-            diners: Math.max(1, prev.diners + increment),
+            diners: Math.max(1, Math.min(8, prev.diners + increment)),
         }));
+    };
+
+    const validateForm = () => {
+        const { diners, date, time, agreeTerms } = formData;
+
+        if (!date || !time || !agreeTerms) {
+            alert("Please fill all required fields.");
+            return false;
+        }
+
+        // Check if date is not in the past
+        const selectedDate = new Date(date);
+        const currentDate = new Date();
+        if (selectedDate < currentDate) {
+            alert("You cannot book a table for a past date.");
+            return false;
+        }
+
+        // Check if time is within operating hours (6:00 AM to 10:00 PM)
+        const selectedTime = new Date(`${date}T${time}`);
+        const openingTime = new Date(`${date}T06:00`);
+        const closingTime = new Date(`${date}T22:00`);
+        if (selectedTime < openingTime || selectedTime > closingTime) {
+            alert("You can only book a table between 6:00 AM and 10:00 PM.");
+            return false;
+        }
+
+        // Check if number of diners is valid (1-8)
+        if (diners <= 0 || diners > 8) {
+            alert("Please select a valid number of diners (1-8).");
+            return false;
+        }
+
+        return true;
     };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (!formData.agreeTerms) {
-            alert("Please agree to the terms and conditions.");
+
+        if (!validateForm()) {
             return;
         }
 
@@ -84,7 +117,7 @@ const ReservationForm: React.FC = () => {
                                         onClick={() => handleDinersChange(-1)}
                                         className="w-8 h-8 flex items-center justify-center rounded-full"
                                     >
-                                        <img src="/images/minus_icon.png" className="decrease-icon" alt="minus"/>
+                                        <img src="/images/minus_icon.png" className="decrease-icon" alt="minus" />
                                     </button>
                                     <span className="px-4 py-1 w-10 text-center">
                                         {formData.diners}
@@ -94,7 +127,7 @@ const ReservationForm: React.FC = () => {
                                         onClick={() => handleDinersChange(1)}
                                         className="w-8 h-8 flex items-center justify-center rounded-full"
                                     >
-                                        <img src="/images/plus_icon.png" className="increase-icon"  alt="plus" />
+                                        <img src="/images/plus_icon.png" className="increase-icon" alt="plus" />
                                     </button>
                                 </div>
                             </div>
@@ -169,9 +202,7 @@ const ReservationForm: React.FC = () => {
                 </div>
             </div>
         </RootLayout>
-
     );
 };
 
 export default ReservationForm;
-
