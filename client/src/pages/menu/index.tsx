@@ -12,6 +12,13 @@ interface MenuItem {
   category: string;
 }
 
+interface QueryParams {
+  page: number;
+  limit: number;
+  category: string;
+  nameFilter: string;
+}
+
 const MenuTabAll: React.FC = () => {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [activeCuisine, setActiveCuisine] = useState<string>('all'); // Default cuisine
@@ -20,11 +27,12 @@ const MenuTabAll: React.FC = () => {
   const [totalPages, setTotalPages] = useState<number>(0);
   const itemsPerPage = 8;
 
-  const fetchMenuItems = async (cuisine: string, page: number) => {
+  const fetchMenuItems = async (cuisine: string, queryParams: QueryParams) => {
     //return; // TODO: Remove this line later
     try {
       setIsLoading(true);
-      const apiUrl = `/menus?page=${page}&limit=${itemsPerPage}&category=${cuisine}`;
+      const urlParams = new URLSearchParams(Object.entries(queryParams).map(([key, value]) => [key, value.toString()])).toString();
+      const apiUrl = `/menus?${urlParams}`;
       console.log(`fetching menu items from ${apiUrl}`);
       const result = await apiGet(apiUrl);
       
@@ -48,7 +56,15 @@ const MenuTabAll: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchMenuItems(activeCuisine, currentPage);
+    const urlParams = new URLSearchParams(window.location.search);
+    const nameFilter = urlParams.get('nameFilter') || "";
+    const queryParams: QueryParams = {
+      page: currentPage,
+      limit: itemsPerPage,
+      category: activeCuisine,
+      nameFilter: nameFilter,
+    };
+    fetchMenuItems(activeCuisine, queryParams);
   }, [activeCuisine, currentPage]);
 
   const handleCuisineChange = (cuisine: string) => {

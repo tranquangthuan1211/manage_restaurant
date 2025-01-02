@@ -4,7 +4,12 @@ import MenuDataBase from '../models/menu-model'
 import { error } from 'console';
 
 // 2/1/2025: Modified by HP
-async function handleGetFood(page: number = 1, limit: number = 10, categoryName: string = "all") {
+async function handleGetFood(
+    page: number = 1, 
+    limit: number = 10, 
+    categoryName: string = "all", 
+    nameFilter: string | undefined = ""
+) {
     try {
         // Helper function to create the $lookup stage
         const createLookupStage = () => ({
@@ -24,12 +29,22 @@ async function handleGetFood(page: number = 1, limit: number = 10, categoryName:
             $match: { "category.name": categoryName }
         });
 
+        // Helper function to create the $match stage for filtering by dish name
+        const createNameFilterStage = (name: string) => ({
+            $match: { name: { $regex: name, $options: "i" } } // Case-insensitive match
+        });
+
         // Base pipeline
         let pipeline: any[] = [createLookupStage()];
 
-        // Add filtering stage if categoryName is provided
+        // Add category filtering stage if categoryName is provided
         if (categoryName !== "all") {
             pipeline.push(createCategoryFilterStage(categoryName));
+        }
+
+        // Add name filtering stage if nameFilter is provided
+        if (nameFilter !== "") {
+            pipeline.push(createNameFilterStage(nameFilter));
         }
 
         // Add projection stage
@@ -56,6 +71,9 @@ async function handleGetFood(page: number = 1, limit: number = 10, categoryName:
         if (categoryName !== "all") {
             totalItemsPipeline.push(createCategoryFilterStage(categoryName));
         }
+        if (nameFilter !== "all") {
+            totalItemsPipeline.push(createNameFilterStage(nameFilter));
+        }
         totalItemsPipeline.push({ $count: "totalItems" });
 
         // Execute the count query
@@ -81,6 +99,7 @@ async function handleGetFood(page: number = 1, limit: number = 10, categoryName:
 
 
 
+
 class MenuController {
     async getFood(req: Request, res: Response) {
         try {
@@ -102,7 +121,8 @@ class MenuController {
             const page = parseInt(req.query.page as string) || 1;
             const limit = parseInt(req.query.limit as string) || 10;
             const categoryName = req.query.category as string | "all";
-            const foods = await handleGetFood(page, limit, categoryName);
+            const nameFilter = req.query.nameFilter as string | "";
+            const foods = await handleGetFood(page, limit, categoryName, nameFilter);
             return res.status(200).json({
                 // Added by HP
                 error: 0,
