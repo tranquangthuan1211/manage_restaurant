@@ -87,10 +87,10 @@ const MenuTabAll: React.FC = () => {
           </h3>
 
           {/* Tabs */}
-          <div className="flex space-x-6 mt-4">
+          <div className="grid grid-cols-2 md:grid-cols-6 mt-4">
             <button
               onClick={() => handleCuisineChange('all')}
-              className={`font-bold flex items-center ${activeCuisine === 'all' ? 'text-yellow-600' : 'text-black'
+              className={`font-bold flex items-center px-8 md:px-0 md:py-2 py-4 ${activeCuisine === 'all' ? 'text-yellow-600' : 'text-black'
                 }`}
             >
               <img src="/images/All-icon.png" className="w-6 h-6 mr-2" /> All
@@ -98,7 +98,7 @@ const MenuTabAll: React.FC = () => {
 
             <button
               onClick={() => handleCuisineChange('western')}
-              className={`font-bold flex items-center ${activeCuisine === 'western' ? 'text-yellow-600' : 'text-black'
+              className={`font-bold flex items-center px-8 md:px-0 md:py-2 py-4 ${activeCuisine === 'western' ? 'text-yellow-600' : 'text-black'
                 }`}
             >
               <img
@@ -111,7 +111,7 @@ const MenuTabAll: React.FC = () => {
 
             <button
               onClick={() => handleCuisineChange('vietnam')}
-              className={`font-bold flex items-center ${activeCuisine === 'vietnam' ? 'text-yellow-600' : 'text-black'
+              className={`font-bold flex items-center px-8 md:px-0 md:py-2 py-4 ${activeCuisine === 'vietnam' ? 'text-yellow-600' : 'text-black'
                 }`}
             >
               <img
@@ -124,7 +124,7 @@ const MenuTabAll: React.FC = () => {
 
             <button
               onClick={() => handleCuisineChange('dessert')}
-              className={`font-bold flex items-center ${activeCuisine === 'dessert' ? 'text-yellow-600' : 'text-black'
+              className={`font-bold flex items-center px-8 md:px-0 md:py-2 py-4 ${activeCuisine === 'dessert' ? 'text-yellow-600' : 'text-black'
                 }`}
             >
               <img
@@ -137,7 +137,7 @@ const MenuTabAll: React.FC = () => {
 
             <button
               onClick={() => handleCuisineChange('drinks')}
-              className={`font-bold flex items-center ${activeCuisine === 'drinks' ? 'text-yellow-600' : 'text-black'
+              className={`font-bold flex items-center px-8 md:px-0 ${activeCuisine === 'drinks' ? 'text-yellow-600' : 'text-black'
                 }`}
             >
               <img
