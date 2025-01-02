@@ -1,25 +1,38 @@
 import { Request, Response } from 'express';
 import { ObjectId } from 'mongodb';
 import MenuDataBase from '../models/menu-model'
+import { error } from 'console';
 
-async function handleGetFood() {
+// 2/1/2025: Modified by HP
+async function handleGetFood(page: number = 1, limit: number = 10, categoryName: string = "all") {
     try {
-        let pipeline: any[] = [];
-
-        pipeline = pipeline.concat([
-            {
-                $lookup: {
-                    from: "category",
-                    let: { categoryId: { $toObjectId: "$category" } },
-                    pipeline: [
-                        { $match: { $expr: { $eq: ["$_id", "$$categoryId"] } } }, 
-                        { $project: { name: 1, _id: 1 } }
-                    ],
-                    as: "category"
-                }
+        // Helper function to create the $lookup stage
+        const createLookupStage = () => ({
+            $lookup: {
+                from: "category",
+                let: { categoryId: { $toObjectId: "$category" } },
+                pipeline: [
+                    { $match: { $expr: { $eq: ["$_id", "$$categoryId"] } } },
+                    { $project: { name: 1, _id: 1 } }
+                ],
+                as: "category"
             }
-        ]);
+        });
 
+        // Helper function to create the $match stage for filtering by category name
+        const createCategoryFilterStage = (categoryName: string) => ({
+            $match: { "category.name": categoryName }
+        });
+
+        // Base pipeline
+        let pipeline: any[] = [createLookupStage()];
+
+        // Add filtering stage if categoryName is provided
+        if (categoryName !== "all") {
+            pipeline.push(createCategoryFilterStage(categoryName));
+        }
+
+        // Add projection stage
         pipeline.push({
             $project: {
                 _id: 1,
@@ -31,12 +44,40 @@ async function handleGetFood() {
             }
         });
 
-        const data = await MenuDataBase.menu.aggregate(pipeline).toArray();
-        return data;
+        // Add pagination stages
+        const skip = (page - 1) * limit;
+        pipeline.push({ $skip: skip }, { $limit: limit });
+
+        // Execute the main query
+        const items = await MenuDataBase.menu.aggregate(pipeline).toArray();
+
+        // Create total items pipeline
+        let totalItemsPipeline: any[] = [createLookupStage()];
+        if (categoryName !== "all") {
+            totalItemsPipeline.push(createCategoryFilterStage(categoryName));
+        }
+        totalItemsPipeline.push({ $count: "totalItems" });
+
+        // Execute the count query
+        const totalItemsResult = await MenuDataBase.menu.aggregate(totalItemsPipeline).toArray();
+        const totalItemsCount = totalItemsResult.length;
+        // Calculate total pages
+        const totalPages = Math.ceil(totalItemsCount / limit);
+
+        return {
+            items: items,
+            pagination: {
+                page: page,
+                totalItems: totalItemsCount,
+                totalPages: totalPages,
+                limit: limit
+            }
+        };
     } catch (error: any) {
         throw new Error(error.message);
     }
 }
+
 
 
 class MenuController {
@@ -57,8 +98,15 @@ class MenuController {
     }
     async getFoods(req: Request, res: Response) {
         try {
-            const foods = await handleGetFood();
+            const page = parseInt(req.query.page as string) || 1;
+            const limit = parseInt(req.query.limit as string) || 10;
+            const categoryName = req.query.category as string | "all";
+            const foods = await handleGetFood(page, limit, categoryName);
             return res.status(200).json({
+                // Added by HP
+                error: 0,
+                message: "OK",
+                // 
                 data: foods
             })
         } catch (error: any) {

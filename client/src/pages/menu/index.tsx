@@ -1,3 +1,4 @@
+import { set } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { apiGet } from 'src/api/api-requests';
 import RootLayout from 'src/layouts/customer/layout';
@@ -15,30 +16,30 @@ const MenuTabAll: React.FC = () => {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [activeCuisine, setActiveCuisine] = useState<string>('all'); // Default cuisine
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(0);
+  const itemsPerPage = 8;
 
-  // Mapping categories to cuisines
-  const categoryToCuisineMap: Record<string, string> = {
-    "Món chính": "vietnam",
-    "Món phụ": "western",
-    "Món tráng miệng": "dessert",
-    "Món uống": "drinks",
-  };
-
-  const fetchMenuItems = async (cuisine: string) => {
+  const fetchMenuItems = async (cuisine: string, page: number) => {
+    //return; // TODO: Remove this line later
     try {
       setIsLoading(true);
-      const data = await apiGet(`/menus`);
-      const allItems: MenuItem[] = data.data || [];
+      const apiUrl = `/menus?page=${page}&limit=${itemsPerPage}&category=${cuisine}`;
+      console.log(`fetching menu items from ${apiUrl}`);
+      const result = await apiGet(apiUrl);
+      
+      //console.log(JSON.stringify(result)); 
+      if (result.error == 0){
+        const {items, pagination} = result.data;
+        console.log(`fetched ${items.length} items`);
+        
+        setMenuItems(items);
+        setTotalPages(pagination.totalPages);
+        console.log(`total pages: ${pagination.totalPages}`);
+      } else {
+        console.log(`Failed to fetch menu items: ${JSON.stringify(result)}`);
+      }
 
-      // Filter menu items based on the active cuisine
-      const filteredItems =
-        cuisine === 'all'
-          ? allItems // Show all items for "all" tab
-          : allItems.filter(
-            (item) => categoryToCuisineMap[item.category] === cuisine
-          );
-
-      setMenuItems(filteredItems);
     } catch (err: any) {
       console.log(err);
     } finally {
@@ -47,8 +48,28 @@ const MenuTabAll: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchMenuItems(activeCuisine);
-  }, [activeCuisine]);
+    fetchMenuItems(activeCuisine, currentPage);
+  }, [activeCuisine, currentPage]);
+
+  const renderPagination = () => (
+    <div className="flex justify-center items-center space-x-4 mt-4">
+      <button
+        onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+        disabled={currentPage === 1}
+        className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50">
+        Previous
+      </button>
+      <span className="font-bold">
+        Page {currentPage} of {totalPages}
+      </span>
+      <button
+        onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+        disabled={currentPage === totalPages}
+        className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50">
+        Next
+      </button>
+    </div>
+  );
 
   return (
     <RootLayout>
@@ -124,34 +145,48 @@ const MenuTabAll: React.FC = () => {
           </div>
         </div>
 
-        {/* Menu Items */}
+        {/* Menu Start */}
         <div className="flex-grow">
           {isLoading ? (
             <div className="text-center text-gray-500">Loading...</div>
           ) : (
-            <div className="grid grid-cols-2 gap-6">
-              {menuItems.map((item) => (
+            <div className="grid grid-cols-1 md:grid-cols-2">
+              {/* Menu Item Start*/}
+              {totalPages > 0 && menuItems.map((item) => (
                 <div
                   key={item.id}
-                  className="flex items-center border-b pb-4 last:border-none"
+                  className="col-span-1 grid grid-cols-12 border-solid border-r-2 border-slate-100 py-4 px-2"
                 >
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="w-16 h-16 object-cover rounded-full mr-4"
-                  />
-                  <div className="flex-1">
-                    <h4 className="text-lg font-semibold">{item.name}</h4>
-                    <p className="text-gray-500 text-sm">{item.description}</p>
+                  <div className="col-span-3 flex justify-center items-center">
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className="w-20 h-20 object-cover object-center rounded-full"
+                    />
                   </div>
-                  <span className="text-lg font-bold text-green-600">
-                    ${item.price}
-                  </span>
+                  <div className="col-span-8 flex flex-col">
+                    <div className="flex justify-between items-center">
+                      <h4 className="text-lg font-semibold">{item.name}</h4>
+                      <span className="text-lg font-bold text-green-600">
+                        ${item.price}
+                      </span>
+                    </div>
+                    <p className="text-slate-500 text-sm">{item.description}</p>
+                  </div>
                 </div>
               ))}
+              {totalPages === 0 && (
+                <div className="col-span-full text-center text-gray-500">No items found</div>
+              )}
+              {/* Menu Item End*/}
             </div>
           )}
         </div>
+        {/* Menu End */}
+
+        {/* Pagination Start*/}
+        {totalPages > 0 && renderPagination()}
+        {/* Pagination End*/}
       </div>
     </RootLayout>
   );
