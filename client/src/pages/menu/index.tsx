@@ -1,8 +1,7 @@
-import MenuItem from "src/types/menu-item";
-import Menu from "src/components/menu";
+import Menu, {MenuItemProps} from "src/components/menu";
 import RootLayout from "src/layouts/customer/layout";
 
-const DefaultMenuItem: React.FC<MenuItem> = (item) => {
+const DefaultMenuItem: React.FC<MenuItemProps> = ({item, additionalParams}) => {
   const maxDescriptionLength = 50;
   const showAddToCart = false;
   return (
@@ -42,7 +41,7 @@ const MenuUI: React.FC = () => {
   
   return (
     <RootLayout>
-      <Menu itemComponent={DefaultMenuItem} />
+      <Menu itemComponent={DefaultMenuItem}/>
     </RootLayout>
   );
 };

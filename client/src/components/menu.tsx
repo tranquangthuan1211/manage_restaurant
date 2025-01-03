@@ -3,8 +3,14 @@ import { useState, useEffect } from "react";
 import { apiGet } from "src/api/api-requests";
 import PageHeader from "./page-header";
 
+export interface MenuItemProps {
+  item: MenuItem;
+  additionalParams?: Record<string, any>;
+}
+
 interface MenuProps {
-  itemComponent: React.FC<MenuItem>;
+  itemComponent: React.FC<MenuItemProps>;
+  itemAdditionalParams?: Record<string, any>;
 }
 
 interface QueryParams {
@@ -14,7 +20,7 @@ interface QueryParams {
   nameFilter: string;
 }
 
-const Menu: React.FC<MenuProps> = ({ itemComponent: ItemComponent }) => {
+const Menu: React.FC<MenuProps> = ({ itemComponent: ItemComponent, itemAdditionalParams }) => {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [activeCuisine, setActiveCuisine] = useState<string>('all'); // Default cuisine
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -166,7 +172,7 @@ const Menu: React.FC<MenuProps> = ({ itemComponent: ItemComponent }) => {
               <div
                 key={item._id}
               >
-                <ItemComponent {...item} />
+                <ItemComponent item={item} additionalParams={itemAdditionalParams}/>
               </div>
             ))}
             {totalPages === 0 && (
