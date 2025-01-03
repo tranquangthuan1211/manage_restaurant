@@ -1,10 +1,9 @@
 import React from 'react';
 import RootLayout from '../../layouts/customer/layout';
 import CustomerSideBar from '../../components/customer/sidebar';
-import { useState, useEffect } from 'react';
+import { useState, useEffect} from 'react';
 import { apiGet } from 'src/api/api-requests';
 import { User } from 'src/types/user';
-
 import {useUser} from 'src/contexts/users/user-context';
 
 const CustomerPersonalInfo = () => {

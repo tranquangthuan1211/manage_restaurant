@@ -29,6 +29,8 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         const data: User = response.data;
         setIsAuthenticated(true);
         setUser(data);
+        console.log("User data fetched successfully");
+        console.log(JSON.stringify(data, null, 2));
       }
       catch (error) {
         setIsAuthenticated(false);

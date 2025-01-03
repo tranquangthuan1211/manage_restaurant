@@ -93,23 +93,23 @@ const ReservationForm: React.FC = () => {
     return (
         <RootLayout>
             <div className="min-h-screen flex items-center justify-center bg-cover bg-center">
-                <div className="grid grid-cols-1 md:grid-cols-2 max-w-8xl bg-white">
+                <div className="grid grid-cols-1 md:grid-cols-12 max-w-8xl bg-white">
                     {/* Left Section: Image */}
-                    <div>
+                    <div className="md:col-span-5 ">
                         <img
                             src="/images/login_bg.jpg"
                             alt="Reservation"
-                            className="w-full h-full object-cover"
+                            className="w-full h-full object-center object-cover"
                         />
                     </div>
 
                     {/* Right Section: Form */}
-                    <div className="p-8 md:p-12 bg-slate-100">
+                    <div className="md:col-span-7 md:p-8 bg-teal-900">
                         <PageHeader title="Reservation" subtitle="Book a table" />
 
-                        <form onSubmit={handleSubmit} className="space-y-4">
+                        <form onSubmit={handleSubmit} className="flex flex-col space-y-4 bg-slate-200 p-4 rounded-lg shadow-lg">
                             {/* People */}
-                            <div className="grid grid-cols-3 gap-4 items-center p-4 border border-solid rounded-sm">
+                            <div className="grid grid-cols-3 gap-4 items-center p-4 border border-solid border-slate-400 rounded-md">
                                 <label className="font-bold col-span-1">People</label>
                                 <div className="col-span-2 flex items-center space-x-3">
                                     <button
@@ -133,7 +133,7 @@ const ReservationForm: React.FC = () => {
                             </div>
 
                             {/* Date and Time */}
-                            <div className="grid grid-cols-2 gap-4 p-4 border border-solid rounded-sm">
+                            <div className="grid grid-cols-2 gap-4 p-4 border border-solid border-slate-400 rounded-md">
                                 <div>
                                     <label className="block font-bold mb-1">Date</label>
                                     <input
@@ -159,7 +159,7 @@ const ReservationForm: React.FC = () => {
                             </div>
 
                             {/* Special Requests */}
-                            <div className="p-4 border border-solid rounded-sm">
+                            <div className="p-4 border border-solid border-slate-400 rounded-md">
                                 <label className="block font-bold mb-2">Special requests (optional)</label>
                                 <textarea
                                     name="specialRequests"

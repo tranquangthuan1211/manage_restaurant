@@ -13,14 +13,15 @@ export default function RootLayout({
   const [searchQuery, setSearchQuery] = useState("");
   const router = useRouter();
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault(); // Prevent default form submission behavior
     if (searchQuery.trim()) {
       const url = `/menu?nameFilter=${encodeURIComponent(searchQuery)}`;
-      router.push(url).then(() => {
-        router.replace(url); // Ensure the URL is updated even if on the same page
-        window.location.reload(); // Force a full page reload
-      });
+      await router.push(url);
+      if (router.pathname === "/menu") {
+        await router.replace(url);
+        router.reload();
+      } 
     }
   };
   useEffect(() => {
@@ -91,6 +92,9 @@ export default function RootLayout({
             <div className="col-span-full md:col-span-6 grid grid-cols-12 md:grid-cols-6 text-center md:text-right">
               <a href="/menu" className="text-white py-2 px-4 hover:underline col-span-full md:col-span-2">
                 Menu
+              </a>
+              <a href="/reservation" className="text-white py-2 px-4 hover:underline col-span-full md:col-span-2">
+                Booking
               </a>
               <a
                 href="/customer/personal"

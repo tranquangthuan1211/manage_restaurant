@@ -3,9 +3,10 @@ import RootLayout from '../../../layouts/customer/layout';
 import { apiGet, apiPost } from "../../../api/api-requests";
 import { AuthGuard } from "../../../guards/auth-guard";
 import { useUser } from 'src/contexts/users/user-context';
+import {User} from 'src/types/user';
 
 interface MenuItem {
-    id: number;
+    _id: number;
     name: string;
     description: string;
     price: number;
@@ -23,9 +24,11 @@ interface QueryParams {
 const PreorderDishesTabAll: React.FC = () => {
     const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
     const [reservationData, setReservationData] = useState<any>(null);
-    const userContext = useUser();
-    const user = userContext ? userContext.user : null;
-
+    const { user, isAuthenticated } = useUser() || { user: null, isAuthenticated: false };
+    if (user === null || !isAuthenticated) {
+        window.location.href = '/auth';
+        return <div></div>;
+    }
     const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
     const [activeCuisine, setActiveCuisine] = useState<string>('all'); // Default cuisine
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -93,7 +96,6 @@ const PreorderDishesTabAll: React.FC = () => {
         setActiveCuisine(cuisine);
         setCurrentPage(1);
     };
-
 
     const renderPagination = () => (
         <div className="flex justify-center items-center space-x-4 mt-4">
