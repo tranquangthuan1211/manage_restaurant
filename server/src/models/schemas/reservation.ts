@@ -11,3 +11,4 @@ export interface Reservation {
   }[];
   createAt?: string; // filled in by the server, ISO 8601 date-time string
 }
+

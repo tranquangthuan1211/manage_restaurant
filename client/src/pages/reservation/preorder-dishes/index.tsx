@@ -6,7 +6,7 @@ import React, { useState, useEffect } from 'react';
 import { useUser } from 'src/contexts/users/user-context';
 import { apiGet, apiPost } from 'src/api/api-requests';
 import MenuItem from 'src/types/menu-item';
-
+import ReservationForm from '../index';
 interface PreorderItem {
     _id: string;
     menuItemId: string;
@@ -131,6 +131,10 @@ const Preorder: React.FC = () => {
     };
 
     const handleConfirm = async () => {
+        const storedReservation = localStorage.getItem('reservationData');
+
+        // Parse the reservation data
+        const reservationData = storedReservation ? JSON.parse(storedReservation) : {};
         if (!reservationData || preorderedItems.length === 0) {
             alert('Reservation data or preordered items are missing.');
             return;
@@ -150,19 +154,62 @@ const Preorder: React.FC = () => {
             updated_at: new Date(),
         };
 
-        const appointment = {
-            id_customer: user?._id,
-            table_number: reservationData?.diners,
-            status: 'Pending',
-            date: reservationData?.date,
-            hours: reservationData?.time,
-            created_at: new Date(),
-            updated_at: new Date(),
+        // const appointment = {
+        //     id_customer: user?._id,
+        //     table_number: reservationData?.diners,
+        //     status: 'Pending',
+        //     date: reservationData?.date,
+        //     hours: reservationData?.time,
+        //     created_at: new Date(),
+        //     updated_at: new Date(),
+        // };
+
+
+        // // Construct the reservation object
+        // const reservation = {
+        //     userId: user?._id, // Match 'userId' in the schema
+        //     num_of_people: reservationData.diners || 0, // Default to 0 if not found
+        //     date_time: new Date().toISOString(), // Ensure ISO 8601 format for the date-time
+        //     status: 'Pending', // Match 'status' in the schema
+        //     special_request: reservationData.specialRequests || undefined, // Optional, only include if exists
+        //     preorders: preorderedItems.map((item) => ({
+        //         menuItemId: item.menuItemId,
+        //         quantity: item.quantity,
+        //     })),
+        //     createAt: new Date().toISOString(), // Match 'createAt' in the schema
+        // };
+
+
+
+        // Extract date and time
+        const { date, time } = reservationData;
+
+        // Combine date and time into ISO 8601 format
+        const dateTime = new Date(`${date}T${time}`).toISOString();
+
+        // Construct the reservation object
+        const reservation = {
+            userId: user?._id, // Match 'userId' in the schema
+            num_of_people: reservationData.diners || 0, // Default to 0 if not found
+            date_time: dateTime, // Use combined date and time in ISO 8601 format
+            status: "Pending", // Match 'status' in the schema
+            special_request: reservationData.specialRequests || undefined, // Optional, only include if exists
+            preorders: preorderedItems.map((item) => ({
+                menuItemId: item.menuItemId,
+                quantity: item.quantity,
+            })),
+            createAt: new Date().toISOString(), // Match 'createAt' in the schema
         };
+
+        console.log("Constructed reservation object:", reservation);
+
+
+        // Send the reservation object to the backend
+        console.log('Sending reservation:', reservation);
 
         try {
             await Promise.all([
-                apiPost('/orders', order),
+                apiPost('/reservations', reservation),
                 // apiPost('/appointments', appointment),
             ]);
             alert('Successfully booked!');
