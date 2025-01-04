@@ -5,7 +5,7 @@ import Database from './configs/db';
 import useRouteUser from './routes/users';
 import useRouteMenu from './routes/menu';
 import useRouteCategory from './routes/category';
-import useRouteOrder  from './routes/order';
+import useRouteOrder from './routes/order';
 import useRouteAppointment from './routes/appointment';
 import useRouteAssess from "./routes/assess"
 import useRouteStaff from "./routes/staff"
@@ -16,6 +16,9 @@ import swaggerUi from 'swagger-ui-express';
 import morgan from "morgan";
 import cors from 'cors';
 import { rateLimit } from 'express-rate-limit'
+
+import useRouteReviews from './routes/reviews';
+
 const app = express();
 const port = process.env.PORT || 3001;
 const swaggerDocument = swaggerJSDoc(SwaggerOption);
@@ -25,8 +28,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 Database.connect();
 const limiter = rateLimit({
-	windowMs: 2 * 60 * 1000,
-	limit: 1000, 
+  windowMs: 2 * 60 * 1000,
+  limit: 1000,
   message: "Too many requests from this IP, please try again after an hour",
 })
 app.use("/api/", limiter);
@@ -37,18 +40,19 @@ app.use("/api/", limiter);
 //   })
 // })
 const routesDef = [
-  {path:"users", route: useRouteUser()},
-  {path:"menus", route: useRouteMenu()},
-  {path: "categories", route: useRouteCategory()},
-  {path: "orders", route: useRouteOrder()},
-  {path:"appointments", route: useRouteAppointment()},
-  {path:"assess", route: useRouteAssess()},
-  {path : "staffs", route: useRouteStaff()},
-  {path:"payments",route: usePaymentRoute()}
+  { path: "users", route: useRouteUser() },
+  { path: "menus", route: useRouteMenu() },
+  { path: "categories", route: useRouteCategory() },
+  { path: "orders", route: useRouteOrder() },
+  { path: "appointments", route: useRouteAppointment() },
+  { path: "assess", route: useRouteAssess() },
+  { path: "staffs", route: useRouteStaff() },
+  { path: "payments", route: usePaymentRoute() },
+  { path: "reviews", route: useRouteReviews() }
 ]
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-routesDef.forEach(({path,route}) => {
-  app.use(`/api/v1/${path}`,route)
+routesDef.forEach(({ path, route }) => {
+  app.use(`/api/v1/${path}`, route)
 })
 app.use((req: Request, res: Response, next: NextFunction) => {
   const error = new Error("Not found") as any;
@@ -57,10 +61,10 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 });
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
   res.status(error.status || 500).send({
-      error: {
-          status: error.status || 500,
-          message: error.message || 'Internal Server Error',
-      },
+    error: {
+      status: error.status || 500,
+      message: error.message || 'Internal Server Error',
+    },
   });
 });
 app.listen(port, () => {

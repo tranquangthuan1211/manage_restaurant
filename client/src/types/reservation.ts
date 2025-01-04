@@ -1,5 +1,5 @@
 export interface Reservation {
-  id?: string; // Optional if pushing data
+  _id?: string; // Optional if pushing data
   userId: string;
   num_of_people: number;
   date_time: string; // ISO 8601 date-time string

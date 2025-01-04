@@ -6,21 +6,7 @@ import StarRating from "src/components/star-rating";
 import PageHeader from "src/components/page-header";
 import { apiGet, apiPost } from "src/api/api-requests";
 import { Review } from "src/types/review";
-
-// Reservation type
-export interface Reservation {
-  id?: string; // Optional if pushing data
-  userId: string;
-  num_of_people: number;
-  date_time: string; // ISO 8601 date-time string
-  status: string;
-  special_request?: string;
-  preorders: {
-    menuItemId: string;
-    quantity: number;
-  }[];
-  createAt?: string; // filled in by the server, ISO 8601 date-time string
-}
+import { Reservation } from "src/types/reservation";
 
 const ScoreFields = {
   overall: "Overall",
@@ -41,11 +27,25 @@ const SectionHeader: React.FC<{ title: string }> = ({ title }) => (
   </div>
 );
 
+const placeholderReservation = {
+  userId: "1",
+  num_of_people: 2,
+  date_time: "2022-01-01T12:00:00Z",
+  status: "confirmed",
+  special_request: "No onions",
+  preorders: [
+    { menuItemId: "1", quantity: 1 },
+    { menuItemId: "2", quantity: 2 },
+  ],
+  createAt: "2022-01-01T12:00:00Z",
+}
+
 const CustomerWriteReview: React.FC = () => {
   const { user, isAuthenticated } = useUser() || { user: null, isAuthenticated: false };
   const { reservationId } = useParams<{ reservationId: string }>();
-  const [reservation, setReservation] = useState<Reservation | null>(null);
+  const [reservation, setReservation] = useState<Reservation | null>(placeholderReservation); // TODO: Change to null
   const [formData, setFormData] = useState<Review>(() => {
+    // Initialize form data
     const initialScores: { [key: string]: number } = {};
     for (const key in ScoreFields) {
       initialScores[key] = 0;
@@ -62,10 +62,12 @@ const CustomerWriteReview: React.FC = () => {
 
   // Fetch reservation data
   useEffect(() => {
+    return; // TODO: Remove this line
     if (reservationId) {
       const fetchReservation = async () => {
         try {
           const data = await apiGet(`/reservations/${reservationId}`);
+
           setReservation(data);
         } catch (error) {
           console.error("Failed to fetch reservation:", error);
@@ -96,7 +98,7 @@ const CustomerWriteReview: React.FC = () => {
     const reviewData: Review = {
       ...formData,
       userId: user._id,
-      reservationId: reservation.id || reservationId,
+      reservationId: reservation._id || reservationId,
     };
     try {
       const response = await apiPost("/reviews", reviewData);
@@ -122,22 +124,25 @@ const CustomerWriteReview: React.FC = () => {
   return (
     <RootLayout>
       <div className="bg-gray-teal-800">
-        <div className="grid grid-cols-12 pt-8 pb-16 px-2 md:px-16">
+        <div className="grid grid-cols-12 pt-8 pb-16 px-2 md:px-32 gap-y-2">
           <div className="col-span-full mb-4">
             <PageHeader title="Review" subtitle="Thoughts on our restaurant" />
           </div>
 
-          {/* Reservation Details */}
+          {/* Reservation Details Start */}
           <div className="col-span-full bg-slate-200 rounded-lg shadow-lg pb-8">
             <div className="w-full bg-olive-green-200 p-4 rounded-t-lg text-center uppercase italic text-white">
               Reservation Details
             </div>
             <div className="mx-8 mt-4 text-sm">
               <p>
-                <strong>Date & Time:</strong> {new Date(reservation.date_time).toLocaleString()}
+                <strong>Number of People:</strong> {reservation.num_of_people}
               </p>
               <p>
-                <strong>Number of People:</strong> {reservation.num_of_people}
+                <strong>Date:</strong> {new Date(reservation.date_time).toLocaleDateString()}
+              </p>
+              <p>
+                <strong>Time:</strong> {new Date(reservation.date_time).toLocaleTimeString()}
               </p>
               <p>
                 <strong>Status:</strong> {reservation.status}
@@ -157,8 +162,10 @@ const CustomerWriteReview: React.FC = () => {
               )}
             </div>
           </div>
+          {/* Reservation Details End */}
 
-          {/* Review Form */}
+
+          {/* Review Form Start */}
           <div className="col-span-full bg-slate-200 rounded-lg shadow-lg pb-8">
             <div className="w-full bg-olive-green-200 p-4 rounded-t-lg text-center uppercase italic text-white">
               Review Card
@@ -205,6 +212,8 @@ const CustomerWriteReview: React.FC = () => {
                 </button>
               </div>
             </form>
+            {/* Review Form End */}
+
           </div>
         </div>
       </div>
