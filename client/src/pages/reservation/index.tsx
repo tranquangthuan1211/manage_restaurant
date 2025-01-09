@@ -107,10 +107,10 @@ const ReservationForm: React.FC = () => {
                     <div className="md:col-span-7 md:p-8 bg-teal-900">
                         <PageHeader title="Reservation" subtitle="Book a table" />
 
-                        <form onSubmit={handleSubmit} className="flex flex-col space-y-4 bg-slate-200 p-4 rounded-lg shadow-lg">
+                        <form onSubmit={handleSubmit} className="flex flex-col space-y-4 bg-slate-200 px-6 py-6 md:rounded-lg shadow-lg">
                             {/* People */}
                             <div className="grid grid-cols-3 gap-4 items-center p-4 border border-solid border-slate-400 rounded-md">
-                                <label className="font-bold col-span-1">People</label>
+                                <label className="font-bold col-span-1">Number of People</label>
                                 <div className="col-span-2 flex items-center space-x-3">
                                     <button
                                         type="button"
@@ -160,12 +160,13 @@ const ReservationForm: React.FC = () => {
 
                             {/* Special Requests */}
                             <div className="p-4 border border-solid border-slate-400 rounded-md">
-                                <label className="block font-bold mb-2">Special requests (optional)</label>
+                                <label className="font-bold mb-2">Special requests</label>
+                                <small className="inline-block italic text-slate-500 ml-2"> (optional) </small>
                                 <textarea
                                     name="specialRequests"
                                     value={formData.specialRequests}
                                     onChange={handleChange}
-                                    className="w-full p-2 border rounded-lg text-sm"
+                                    className="w-full mt-1 p-2 border rounded-lg text-sm"
                                     rows={3}
                                 />
                             </div>

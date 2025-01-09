@@ -21,7 +21,7 @@ export default function RootLayout({
       if (router.pathname === "/menu") {
         await router.replace(url);
         router.reload();
-      } 
+      }
     }
   };
   useEffect(() => {
@@ -30,7 +30,7 @@ export default function RootLayout({
       setSearchQuery(nameFilter);
     }
   }, [router.query]);
-  
+
   return (
     <div>
       <nav className="bg-gray-teal-900 bg-opacity-80 shadow-xl">
@@ -70,21 +70,21 @@ export default function RootLayout({
               onSubmit={handleSearch}
             >
               <input
-              type="text"
-              placeholder="Search..."
-              className="bg-gray-200 pl-2 rounded-l-md h-8 w-full"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+                type="text"
+                placeholder="Search..."
+                className="bg-gray-200 pl-2 rounded-l-md h-8 w-full"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
               <button
-              type="submit"
-              className="bg-gray-300 h-8 w-8 flex items-center justify-center rounded-r-md hover:bg-gray-500 transition-colors"
+                type="submit"
+                className="bg-gray-300 h-8 w-8 flex items-center justify-center rounded-r-md hover:bg-gray-500 transition-colors"
               >
-              <img
-                className="h-4 w-4"
-                src="/images/search_icon.png"
-                alt="search"
-              />
+                <img
+                  className="h-4 w-4"
+                  src="/images/search_icon.png"
+                  alt="search"
+                />
               </button>
             </form>
 
@@ -111,9 +111,57 @@ export default function RootLayout({
         <div>{children}</div>
       </main>
 
+      {/* Footer Start */}
       <footer>
-        {/* Footer Content */}
+        <div className="bg-gray-teal-900 bg-opacity-80 text-gray-200 grid grid-cols-12 py-4 gap-4 md:gap-6">
+          {/* Logo Section */}
+          <div className="col-span-12 md:col-span-4 flex flex-col justify-center items-center">
+            <Image src="/images/logo.png" alt="logo" width={64} height={64} />
+            <span className="uppercase pl-2 text-2xl font-bold text-center">
+              Baby Hippo Restaurant
+            </span>
+          </div>
+
+          {/* Address Section */}
+          <div className="col-span-12 md:col-span-2 text-center md:text-left">
+            <p className="font-bold">Address</p>
+            <p>1234, Ho Chi Minh City</p>
+            <p>Phone: 0900111222</p>
+            <p>Email: babyhippo@gmail.com</p>
+          </div>
+
+          {/* Open Hours Section */}
+          <div className="col-span-12 md:col-span-3 text-center md:text-left">
+            <p className="font-bold">Open Hours</p>
+            <p>Mon - Fri: 8:00 AM - 9:00 PM</p>
+            <p>Sat - Sun: 8:00 AM - 10:00 PM</p>
+          </div>
+
+          {/* Social Media Links */}
+          <div className="col-span-12 md:col-span-3 text-center md:text-left">
+            <p className="font-bold">Social Media Links</p>
+            <div className="flex justify-center md:justify-start items-center space-x-2">
+              <Image src="/images/fb.png" alt="Facebook" width={32} height={32} />
+              <Link href="https://www.facebook.com/" className="hover:underline">
+                Facebook
+              </Link>
+            </div>
+            <div className="flex justify-center md:justify-start items-center space-x-2 mt-2">
+              <Image src="/images/Instagram.png" alt="Instagram" width={32} height={32} />
+              <Link href="https://www.instagram.com/" className="hover:underline">
+                Instagram
+              </Link>
+            </div>
+            <div className="flex justify-center md:justify-start items-center space-x-2 mt-2">
+              <Image src="/images/youtube.png" alt="YouTube" width={32} height={32} />
+              <Link href="https://www.youtube.com/" className="hover:underline">
+                YouTube
+              </Link>
+            </div>
+          </div>
+        </div>
       </footer>
+      {/* Footer End */}
     </div>
   );
 }
