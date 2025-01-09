@@ -10,6 +10,7 @@ import useRouteAppointment from './routes/appointment';
 import useRouteAssess from "./routes/assess"
 import useRouteStaff from "./routes/staff"
 import usePaymentRoute from "./routes/payment"
+import useRouteReservations from "./routes/reservation";
 import swaggerJSDoc from 'swagger-jsdoc';
 import SwaggerOption from "./configs/swagger";
 import swaggerUi from 'swagger-ui-express';
@@ -18,6 +19,7 @@ import cors from 'cors';
 import { rateLimit } from 'express-rate-limit'
 
 import useRouteReviews from './routes/reviews';
+import path from "path";
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -48,7 +50,8 @@ const routesDef = [
   { path: "assess", route: useRouteAssess() },
   { path: "staffs", route: useRouteStaff() },
   { path: "payments", route: usePaymentRoute() },
-  { path: "reviews", route: useRouteReviews() }
+  { path: "reviews", route: useRouteReviews() },
+  { path: "reservations", route: useRouteReservations() } // MP jan 4
 ]
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 routesDef.forEach(({ path, route }) => {

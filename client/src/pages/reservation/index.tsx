@@ -87,6 +87,10 @@ const ReservationForm: React.FC = () => {
         }
 
         localStorage.setItem("reservationData", JSON.stringify(formData));
+        //debugging
+        console.log("Reservation data:", formData);
+
+        alert("Reservation successfully submitted! Redirecting to the menu..."); //MPhuong notify user to book dihes    
         router.push("/reservation/preorder-dishes");
     };
 
