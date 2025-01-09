@@ -140,7 +140,7 @@ const Menu: React.FC<MenuProps> = ({ itemComponent: ItemComponent, itemAdditiona
           >
             <img
               src="/images/dessert-icon.png"
-              alt="Dessert"
+              alt="Dessert" 
               className="w-6 h-6 mr-2"
             />{' '}
             Dessert
@@ -148,7 +148,7 @@ const Menu: React.FC<MenuProps> = ({ itemComponent: ItemComponent, itemAdditiona
 
           <button
             onClick={() => handleCuisineChange('drinks')}
-            className={`md:justify-center font-bold flex items-center px-8 md:px-0 ${activeCuisine === 'drinks' ? 'text-yellow-600' : 'text-black'
+            className={`md:justify-center font-bold flex items-center px-8 md:px-0 md:py-2 py-4 ${activeCuisine === 'drinks' ? 'text-yellow-600' : 'text-black'
               }`}
           >
             <img

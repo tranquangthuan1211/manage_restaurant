@@ -4,7 +4,7 @@ import RootLayout from "src/layouts/customer/layout";
 import { useUser } from "src/contexts/users/user-context";
 import StarRating from "src/components/star-rating";
 import PageHeader from "src/components/page-header";
-import { apiGet, apiPost } from "src/api/api-requests";
+import { apiGet } from "src/api/api-requests";
 import { Review } from "src/types/review";
 import { ReservationDetails } from "src/types/reservation";
 
@@ -27,39 +27,29 @@ const SectionHeader: React.FC<{ title: string }> = ({ title }) => (
   </div>
 );
 
-const CustomerWriteReview: React.FC = () => {
+
+const CustomerViewReview: React.FC = () => {
   const { user, isAuthenticated } = useUser() || { user: null, isAuthenticated: false };
   const { reservationId } = useParams<{ reservationId: string }>();
-  const [reservation, setReservation] = useState<ReservationDetails | null>(null); // TODO: Change to null
-  const [formData, setFormData] = useState<Review>(() => {
-    // Initialize form data
-    const initialScores: { [key: string]: number } = {};
-    for (const key in ScoreFields) {
-      initialScores[key] = 0;
-    }
-    return { ...initialScores, feedback: "" } as Review;
-  });
+  const [reservation, setReservation] = useState<ReservationDetails | null>(null);
+  const [review, setReview] = useState<Review | null>(null);
 
-  // Redirect if the user is not authenticated
   useEffect(() => {
     if (!isAuthenticated || !user) {
       window.location.href = "/auth";
     }
   }, [isAuthenticated, user]);
 
-  // Fetch reservation data
   useEffect(() => {
     if (reservationId) {
       const fetchReservation = async () => {
         try {
           const response = await apiGet(`/reservations/${reservationId}`);
-
           if (response.error == 1) {
             console.error("Failed to fetch reservation:", response.message);
             return;
           }
-          console.log("Reservation data fetched:", JSON.stringify(response.data, null, 2));
-
+          console.log(`Response data: ${JSON.stringify(response.data, null, 2)}`);
           setReservation(response.data);
         } catch (error) {
           console.error("Failed to fetch reservation:", error);
@@ -69,44 +59,30 @@ const CustomerWriteReview: React.FC = () => {
     }
   }, [reservationId]);
 
-  const handleScoreChange = (label: string, newScore: number) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      [label]: newScore,
-    }));
-  };
-
-  const handleFeedbackChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      feedback: event.target.value,
-    }));
-  };
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!user || !reservation) return;
-
-    const reviewData: Review = {
-      ...formData,
-      userId: user._id,
-      reservationId: reservation._id || reservationId,
-    };
-    try {
-      const response = await apiPost("/reviews", reviewData);
-      alert("Review submitted successfully!");
-      console.log("Review response:", response);
-    } catch (error) {
-      console.error("Failed to submit the review:", error);
+  useEffect(() => {
+    if (reservationId) {
+      const fetchReview = async () => {
+        try {
+          const response = await apiGet(`/reviews/by-reservation/${reservationId}`);
+          if (response.error == 1) {
+            console.error("Failed to fetch review:", response.message);
+            return;
+          }
+          setReview(response.data);
+        } catch (error) {
+          console.error("Failed to fetch review:", error);
+        }
+      };
+      fetchReview();
     }
-  };
+  }, [reservationId]);
 
-  if (!reservation) {
+  if (!reservation || !review) {
     return (
       <RootLayout>
         <div className="bg-gray-teal-800">
           <div className="grid grid-cols-12 pt-8 pb-16 px-2 md:px-16">
-            <div className="col-span-full text-center">Loading reservation details...</div>
+            <div className="col-span-full text-center">Loading reservation and review details...</div>
           </div>
         </div>
       </RootLayout>
@@ -121,7 +97,7 @@ const CustomerWriteReview: React.FC = () => {
             <PageHeader title="Review" subtitle="Thoughts on our restaurant" />
           </div>
 
-          {/* Reservation Details Start */}
+          {/* Rerservation Details Start */}
           {reservation && (
             <div className="col-span-full bg-slate-200 rounded-lg shadow-lg pb-8">
               <div className="w-full bg-olive-green-200 p-4 rounded-t-lg text-center uppercase italic text-white">
@@ -159,16 +135,14 @@ const CustomerWriteReview: React.FC = () => {
               </div>
             </div>
           )}
-          {/* Reservation Details End */}
+          {/* Rerservation Details End */}
 
 
-          {/* Review Form Start */}
           <div className="col-span-full bg-slate-200 rounded-lg shadow-lg pb-8">
             <div className="w-full bg-olive-green-200 p-4 rounded-t-lg text-center uppercase italic text-white">
-              Review Card
+              Review Card (Read-Only)
             </div>
-            <form className="flex flex-col space-y-8 px-8" onSubmit={handleSubmit}>
-              {/* Rating */}
+            <div className="flex flex-col space-y-8 px-8">
               <div>
                 <SectionHeader title="Rating" />
                 <div className="grid grid-cols-12">
@@ -181,14 +155,13 @@ const CustomerWriteReview: React.FC = () => {
                         {label}
                       </label>
                       <div className="col-span-6 md:col-span-4">
-                        <StarRating label={key} onChange={handleScoreChange} />
+                        <StarRating label={key} value={(review as any)[key]} />
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Feedback */}
               <div>
                 <SectionHeader title="Feedback" />
                 <textarea
@@ -196,21 +169,12 @@ const CustomerWriteReview: React.FC = () => {
                   name="feedback"
                   rows={4}
                   className="w-full border border-gray-300 rounded-md p-4 shadow-inner"
-                  placeholder="Write your detailed feedback here..."
-                  value={formData.feedback}
-                  onChange={handleFeedbackChange}
+                  placeholder="No feedback provided."
+                  value={review.feedback}
+                  readOnly
                 />
               </div>
-
-              {/* Submit */}
-              <div className="flex justify-center">
-                <button type="submit" className="button-red">
-                  Submit
-                </button>
-              </div>
-            </form>
-            {/* Review Form End */}
-
+            </div>
           </div>
         </div>
       </div>
@@ -218,4 +182,4 @@ const CustomerWriteReview: React.FC = () => {
   );
 };
 
-export default CustomerWriteReview;
+export default CustomerViewReview;

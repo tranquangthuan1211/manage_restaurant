@@ -1,5 +1,7 @@
+import { WithId } from "mongodb";
+
 export interface Reservation {
-  id?: string; // Optional if pushing data
+  id: string;
   userId: string;
   num_of_people: number;
   date_time: string; // ISO 8601 date-time string
@@ -11,4 +13,3 @@ export interface Reservation {
   }[];
   createAt?: string; // filled in by the server, ISO 8601 date-time string
 }
-

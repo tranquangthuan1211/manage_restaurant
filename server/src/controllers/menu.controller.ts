@@ -120,8 +120,8 @@ class MenuController {
         try {
             const page = parseInt(req.query.page as string) || 1;
             const limit = parseInt(req.query.limit as string) || 10;
-            const categoryName = req.query.category as string | "all";
-            const nameFilter = req.query.nameFilter as string | "";
+            const categoryName = req.query.category as string || "all";
+            const nameFilter = req.query.nameFilter as string || "";
             const foods = await handleGetFood(page, limit, categoryName, nameFilter);
             return res.status(200).json({
                 // Added by HP

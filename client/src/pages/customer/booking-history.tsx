@@ -2,20 +2,8 @@ import React, { useState, useEffect } from 'react';
 import RootLayout from 'src/layouts/customer/layout';
 import CustomerSideBar from '../../components/customer/sidebar';
 import { useUser } from 'src/contexts/users/user-context';
-
-interface Booking {
-    date: string;
-    time: string;
-    numberOfPeople: number;
-    preOrder: PreOrder[];
-    reviewId: number;
-}
-
-interface PreOrder {
-    foodId: string;
-    foodName: string;
-    quantity: number;
-}
+import { ReservationDetails } from 'src/types/reservation';
+import { apiGet } from 'src/api/api-requests';
 
 const CustomerBookingHistory = () => {
     const { user, isAuthenticated } = useUser() || { user: null, isAuthenticated: false };
@@ -23,80 +11,61 @@ const CustomerBookingHistory = () => {
         window.location.href = '/auth';
         return <div></div>;
     }
-    // Placeholder data for current pages
-    const placeholderData : Booking[] = [
-        {
-            date: '2021-09-01',
-            time: '12:00',
-            numberOfPeople: 5,
-            preOrder: [
-                { foodId: '1', foodName: 'Spaghetti Carbonara', quantity: 2 },
-                { foodId: '2', foodName: 'Caesar Salad', quantity: 1 },
-                { foodId: '3', foodName: 'Pizza', quantity: 2 }
-            ],
-            reviewId: 1122
-        },
-        {
-            date: '2021-09-02',
-            time: '18:00',
-            numberOfPeople: 2,
-            preOrder: [
-            { foodId: '4', foodName: 'Lasagna', quantity: 1 },
-            { foodId: '5', foodName: 'Garlic Bread', quantity: 33 }
-            ],
-            reviewId: -1
-        },
-        {
-            date: '2021-09-03',
-            time: '20:00',
-            numberOfPeople: 1,
-            preOrder: [
-            { foodId: '6', foodName: 'Tiramisu', quantity: 2 },
-            { foodId: '7', foodName: 'Bruschetta', quantity: 1 }
-            ],
-            reviewId: 2233
-        }
-    ];
 
-    const [bookingData, setBookingData] = useState<Booking[]>(placeholderData); // TODO: Replace with []
+    const [reservationData, setReservationData] = useState<ReservationDetails[] | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(4); // TODO: Replace with 0
-    const itemsPerPage = 3;
+    const [totalPages, setTotalPages] = useState(0);
+    const [loading, setLoading] = useState(false);
+    const itemsPerPage = 5;
 
-    const fetchBookingData = async (page: number) => {
-        const response = await fetch(`/api/bookings?page=${page}&limit=${itemsPerPage}`);
-        const data = await response.json();
-        setBookingData(data.bookings);
-        setTotalPages(data.totalPages);
+    const fetchreservationData = async (page: number) => {
+        setLoading(true);
+        try {
+            const response = await apiGet(`/reservations/by-user/${user._id}?page=${page}&limit=${itemsPerPage}`);
+            if (response.error) {
+                console.error("Failed to fetch reservation:", response.message);
+                return;
+            }
+            console.log(JSON.stringify(response.data, null, 2));
+
+            setReservationData(response.data.items);
+            setTotalPages(response.data.pagination.totalPages);
+        } catch (error) {
+            console.error("An error occurred while fetching reservation data:", error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     useEffect(() => {
-        fetchBookingData(currentPage);
+        fetchreservationData(currentPage);
     }, [currentPage]);
 
-    const renderRow = (index: number, booking : Booking) => (
+    const renderRow = (index: number, reservationDetails: ReservationDetails) => (
         <tr key={index} className="hover:bg-gray-100">
             <td className="p-4 text-center">{index}</td>
-            <td className="p-4">{booking.date}</td>
-            <td className="p-4">{booking.time}</td>
+            <td className="p-4">{new Date(reservationDetails.date_time).toLocaleDateString()}</td>
+            <td className="p-4">{new Date(reservationDetails.date_time).toLocaleTimeString()}</td>
             <td className="p-4">
-                {booking.numberOfPeople}
+                {reservationDetails.num_of_people}
             </td>
             <td className="p-4">
                 <ul className="list-disc pl-4">
-                    {booking.preOrder.map((item, idx) => (
+                    {reservationDetails.preorders.map((item, idx) => (
                         <li className='flex' key={idx}>
                             <span className='text-slate-700 font-bold text-right'>{`${item.quantity} x`}</span>
-                            <span className='ml-1'>{item.foodName}</span>
+                            <span className='ml-1'>{item.name}</span>
                         </li>
                     ))}
                 </ul>
             </td>
             <td className="p-4 text-center">{
-                booking.reviewId == -1 ? (
-                    <a className="link-secondary" href={`/customer/reviews/${booking.reviewId}`}>View</a>
+                // Even though we have a reviewId, the page finds the reivew by reservationId
+                // the reviewId is just used to check if the review exists
+                (reservationDetails.reviewId !== "") ? (
+                    <a className="link-secondary" href={`/customer/reviews/view/${reservationDetails.id}`}>View</a>
                 ) : (
-                    <a className="link-primary" href={`/customer/reviews/${booking.reviewId}`}>Write</a>
+                    <a className="link-primary" href={`/customer/reviews/write/${reservationDetails.id}`}>Write</a>
                 )
             }</td>
         </tr>
@@ -116,7 +85,7 @@ const CustomerBookingHistory = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {bookingData.map((booking, index) =>
+                    {reservationData && reservationData.map((booking, index) =>
                         renderRow(
                             (currentPage - 1) * itemsPerPage + index + 1,
                             booking
@@ -153,8 +122,15 @@ const CustomerBookingHistory = () => {
                 <CustomerSideBar user={user}>
                     <div className="grid grid-cols-1 gap-4">
                         <h2 className="text-xl font-bold">Booking History</h2>
-                        {renderTable()}
-                        {renderPagination()}
+                        {loading && <div>Loading...</div>}
+                        {!loading && reservationData && (<div>
+                            {renderTable()}
+                            {renderPagination()}
+                        </div>)}
+                        {!loading && !reservationData && (<div>Loading...</div>)}
+                        {!loading && reservationData && reservationData.length === 0 && (
+                            <div>You didn't have any reservation yet...</div>
+                        )}
                     </div>
                 </CustomerSideBar>
             </div>
@@ -163,4 +139,3 @@ const CustomerBookingHistory = () => {
 };
 
 export default CustomerBookingHistory;
-

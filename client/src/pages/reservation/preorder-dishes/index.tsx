@@ -33,7 +33,8 @@ const PreorderMenuItem: React.FC<MenuItemProps> = ({ item, additionalParams }) =
     };
 
     return (
-        <div className="col-span-1 grid grid-cols-12 auto-rows-max border border-gray-200 rounded-lg shadow-sm p-4 hover:shadow-lg transition-shadow">
+        <div className="col-span-1 grid grid-cols-12 auto-rows-max border-solid border-r-2 border-slate-100 py-4 px-2">
+            {/* Image */}
             <div className="col-span-3 flex justify-center items-center">
                 <img
                     src={preorderItem.image}
@@ -41,20 +42,21 @@ const PreorderMenuItem: React.FC<MenuItemProps> = ({ item, additionalParams }) =
                     className="w-20 h-20 object-cover object-center rounded-full"
                 />
             </div>
+            {/* Details */}
             <div className="col-span-8 grid grid-cols-8">
+                {/* Name */}
                 <h4 className="col-span-6 text-lg font-semibold">{preorderItem.name}</h4>
-                <span className="col-span-2 text-lg font-bold text-green-600 text-end">
-                    ${preorderItem.price}
-                </span>
-                <p className="col-span-8 text-slate-500 text-sm line-clamp-2">
-                    {preorderItem.description.length > maxDescriptionLength
-                        ? preorderItem.description.substring(0, maxDescriptionLength) + '...'
-                        : preorderItem.description}
-                </p>
+                {/* Price */}
+                <span className="col-span-2 text-lg font-bold text-green-600 text-end">${preorderItem.price}</span>
+                {/* Description */}
+                <p className={`text-slate-500 text-sm ${showAddToCart ? "col-span-6" : "col-span-full"} h-12 overflow-hidden`}>{
+                    preorderItem.description.length > maxDescriptionLength ? preorderItem.description.substring(0, maxDescriptionLength) + '...' : preorderItem.description
+                }</p>
+                {/* Add to Cart */}
                 {showAddToCart && (
-                    <div className="col-span-8 flex justify-end items-center mt-2">
+                    <div className="col-span-2 flex justify-end items-start">
                         <button
-                            className="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition"
+                            className="button-outline-primary text-xs"
                             onClick={() => onClick && onClick(preorderItem)}
                         >
                             Preorder
@@ -154,33 +156,6 @@ const Preorder: React.FC = () => {
             updated_at: new Date(),
         };
 
-        // const appointment = {
-        //     id_customer: user?._id,
-        //     table_number: reservationData?.diners,
-        //     status: 'Pending',
-        //     date: reservationData?.date,
-        //     hours: reservationData?.time,
-        //     created_at: new Date(),
-        //     updated_at: new Date(),
-        // };
-
-
-        // // Construct the reservation object
-        // const reservation = {
-        //     userId: user?._id, // Match 'userId' in the schema
-        //     num_of_people: reservationData.diners || 0, // Default to 0 if not found
-        //     date_time: new Date().toISOString(), // Ensure ISO 8601 format for the date-time
-        //     status: 'Pending', // Match 'status' in the schema
-        //     special_request: reservationData.specialRequests || undefined, // Optional, only include if exists
-        //     preorders: preorderedItems.map((item) => ({
-        //         menuItemId: item.menuItemId,
-        //         quantity: item.quantity,
-        //     })),
-        //     createAt: new Date().toISOString(), // Match 'createAt' in the schema
-        // };
-
-
-
         // Extract date and time
         const { date, time } = reservationData;
 
@@ -225,41 +200,50 @@ const Preorder: React.FC = () => {
         <RootLayout>
             <div>
                 <PageHeader title="Preorder Dishes" subtitle="Choose your dishes in advance" />
-                <div className="grid grid-cols-2 gap-4 mt-4 p-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-4 p-2">
                     {preorderedItems.map((item: PreorderItem) => (
                         <div
                             key={item.menuItemId}
-                            className="col-span-1 grid grid-cols-12 auto-rows-max border border-gray-200 rounded-lg shadow-sm p-4 hover:shadow-lg transition-shadow"
+                            className="col-span-1 grid grid-cols-12 auto-rows-max border border-gray-200 p-4 hover:shadow-md transition-shadow"
                         >
                             <div className="col-span-3 flex justify-center items-center">
                                 <img
                                     src={item.image}
                                     alt={item.name}
-                                    className="w-20 h-20 object-cover object-center rounded-full"
+                                    className="w-20 h-20 object-cover object-center rounded-md"
                                 />
                             </div>
-                            <div className="col-span-9 grid grid-cols-9 gap-y-2">
-                                <h4 className="col-span-6 text-lg font-semibold">{item.name}</h4>
-                                <span className="col-span-3 text-lg font-bold text-green-600 text-end">
-                                    ${item.price}
+                            <div className="col-span-9 grid grid-cols-9 gap-y-2 ml-2">
+                                <h4 className='col-span-6'>
+                                    <span
+                                        className="tooltip"
+                                        data-tooltip={item.name}
+                                    >
+                                        {item.name.length > 20 ? item.name.substring(0, 20) + '...' : item.name}
+                                    </span>
+                                </h4>
+                                <span className="col-span-3 text-md text-end">
+                                    ${item.price}   
                                 </span>
-                                <div className="col-span-9 flex items-center gap-2">
+                                <div className="col-span-6 flex items-center justify-end">
                                     <button
                                         onClick={() => handleDecreaseQuantity(item.menuItemId)}
                                         className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300"
                                     >
-                                        -
+                                        <img src="/images/minus_icon.png" className="decrease-icon" alt="minus" />
                                     </button>
-                                    <span className="w-12 text-center text-lg font-bold">{item.quantity}</span>
+                                    <span className="w-10 text-center text-lg font-bold">{item.quantity}</span>
                                     <button
                                         onClick={() => handleIncreaseQuantity(item.menuItemId)}
                                         className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300"
                                     >
-                                        +
+                                        <img src="/images/plus_icon.png" className="increase-icon" alt="plus" />
                                     </button>
+                                </div>
+                                <div className='col-span-3 flex justify-end'>
                                     <button
                                         onClick={() => handleDeletePreorder(item.menuItemId)}
-                                        className="ml-auto text-red-600 hover:text-red-800"
+                                        className="button-outline-danger text-xs"
                                     >
                                         Remove
                                     </button>
@@ -267,16 +251,24 @@ const Preorder: React.FC = () => {
                             </div>
                         </div>
                     ))}
-                    <button
-                        className={`w-full sm:w-48 h-14 px-2 py-2 rounded-md text-white font-bold transition ${preorderedItems.length > 0
-                            ? "bg-blue-600 hover:bg-blue-700"
-                            : "bg-gray-300 cursor-not-allowed"
-                            }`}
-                        onClick={handleConfirm}
-                        disabled={preorderedItems.length === 0}
-                    >
-                        Confirm
-                    </button>
+                    {preorderedItems.length === 0 && (
+                        <div className="col-span-full text-center text-gray-500">
+                            Please pick items from the menu to preorder.
+                        </div>
+                    )}
+                    <div className='col-span-full flex justify-center items-center'>
+                        <button
+                            className={`button-outline-primary w-full h-fit ${preorderedItems.length > 0
+                                ? "enabled"
+                                : "disabled"
+                                }`}
+                            onClick={handleConfirm}
+                            disabled={preorderedItems.length === 0}
+                        >
+                            Confirm
+                        </button>
+                    </div>
+
 
                 </div>
             </div>

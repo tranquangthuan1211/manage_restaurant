@@ -1,5 +1,5 @@
 export interface Review {
-  _id?: string; // Optional if pushing data
+  id: string,
   userId: string;
   reservationId: string;
   overall: number;

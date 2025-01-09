@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface StarScoreProps {
   filled: boolean;
@@ -24,16 +24,25 @@ const StarScore: React.FC<StarScoreProps> = ({ filled }) => {
 
 interface StarRatingProps {
   label: string;
-  onChange: (label: string, rating: number) => void; // Callback to pass the rating to parent
+  onChange?: (label: string, rating: number) => void; // Callback to pass the rating to parent
+  value?: number;
 }
 
-const StarRating: React.FC<StarRatingProps> = ({ label, onChange }) => {
+const StarRating: React.FC<StarRatingProps> = ({ label, onChange = null, value = 0 }) => {
   const [rating, setRating] = useState(0);
-
+  
   const handleStarClick = (starIndex: number) => {
-    setRating(starIndex + 1);
-    onChange(label, starIndex + 1); // Call the parent callback
+    if (onChange !== null && value === 0){
+      setRating(starIndex + 1);
+      onChange(label, starIndex + 1); // Call the parent callback
+    }
   };
+
+  useEffect(()=>{
+    if (value !== 0){
+      setRating(value);
+    }
+  }, [])
 
   return (
     <div className="flex flex-col">
@@ -42,7 +51,7 @@ const StarRating: React.FC<StarRatingProps> = ({ label, onChange }) => {
           <div
             key={index}
             onClick={() => handleStarClick(index)}
-            className="cursor-pointer"
+            className= {value === 0? "cursor-pointer" : ""}
           >
             <StarScore filled={index < rating} />
           </div>

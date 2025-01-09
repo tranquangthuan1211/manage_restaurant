@@ -76,11 +76,17 @@
     text-white font-bold py-2 px-4 rounded-3xl shadow-lg
     text-xl;
   }
+  .button-orange:disabled {
+    @apply bg-orange-200 text-orange-500 ;
+  }
   .button-green{
     @apply bg-gradient-to-r from-green-400 to-green-500
     hover:from-green-500 hover:to-green-600
     text-white font-bold py-2 px-4 rounded-3xl shadow-lg
     text-xl;
+  }
+  .button-green:disabled {
+    @apply bg-green-200 text-green-500 ;
   }
   .button-red{
     @apply bg-gradient-to-r from-red-400 to-red-500
@@ -88,11 +94,17 @@
     text-white font-bold py-2 px-4 rounded-3xl shadow-lg
     text-xl;
   }
+  .button-red:disabled {
+    @apply bg-red-200 text-red-500 ;
+  }
   .button-yellow{
     @apply bg-gradient-to-r from-yellow-400 to-yellow-500
     hover:from-yellow-500 hover:to-yellow-600
     text-white font-bold py-2 px-4 rounded-3xl shadow-lg
     text-xl;
+  }
+  .button-yellow:disabled {
+    @apply bg-yellow-200 text-yellow-500 ;
   }
   .button-icon{
     @apply bg-gray-200
@@ -101,6 +113,9 @@
     text-white font-bold rounded-full shadow-lg
     hover:scale-105 transform transition-all
     text-xl flex items-center justify-center;
+  }
+  .button-icon:disabled {
+    @apply bg-gray-100 text-gray-400 ;
   }
   .text-primary{
     @apply text-olive-green-300 font-bold font-sansita-one text-2xl;
@@ -126,19 +141,41 @@
   .button-dark-gray {
     @apply bg-gradient-to-b from-gray-500 to-zinc-600
     hover:from-zinc-600 hover:to-zinc-700
-     text-white font-bold py-2 px-4 rounded-lg shadow-lg;
+    text-white font-bold py-2 px-4 rounded-lg shadow-lg;
   }
+  .button-dark-gray:disabled {
+    @apply bg-gray-300 text-gray-500 ;
+  }
+
   .button-outline-light {
     @apply bg-transparent text-gray-500 font-bold py-2 px-4 rounded-lg border border-solid border-gray-500
     hover:bg-gray-500 hover:text-white transition-all;
   }
-  .button-outline-primary{
+  .button-outline-light:disabled {
+    @apply bg-transparent text-gray-300 border-gray-300 ;
+  }
+
+  .button-outline-primary {
     @apply bg-transparent text-olive-green-400 font-bold py-2 px-3 rounded-md border border-solid border-olive-green-400
     hover:bg-olive-green-400 hover:text-white transition-all;
+  }
+  .button-outline-primary:disabled {
+    @apply bg-transparent text-olive-green-200 border-olive-green-200 ;
+  }
+
+  .button-outline-danger {
+    @apply bg-transparent text-red-600 font-bold py-2 px-3 rounded-md border border-solid border-red-600
+    hover:bg-red-600 hover:text-white transition-all;
+  }
+  .button-outline-danger:disabled {
+    @apply bg-transparent text-red-300 border-red-300 ;
   }
 
   .button-primary {
     @apply px-4 py-2 bg-teal-600 text-white font-semibold rounded-lg shadow-md hover:bg-teal-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition duration-150 ease-in-out;
+  }
+  .button-primary:disabled {
+    @apply bg-teal-300 text-teal-500 ;
   }
 
   .table-auto {
@@ -146,10 +183,10 @@
   }
   .table-auto th,
   .table-auto td {
-    @apply  border border-gray-200;
+    @apply  text-xs border border-gray-200;
   }
   .table-auto th {
-    @apply bg-gray-200 text-left text-slate-800 font-bold py-2 px-4;
+    @apply bg-gray-200 text-left text-slate-800 py-2 px-4;
   }
   .table-auto tr:hover {
     @apply bg-gray-100;
@@ -191,10 +228,10 @@
   }
 
   .increase-icon{
-    @apply rounded-full border border-solid bg-slate-100 border-slate-200 hover:bg-slate-200 w-16 p-2;
+    @apply rounded-md border border-solid bg-slate-100 border-slate-200 hover:bg-slate-200 w-16 p-2;
   }
   
   .decrease-icon{
-    @apply rounded-full border border-solid bg-slate-100 border-slate-200 hover:bg-slate-200 w-16 p-2;
+    @apply rounded-md border border-solid bg-slate-100 border-slate-200 hover:bg-slate-200 w-16 p-2;
   }
 }

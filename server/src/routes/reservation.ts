@@ -61,6 +61,8 @@ const router = express.Router();
 
 function useRouteReservations() {
   router.post("/", ReservationController.createReservation);
+  router.get("/:id", ReservationController.getReservation);
+  router.get("/by-user/:id", ReservationController.getReservationsByUser);
   return router;
 }
 
