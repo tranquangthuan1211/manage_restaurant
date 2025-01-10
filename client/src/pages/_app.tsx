@@ -15,29 +15,29 @@ function App({ Component, pageProps }: AppProps) {
   return (
     <SnackbarProvider>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        {/* <AuthProvider>
+        <AuthProvider>
           <AuthConsumer>
-                {(auth) => {
-                    // console.log(auth)
-                    const showScreen = auth.isInitialized;
-                    // console.log(auth)
-                    const theme = createTheme(initialSettings);
-                    if(!showScreen) {
-                      return <h1> loaaa</h1>
-                    }else {
-                      return (
-                        <ThemeProvider theme={theme} >
-                          <UserProvider>{getLayout(<Component {...pageProps} />)}</UserProvider>
-                        </ThemeProvider>
-                      )
-                    }
-                  }
-                }
+            {(auth) => {
+              // console.log(auth)
+              const showScreen = auth.isInitialized;
+              // console.log(auth)
+              const theme = createTheme(initialSettings);
+              if (!showScreen) {
+                return <h1> Loading ... </h1>
+              } else {
+                return (
+                  <ThemeProvider theme={theme} >
+                    <UserProvider>{getLayout(<Component {...pageProps} />)}</UserProvider>
+                  </ThemeProvider>
+                )
+              }
+            }
+            }
           </AuthConsumer>
-        </AuthProvider> */}
-          <ThemeProvider theme={theme} >
+        </AuthProvider>
+        {/* <ThemeProvider theme={theme} >
             <UserProvider>{getLayout(<Component {...pageProps} />)}</UserProvider>
-          </ThemeProvider>
+          </ThemeProvider> */}
       </LocalizationProvider>
     </SnackbarProvider>
   )

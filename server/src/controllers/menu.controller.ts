@@ -4,10 +4,10 @@ import MenuDataBase from '../models/menu-model'
 import { error } from 'console';
 
 // QT's function
-// import {handleGetFood} from '../services/menu';
+import {handleGetFood} from '../services/menu';
 
 // 2/1/2025: Modified by HP
-async function handleGetFood(
+async function handleGetMenuItems(
     page: number = 1, 
     limit: number = 10, 
     categoryName: string = "all", 
@@ -101,8 +101,6 @@ async function handleGetFood(
 }
 
 
-
-
 class MenuController {
     async getFood(req: Request, res: Response) {
         try {
@@ -119,13 +117,37 @@ class MenuController {
             });
         }
     }
+    async getMenuItems(req: Request, res: Response) {
+        try {
+            const page = parseInt(req.query.page as string) || 1;
+            const limit = parseInt(req.query.limit as string) || 10;
+            const categoryName = req.query.category as string || "all";
+            const nameFilter = req.query.nameFilter as string || "";
+            const foods = await handleGetMenuItems(page, limit, categoryName, nameFilter);
+            //const foods = await handleGetFood();
+            return res.status(200).json({
+                // Added by HP
+                error: 0,
+                message: "OK",
+                // 
+                data: foods
+            })
+        } catch (error: any) {
+            return res.status(400).json({
+                error: 1,
+                message: error?.message,
+                data: null,
+            });
+        }
+    }
     async getFoods(req: Request, res: Response) {
         try {
             const page = parseInt(req.query.page as string) || 1;
             const limit = parseInt(req.query.limit as string) || 10;
             const categoryName = req.query.category as string || "all";
             const nameFilter = req.query.nameFilter as string || "";
-            const foods = await handleGetFood(page, limit, categoryName, nameFilter);
+            // const foods = await handleGetFood(page, limit, categoryName, nameFilter);
+            const foods = await handleGetFood();
             return res.status(200).json({
                 // Added by HP
                 error: 0,

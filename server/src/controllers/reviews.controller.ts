@@ -107,10 +107,11 @@ class ReviewController {
 
   async getReviewByReservation(req: Request, res: Response) {
     try {
+      console.log("Get review by reservation");
       const reservationId = req.params.id as string;
       const review = await ReviewDataBase.reviews.findOne({ reservationId: reservationId });
       if (!review) {
-        res.status(404).json({
+        res.status(500).json({
           error: 1,
           message: `Review with reservation ID ${reservationId} not found`,
         });
@@ -121,7 +122,7 @@ class ReviewController {
         data: review,
       });
     } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      res.status(500).json({ error: 1, message: "Unknow error"});
     }
   }
 

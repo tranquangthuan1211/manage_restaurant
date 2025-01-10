@@ -24,5 +24,6 @@ export const Paths = {
       "danh-sach-phuc-vu":"/staff/list",
       "menu":"/staff/menu",
       "lich-nghi":"/staff/leave",
-    }
+    },
+    user : '/customer',
 }

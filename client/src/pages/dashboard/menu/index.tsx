@@ -117,7 +117,7 @@
 // export default Page;
 
 //update for the new version
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { Page as PageType } from "src/types/page";
 import { Layout } from "src/layouts/index";
 import ContentHeader from "src/sections/dashboard/content-header";

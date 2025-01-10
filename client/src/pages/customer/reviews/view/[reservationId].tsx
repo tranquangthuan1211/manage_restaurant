@@ -65,12 +65,12 @@ const CustomerViewReview: React.FC = () => {
         try {
           const response = await apiGet(`/reviews/by-reservation/${reservationId}`);
           if (response.error == 1) {
-            console.error("Failed to fetch review:", response.message);
+            console.error("Failed to fetch review: ", response.message);
             return;
           }
           setReview(response.data);
         } catch (error) {
-          console.error("Failed to fetch review:", error);
+          console.error("Failed to fetch review: ", error.message || "Unknow error");
         }
       };
       fetchReview();

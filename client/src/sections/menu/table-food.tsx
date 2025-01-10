@@ -69,11 +69,11 @@ export const FoodTabel = ({
                             ></NoLabelTextField>
                         </TableCell>
             
-//                         <TableCell align="center">
-//                             <NoLabelTextField
-//                             fullWidth
-//                             ></NoLabelTextField>
-//                         </TableCell>
+                        <TableCell align="center">
+                            <NoLabelTextField
+                            fullWidth
+                            ></NoLabelTextField>
+                        </TableCell>
             
                         <TableCell align="center">
                             <NoLabelTextField

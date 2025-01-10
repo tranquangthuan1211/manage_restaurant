@@ -7,9 +7,12 @@ const router = express.Router();
 const upload = multer();
 const useRouteMenu = () => {
     router.get('/', MenuController.getFoods);
+    // Alternative version of the above line
+    router.get('/menu', MenuController.getMenuItems);
+
     router.get('/:id', MenuController.getFood);
     router.use(managerMiddleware);
-    router.post('/', uploadCloud.single('image'),MenuController.createFood);
+    router.post('/', uploadCloud.single('image'), MenuController.createFood);
     router.put('/:id', MenuController.updateFood);
     router.delete('/:id', MenuController.deleteFood);
     return router;

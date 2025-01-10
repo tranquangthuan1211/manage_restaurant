@@ -109,9 +109,5 @@ const Page: PageType = () => {
   );
 };
 Page.getLayout = (page) => 
-<IssuerGuard issuer={Issuer.JWT}>
-  <GuestGuard>
-    <AuthLayout>{page}</AuthLayout>
-  </GuestGuard>
-</IssuerGuard>
+    <div>{page}</div>
 export default Page;

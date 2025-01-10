@@ -32,7 +32,7 @@ const Menu: React.FC<MenuProps> = ({ itemComponent: ItemComponent, itemAdditiona
     try {
       setIsLoading(true);
       const urlParams = new URLSearchParams(Object.entries(queryParams).map(([key, value]) => [key, value.toString()])).toString();
-      const apiUrl = `/menus?${urlParams}`;
+      const apiUrl = `/menus/menu?${urlParams}`;
       console.log(`fetching menu items from ${apiUrl}`);
       const result = await apiGet(apiUrl);
 
