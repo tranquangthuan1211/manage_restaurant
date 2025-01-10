@@ -54,7 +54,8 @@ const routesDef = [
   {path : "staffs", route: useRouteStaff()},
   {path:"payments",route: usePaymentRoute()},
   {path:"complaints", route: useRouteComplaint()},
-  {path:"leaves", route: useRouteLeave()}
+  {path:"leaves", route: useRouteLeave()},
+  {path:"reservations", route: useRouteReservations()}
 ]
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 routesDef.forEach(({ path, route }) => {

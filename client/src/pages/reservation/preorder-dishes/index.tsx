@@ -191,7 +191,7 @@ const Preorder: React.FC = () => {
             window.location.href = '/';
         } catch (error: any) {
             alert(error.message || 'An error occurred. Please try again.');
-            console.error(error);
+            console.error('Cannot book: ', error.message || "Unknown error");
         }
     };
 
