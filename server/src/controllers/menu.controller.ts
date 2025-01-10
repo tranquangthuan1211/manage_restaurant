@@ -3,6 +3,9 @@ import { ObjectId } from 'mongodb';
 import MenuDataBase from '../models/menu-model'
 import { error } from 'console';
 
+// QT's function
+// import {handleGetFood} from '../services/menu';
+
 // 2/1/2025: Modified by HP
 async function handleGetFood(
     page: number = 1, 
@@ -140,7 +143,9 @@ class MenuController {
     }
     async createFood(req: Request, res: Response) {
         try{
+            console.log(req.body)
             if (!req.file) {
+                console.log("ko có file")
                 return res.status(400).json({ error: 'No file uploaded' });
             }
             const fileData = req.file;
@@ -185,7 +190,8 @@ class MenuController {
 
     async deleteFood(req: Request, res: Response) {
         try {
-            const {id} = req.params;
+            const id = req.params.id;
+            console.log(id)
             const result = await MenuDataBase.menu.deleteOne({_id: new ObjectId(id)});
             if(!result.acknowledged) {
                 throw new Error("Can not delete food");

@@ -5,10 +5,13 @@ import CloseIcon from '@mui/icons-material/Close';
 import { TabBar } from "src/layouts/tab_bar";
 import { AuthLogin } from "src/sections/auth/auth-login";
 import { RegisterLogin } from "src/sections/auth/auth-register";
+import { Layout as AuthLayout } from "src/layouts/auth/classic-layout";
+import { Issuer } from "src/utils/auth";
+import { IssuerGuard } from "src/guards/issuer-guard";
+import { GuestGuard } from "src/guards/guest-guard";
 
 const Page: PageType = () => {
   const [showSignIn, setShowSignIn] = useState(true);
-
   const handleSignInClick = () => {
     setShowSignIn(true);
   };
@@ -105,5 +108,10 @@ const Page: PageType = () => {
     </TabBar>
   );
 };
-
+Page.getLayout = (page) => 
+<IssuerGuard issuer={Issuer.JWT}>
+  <GuestGuard>
+    <AuthLayout>{page}</AuthLayout>
+  </GuestGuard>
+</IssuerGuard>
 export default Page;

@@ -10,7 +10,7 @@ const useRouteAppointment = () => {
     router.post('/', AppointmentController.createAppointment)
 
     router.get('/:id', AppointmentController.getAppointmentUser)
-    router.put('/:id', AppointmentController.updateAppointment)
+    router.patch('/:id', AppointmentController.updateAppointment)
     router.delete('/:id', AppointmentController.deleteAppointment)
 
     return router

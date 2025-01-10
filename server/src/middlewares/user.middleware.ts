@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import e, { Request, Response, NextFunction } from 'express';
 import {verifyToken } from '../securities/jwt';
 import UsersDataBase from '../models/user-model';
 export const userMiddleware = async(req:Request, res:Response, next: NextFunction) => {
@@ -20,7 +20,7 @@ export const userMiddleware = async(req:Request, res:Response, next: NextFunctio
             });
         }
         console.log(`User role: ${user.role}`);
-        if(user.role !== 'customer' && user.role !== 'user'){ // Should be only user.role !== 'user'? since the model only have 'user' 'admin' & 'staff'
+        if(user.role !== 'customer'){
             return res.status(403).json({
                 error: 1,
                 message: 'Permission denied',
@@ -28,10 +28,10 @@ export const userMiddleware = async(req:Request, res:Response, next: NextFunctio
             });
         }
         next();
-    } catch (error) {
+    } catch (error: any) {
         return res.status(400).json({ 
             error: 1,
-            message: 'Invalid token',
+            message: error.message,
             data: null
         });
     }

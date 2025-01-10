@@ -2,7 +2,7 @@
 export const Paths = {
     index:'/',
     auth: {
-        login: "/auth/login",
+        login: "/auth/",
         register: "/auth/register",
       },
     logout: "/dang-xuat",
@@ -14,12 +14,15 @@ export const Paths = {
       "quan-ly-nhan-vien": "/dashboard/employee",
       "xuat-danh-sach":"dashboard/export",
       "lich-hen": "/dashboard/appointment",
-      "quan-ly-khieu-nai":"/dashboard/khieu-nai",
-      "settings":'/cai-dat'
+      "lich-lam-viec":"/dashboard/schedule",
+      "quan-ly-khieu-nai":"/dashboard/complaint",
+      "quan-ly-nghi-phep":"/dashboard/leave",
+      "settings":'/setting'
     },
-    patient:{
-      "benh-nhan":"/benh-nhan",
-      "dat-lich":"/benh-nhan/dat-lich",
-      "lich-hen":"/benh-nhan/lich-hen",
+    staff :{
+      "lich-lam-viec":"/staff/schedule",
+      "danh-sach-phuc-vu":"/staff/list",
+      "menu":"/staff/menu",
+      "lich-nghi":"/staff/leave",
     }
 }

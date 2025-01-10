@@ -126,7 +126,7 @@ export function CustomTable<P, T extends { id: P; [key: string]: any }>(
       sx = {{
         backgroundColor:"white",
         overflowY: 'auto',
-        padding: 2,
+        padding: 4,
       }}
     >
       {children}
@@ -154,7 +154,7 @@ export function CustomTable<P, T extends { id: P; [key: string]: any }>(
             onClickSort={handleClickSort}
           />
           <TableBody>
-            {additionalTopRow}
+            {rows.length > 0 && additionalTopRow}
             {pagedRows.map((row, index) => (
               <TableRow
                 hover={!!onClickRow}
@@ -246,11 +246,28 @@ export function CustomTable<P, T extends { id: P; [key: string]: any }>(
             {additionalBottomRow}
           </TableBody>
         </Table>
-        {(loading || rows.length == 0) && <Stack height={104} />}
+        {/* {(loading || rows.length == 0) && 
+          <Stack 
+            height={104} 
+            // marginTop={-30}
+            width={"100%"}
+            alignItems="center"
+            justifyContent="center"
+            position="sticky"
+            left={0}
+            top={props.loading ? 12 : undefined}
+            sx = {{
+              backgroundColor:"white",
+            }}
+          >
+            <Typography>No data</Typography>
+          </Stack>
+          
+          } */}
       </Stack>
       {(loading || rows.length == 0) && (
         <Stack
-          marginTop={-30}
+          // marginTop={-30}
           height={50}
           width={"100%"}
           alignItems="center"

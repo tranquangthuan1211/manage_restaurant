@@ -4,12 +4,13 @@ import {managerMiddleware} from "../middlewares/manger.middileware"
 const router = express.Router();
 
 const useRouteStaff = () => {
-    router.post("/", StaffController.createStaff);
     router.get("/:id", StaffController.getStaff);
     router.put("/:id", StaffController.updateStaff);
     router.use(managerMiddleware);
+    router.post("/", StaffController.createStaff);
     router.get("/", StaffController.getStaffs);
-    router.delete("/:id", StaffController.deleteStaff);
+    router.patch("/", StaffController.updateStaffById);
+    router.delete("/:id", StaffController.deleteStaff)
     return router;
 }
 

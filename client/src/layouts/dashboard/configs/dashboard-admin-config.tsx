@@ -39,9 +39,9 @@ export const getDashboardAdminConfigs: DashboardSection[] = [
                 />
             },
             {
-                title:"Thiết lập lịch",
-                path:Paths.dashboard["thiet-lap-lich"],
-                icon: <CalendarMonthIcon width = {20}/>
+                title:"Lịch làm việc",
+                path:Paths.dashboard["lich-lam-viec"],
+                icon:<CalendarMonthIcon width = {20}/>
             },
             {
                 title:"Quản lý khiếu nại",
@@ -51,9 +51,9 @@ export const getDashboardAdminConfigs: DashboardSection[] = [
                 }}/>    
             },
             {
-                title:"Xuất danh sách",
-                path: Paths.dashboard["xuat-danh-sach"],
-                icon: <FileDownloadIcon sx = {{
+                title:"Quản lý nghỉ phép",
+                path: Paths.dashboard["quan-ly-nghi-phep"],
+                icon: <DesignServicesIcon sx = {{
                     width: 20,
                 }}/>
             }

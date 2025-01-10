@@ -10,12 +10,15 @@ import useRouteAppointment from './routes/appointment';
 import useRouteAssess from "./routes/assess"
 import useRouteStaff from "./routes/staff"
 import usePaymentRoute from "./routes/payment"
+import useRouteComplaint from "./routes/complaint"
+import useRouteLeave from "./routes/leave"
 import useRouteReservations from "./routes/reservation";
 import swaggerJSDoc from 'swagger-jsdoc';
 import SwaggerOption from "./configs/swagger";
 import swaggerUi from 'swagger-ui-express';
 import morgan from "morgan";
 import cors from 'cors';
+import rabbitMQ from "./configs/rabbit-mq";
 import { rateLimit } from 'express-rate-limit'
 
 import useRouteReviews from './routes/reviews';
@@ -42,16 +45,16 @@ app.use("/api/", limiter);
 //   })
 // })
 const routesDef = [
-  { path: "users", route: useRouteUser() },
-  { path: "menus", route: useRouteMenu() },
-  { path: "categories", route: useRouteCategory() },
-  { path: "orders", route: useRouteOrder() },
-  { path: "appointments", route: useRouteAppointment() },
-  { path: "assess", route: useRouteAssess() },
-  { path: "staffs", route: useRouteStaff() },
-  { path: "payments", route: usePaymentRoute() },
-  { path: "reviews", route: useRouteReviews() },
-  { path: "reservations", route: useRouteReservations() } // MP jan 4
+  {path:"users", route: useRouteUser()},
+  {path:"menus", route: useRouteMenu()},
+  {path: "categories", route: useRouteCategory()},
+  {path: "orders", route: useRouteOrder()},
+  {path:"appointments", route: useRouteAppointment()},
+  {path:"assess", route: useRouteAssess()},
+  {path : "staffs", route: useRouteStaff()},
+  {path:"payments",route: usePaymentRoute()}
+  {path:"complaints", route: useRouteComplaint()},
+  {path:"leaves", route: useRouteLeave()}
 ]
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 routesDef.forEach(({ path, route }) => {
@@ -70,6 +73,12 @@ app.use((error: any, req: Request, res: Response, next: NextFunction) => {
     },
   });
 });
-app.listen(port, () => {
-  console.log(`Server started at http://localhost:${port}`);
-});
+rabbitMQ.connect()
+    .then(() => {
+        app.listen(port, () => {
+            console.log('Producer API running on http://localhost:3001');
+        });
+    })
+    .catch((error) => {
+        console.error('Failed to start the server:', error);
+    });

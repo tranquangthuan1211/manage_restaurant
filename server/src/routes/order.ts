@@ -1,14 +1,16 @@
 import OrderController from '../controllers/order.controller'
 import express from 'express'
-import { managerMiddleware } from '../middlewares/manger.middileware'
+import {checkOrderMiddleware} from "../middlewares/order-check.middleware"
 const router = express.Router()
 
 function useRouteOrder() {
-    router.get('/', OrderController.getOrders)
     router.post('/', OrderController.createOrder)
     router.get('/:id', OrderController.getOrder)
     router.patch('/:id', OrderController.updateOrder)
     router.delete('/:id', OrderController.deleteOrder)
+    router.use(checkOrderMiddleware)
+    router.get('/', OrderController.getOrders)
+    router.patch('/',OrderController.finishingOrder)
     return router
 }
 

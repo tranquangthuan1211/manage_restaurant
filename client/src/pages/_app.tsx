@@ -1,32 +1,43 @@
 import { AppProps } from 'next/app';
-import { ThemeProvider } from '@mui/material/styles';
+import { ThemeProvider} from '@mui/material/styles';
+import {createTheme} from 'src/theme/index';
+import {initialSettings} from 'src/contexts/settings-context';
+import {SnackbarProvider} from 'notistack';
 import { UserProvider } from 'src/contexts/users/user-context';
-import { createTheme } from 'src/theme/index';
-import { initialSettings } from 'src/contexts/settings-context';
-//import { LoadingProvider, useLoading } from 'src/contexts/loading';
-import { useEffect } from 'react';
-import Spinner from 'src/components/spinner';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { AuthConsumer, AuthProvider } from 'src/contexts/auth/jwt-context';
 import "./global.css";
 
-function InnerApp({ Component, pageProps }: AppProps) {
+function App({ Component, pageProps }: AppProps){
   const getLayout = Component.getLayout ?? ((page) => page);
-  //const { isLoading, setLoading } = useLoading();
-
-  return (
-    <div>
-      <UserProvider>{getLayout(<Component {...pageProps} />)}</UserProvider>
-    </div>
-  );
-}
-
-function App(props: AppProps) {
   const theme = createTheme(initialSettings);
-
   return (
-    <ThemeProvider theme={theme}>
-      <InnerApp {...props} />
-    </ThemeProvider>
-  );
+    <SnackbarProvider>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <AuthProvider>
+          <AuthConsumer>
+                {(auth) => {
+                    // console.log(auth)
+                    const showScreen = auth.isInitialized;
+                    // console.log(auth)
+                    const theme = createTheme(initialSettings);
+                    if(!showScreen) {
+                      return <h1> loaaa</h1>
+                    }else {
+                      return (
+                        <ThemeProvider theme={theme} >
+                          <UserProvider>{getLayout(<Component {...pageProps} />)}</UserProvider>
+                        </ThemeProvider>
+                      )
+                    }
+                  }
+                }
+          </AuthConsumer>
+        </AuthProvider>
+      </LocalizationProvider>
+    </SnackbarProvider>
+  )
 }
 
 export default App;

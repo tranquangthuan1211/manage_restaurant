@@ -1,5 +1,5 @@
-import { Box, Button, IconButton, TextField, Typography } from "@mui/material"
-import { useState } from "react"
+import { Box, Button, IconButton, TextField, Typography } from "@mui/material";
+import { useState } from "react";
 import CloseIcon from '@mui/icons-material/Close';
 import { apiPost } from 'src/api/api-requests';
 import CookieHelper from 'src/utils/cookie-helper';

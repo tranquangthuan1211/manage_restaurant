@@ -3,79 +3,7 @@ import { ObjectId } from 'mongodb';
 import AppointmentDataBase from '../models/appointment-model';
 import { AppointmentDetails } from '../models/schemas/appointment';
 import RedisService from '../services/redis';
-async function getAppointments(): Promise<AppointmentDetails[]> {
-    try {
-        let pipeline: any[] = []
-        pipeline = pipeline.concat([
-            {
-                $lookup: {
-                    from: "users",
-                    let: { customerId: { $toObjectId: "$id_customer" } },
-                    pipeline: [
-                        { $match: { $expr: { $eq: ["$_id", "$$customerId"] } } },
-                        { $project: { name: 1, price: 1, _id: 1 } }
-                    ],
-                    as: "customer"
-                }
-            }
-        ])
-        pipeline.push({
-            $project: {
-                _id: 1,
-                customer_name: { $arrayElemAt: ["$customer.name", 0] },
-                table_number: 1,
-                date: 1,
-                hours:1,
-                status: 1,        
-                created_at: 1,
-                updated_at: 1
-            }
-        })
-        const data = await AppointmentDataBase.appointment.aggregate(pipeline).toArray() as AppointmentDetails[]
-        return data
-    }
-    catch (error: any) {
-        throw new Error(error.message)
-    }
-}
-async function getAppointmentUser(id: string): Promise<AppointmentDetails[]> {
-    try {
-        let pipeline: any[] = []
-        pipeline = pipeline.concat([
-            {
-                $match: { id_customer: id }
-            },
-            {
-                $lookup: {
-                    from: "users",
-                    let: { customerId: { $toObjectId: "$id_customer" } },
-                    pipeline: [
-                        { $match: { $expr: { $eq: ["$_id", "$$customerId"] } } },
-                        { $project: { name: 1, price: 1, _id: 1 } }
-                    ],
-                    as: "customer"
-                }
-            }
-        ])
-        pipeline.push({
-            $project: {
-                _id: 1,
-                customer_name: { $arrayElemAt: ["$customer.name", 0] },
-                table_number: 1,
-                date: 1,
-                hours:1,
-                status: 1,        
-                created_at: 1,
-                updated_at: 1
-            }
-        })
-        const data = await AppointmentDataBase.appointment.aggregate(pipeline).toArray() as AppointmentDetails[]
-        return data
-    }
-    catch (error: any) {
-        throw new Error(error.message)
-    }
-}
+import {getAppointments,getAppointmentUser} from '../services/appointment'
 class AppointmentController {
     async getAppointments(req: Request, res: Response) {
         try {
@@ -99,6 +27,8 @@ class AppointmentController {
     async getAppointmentUser(req: Request, res: Response) {
         try {
             const data = await getAppointmentUser(req.params.id)
+            const value = await RedisService.REDIS_GET("tableBooking1")
+            console.log(value)
             return res.status(200).json({
                 error: 0,
                 message:"Success",
@@ -142,7 +72,9 @@ class AppointmentController {
     }
     async updateAppointment(req: Request, res: Response) {
         try {
-            const data = await AppointmentDataBase.appointment.updateOne({ _id: new ObjectId(req.params.id) }, { $set: req.body })
+            const {_id, ...rest} = req.body
+            console.log(req.params.id)
+            const data = await AppointmentDataBase.appointment.updateOne({ _id: new ObjectId(req.params.id) }, { $set: rest })
             return res.status(200).json({
                 error: 0,
                 message:"Updated successfully",
