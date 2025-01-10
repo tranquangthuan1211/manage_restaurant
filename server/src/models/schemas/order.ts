@@ -14,3 +14,10 @@ export interface OrderDetail {
     created_at: Date;
     updated_at: Date;
 }
+export interface Reservation {
+    user_id: string;
+    num_of_people: number;
+    date: Date;
+    time: number;
+    status: "pending" | "approved" | "rejected";
+}

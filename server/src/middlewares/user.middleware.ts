@@ -19,8 +19,13 @@ export const userMiddleware = async(req:Request, res:Response, next: NextFunctio
                 data: null
             });
         }
-        if(!user.role){
-            throw new Error("User is not customer");
+        console.log(`User role: ${user.role}`);
+        if(user.role !== 'customer'){
+            return res.status(403).json({
+                error: 1,
+                message: 'Permission denied',
+                data: null
+            });
         }
         next();
     } catch (error: any) {

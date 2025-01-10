@@ -4,7 +4,7 @@ import { Employee,initialEmployee } from "src/types/employee";
 import { useFormik } from "formik";
 import { ArrowBack } from "@mui/icons-material";
 import { useEmployee } from "src/contexts/employee/employee-context";
-import DocViewer from "src/components/\bdoc-view";
+import DocViewer from "src/components/doc-view";
 import { Leave } from "src/types/leave";
 const NoLabelTextField = styled(TextField)<TextFieldProps>(() => ({
     "& .MuiInputBase-input.MuiFilledInput-input": {

@@ -2,6 +2,7 @@ export interface Users {
     name: string;
     address: string;
     phone:string;
+
     gender: string;
     birthdate: string;
     schedule_id?: string;

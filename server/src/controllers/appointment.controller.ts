@@ -42,6 +42,7 @@ class AppointmentController {
              });
         }
     }
+    
     async createAppointment(req: Request, res: Response) {
         try {
             let tableBooking = await RedisService.REDIS_GET("tableBooking1")
