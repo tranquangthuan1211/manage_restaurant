@@ -52,7 +52,7 @@ const routesDef = [
   {path:"appointments", route: useRouteAppointment()},
   {path:"assess", route: useRouteAssess()},
   {path : "staffs", route: useRouteStaff()},
-  {path:"payments",route: usePaymentRoute()}
+  {path:"payments",route: usePaymentRoute()},
   {path:"complaints", route: useRouteComplaint()},
   {path:"leaves", route: useRouteLeave()}
 ]
