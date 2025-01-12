@@ -1,10 +1,10 @@
 import React from 'react';
 import RootLayout from '../../layouts/customer/layout';
 import CustomerSideBar from '../../components/customer/sidebar';
-import { useState, useEffect} from 'react';
-import { apiGet } from 'src/api/api-requests';
+import { useState, useEffect } from 'react';
+import { apiGet, apiPatch } from 'src/api/api-requests';
 import { User } from 'src/types/user';
-import {useUser} from 'src/contexts/users/user-context';
+import { useUser } from 'src/contexts/users/user-context';
 
 const CustomerPersonalInfo = () => {
     const { user, isAuthenticated } = useUser() || { user: null, isAuthenticated: false };
@@ -42,9 +42,10 @@ const CustomerPersonalInfo = () => {
         setIsEditing(!isEditing);
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
         console.log('Saving data:', formData);
         // Placeholder for API call
+        await apiPatch(`/users/${user?._id}`, formData);
         alert('Changes saved!');
         setIsEditing(false);
     };
