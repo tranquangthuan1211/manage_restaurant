@@ -16,6 +16,7 @@ const CustomerPersonalInfo = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState({
         username: user ? user.username : '',
+        name: user ? user.name: '',
         phone: user ? user.phone : '',
         address: user ? user.address : '',
     });
@@ -24,6 +25,7 @@ const CustomerPersonalInfo = () => {
         if (user) {
             setFormData({
                 username: user.username,
+                name: user.name,
                 phone: user.phone,
                 address: user.address,
             });
@@ -89,9 +91,21 @@ const CustomerPersonalInfo = () => {
                             <span>Your Name</span>
                             <input
                                 type="text"
-                                name="username"
+                                name="name"
                                 className={`input-field ${!isEditing ? 'input-field-disabled' : ''}`}
                                 placeholder="Your Name"
+                                value={formData.name}
+                                onChange={handleInputChange}
+                                disabled={!isEditing}
+                            />
+                        </div>
+                        <div>
+                            <span>Your Username</span>
+                            <input
+                                type="text"
+                                name="username"
+                                className={`input-field ${!isEditing ? 'input-field-disabled' : ''}`}
+                                placeholder="Your username"
                                 value={formData.username}
                                 onChange={handleInputChange}
                                 disabled={!isEditing}
