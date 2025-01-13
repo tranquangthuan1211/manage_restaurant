@@ -33,7 +33,7 @@ export const RegisterLogin = () => {
         try{
             console.log("API attempt to register user with data:", formData);
             const response = await apiPost("/users/register", formData);
-            if (response.error === 1) {
+            if (response.error === 1) { 
                 console.log("Registration failed:", response.message);
                 return;
             }

@@ -136,12 +136,11 @@ const CustomerReviewHistory = () => {
           <div className="grid grid-cols-1 gap-4">
             <h2 className="text-xl font-bold">Review History</h2>
             {loading && <div>Loading...</div>}
-            {!loading && reviewData && (<div>
+            {(!loading && reviewData && reviewData.length > 0) && (<div>
               {renderTable()}
               {renderPagination()}
             </div>)}
-            {!loading && !reviewData && (<div>Loading...</div>)}
-            {!loading && reviewData && reviewData.length === 0 && (
+            {(!loading && reviewData && reviewData.length === 0) && (
               <div>No review found</div>
             )}
           </div>

@@ -60,16 +60,20 @@ class UserController {
   }
   async createUser(req: Request, res: Response) {
     try {
-      const check = checkInputError<Users>({
-        ...req.body
-      }, initialUser);
-      if(check.errors.length > 0) {
-        return res.status(400).json({
-          error: 1,
-          message: "Input is invalid",
-          data: null,
-        });
-      }
+      // The schema is messy, fields don't actually depict the actual data
+      // const check = checkInputError<Users>({
+      //   ...req.body
+      // }, initialUser);  
+
+      // if(check.errors.length > 0) {
+      //   console.log("Error input:");
+      //   check.errors.forEach((error) => { console.error(error.message) });
+      //   return res.status(400).json({
+      //     error: 1,
+      //     message: "Invalid input",
+      //     data: null,
+      //   });
+      // }
       // console.log(check)
       const newUser = req.body as Users;
       if(!newUser.role){

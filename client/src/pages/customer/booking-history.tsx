@@ -123,13 +123,12 @@ const CustomerBookingHistory = () => {
                     <div className="grid grid-cols-1 gap-4">
                         <h2 className="text-xl font-bold">Booking History</h2>
                         {loading && <div>Loading...</div>}
-                        {!loading && reservationData && (<div>
+                        {(!loading && reservationData && reservationData.length > 0) && (<div>
                             {renderTable()}
                             {renderPagination()}
                         </div>)}
-                        {!loading && !reservationData && (<div>Loading...</div>)}
-                        {!loading && reservationData && reservationData.length === 0 && (
-                            <div>You didn't have any reservation yet...</div>
+                        {(!loading && reservationData && reservationData.length === 0) && (
+                            <div>No review found</div>
                         )}
                     </div>
                 </CustomerSideBar>
