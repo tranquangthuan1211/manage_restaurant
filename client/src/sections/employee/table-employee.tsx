@@ -31,7 +31,7 @@ export const EmployeeTable = ({
         editEmployee: (employee: Employee) => editEmployee.handleOpen(employee),
         deleteEmployee: (employee: Employee) => deleteEmployeeDialog.handleOpen(employee),
     });
-    const pagination = usePagination({ count: employees.length });
+    const pagination = usePagination({ count: employees.length});
     return (
         <>
             <CustomTable

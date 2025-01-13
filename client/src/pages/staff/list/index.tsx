@@ -3,7 +3,7 @@ import {Page as PageType} from "src/types/page"
 import { Layout } from "src/layouts/index"
 import ContentHeader from 'src/sections/dashboard/content-header';
 import { Stack, Box, Button, Tabs, Tab, useMediaQuery, Theme } from '@mui/material';
-import {AppointmentTable} from "src/sections/appointment/table-appointment"
+import {ReservationTable} from "src/sections/appointment/table-appointment"
 import AppointmentApi from "src/api/appointment";
 import useFunction from "src/hooks/use-function";
 import VirtualizedAppointmentList from "src/sections/appointment/scroll-windown-appointment"
@@ -38,7 +38,8 @@ const Page:PageType = () => {
                     </Box>
                   }
             />
-            {lgUp ?
+            <ReservationTable/>
+            {/* {lgUp ?
                 (
                     <AppointmentTable/>
                ): 
@@ -49,7 +50,7 @@ const Page:PageType = () => {
                     />
                )
                
-            }
+            } */}
             <ConfirmDialog
                 title={`Xác nhận phục vụ khách hàng ${confirmDialog.data?.customer_name}`}
                 open={confirmDialog.open}

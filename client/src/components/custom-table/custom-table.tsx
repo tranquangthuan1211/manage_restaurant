@@ -94,8 +94,8 @@ export function CustomTable<P, T extends { id: P; [key: string]: any }>(
   const pagedRows = useMemo(() => {
     return pagination
       ? sortedRows.slice(
-          pagination.rowsPerPage * (pagination.page - 1),
-          pagination.rowsPerPage * pagination.page
+        pagination.rowsPerPage * (pagination.page - 1),
+        pagination.rowsPerPage * pagination.page,
         )
       : sortedRows;
   }, [pagination, sortedRows]);
@@ -118,6 +118,7 @@ export function CustomTable<P, T extends { id: P; [key: string]: any }>(
   useEffect(() => {
     setTimeout(() => setIsMounted(true), 1000);
     const interval = setInterval(() => scrollBar.current?.recalculate?.(), 200);
+    console.log("Paged: ", pagedRows, " - ", typeof pagedRows);
     return () => clearInterval(interval);
   }, []);
 
@@ -155,7 +156,7 @@ export function CustomTable<P, T extends { id: P; [key: string]: any }>(
           />
           <TableBody>
             {rows.length > 0 && additionalTopRow}
-            {pagedRows.map((row, index) => (
+            {pagedRows && pagedRows.length >= 0 && pagedRows.map((row, index) => (
               <TableRow
                 hover={!!onClickRow}
                 onClick={onClickRow ? () => onClickRow(row, index) : undefined}

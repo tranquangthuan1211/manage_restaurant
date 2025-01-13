@@ -16,6 +16,7 @@ export interface Reservation {
 export interface ReservationDetails{
   id: string;
   userId: string;
+  userName: string; // We have this field 
   num_of_people: number;
   date_time: string;
   status: string;

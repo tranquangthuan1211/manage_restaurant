@@ -63,6 +63,8 @@ function useRouteReservations() {
   router.post("/", ReservationController.createReservation);
   router.get("/:id", ReservationController.getReservation);
   router.get("/by-user/:id", ReservationController.getReservationsByUser);
+  router.get("/", ReservationController.getReservations);
+  router.post("/status/:id", ReservationController.updateReservationStatus);
   return router;
 }
 

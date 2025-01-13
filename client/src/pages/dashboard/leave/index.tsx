@@ -3,7 +3,7 @@ import {Page as PageType} from "src/types/page"
 import { Layout } from "src/layouts/index"
 import ContentHeader from 'src/sections/dashboard/content-header';
 import { Stack, Box, Button, Tabs, Tab } from '@mui/material';
-import DocViewer from "src/components/doc-view"
+import DocViewer from "src/components/doc-view"
 import LeaveProvider, {useLeave} from "src/contexts/leave/leave-context"
 import { LeaveTable} from "src/sections/leave/table-leave"
 const Page:PageType = () => {
