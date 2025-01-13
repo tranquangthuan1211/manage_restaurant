@@ -23,7 +23,7 @@ const Page:PageType = () => {
     return (
         <Stack spacing={2}>
             <ContentHeader 
-                title="Danh sách phục vụ" 
+                title="Appointments" 
                 rightSection={
                     <Box
                         sx={{

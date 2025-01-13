@@ -117,6 +117,7 @@ class MenuController {
             });
         }
     }
+    // Alternative version of the getFoods() function
     async getMenuItems(req: Request, res: Response) {
         try {
             const page = parseInt(req.query.page as string) || 1;
@@ -142,11 +143,6 @@ class MenuController {
     }
     async getFoods(req: Request, res: Response) {
         try {
-            const page = parseInt(req.query.page as string) || 1;
-            const limit = parseInt(req.query.limit as string) || 10;
-            const categoryName = req.query.category as string || "all";
-            const nameFilter = req.query.nameFilter as string || "";
-            // const foods = await handleGetFood(page, limit, categoryName, nameFilter);
             const foods = await handleGetFood();
             return res.status(200).json({
                 // Added by HP
