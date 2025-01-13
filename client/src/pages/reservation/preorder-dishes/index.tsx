@@ -188,7 +188,7 @@ const Preorder: React.FC = () => {
                 // apiPost('/appointments', appointment),
             ]);
             alert('Successfully booked!');
-            window.location.href = '/';
+            window.location.href = '/customer/personal'; // auto redirect to personal page
         } catch (error: any) {
             alert(error.message || 'An error occurred. Please try again.');
             console.error('Cannot book: ', error.message || "Unknown error");
