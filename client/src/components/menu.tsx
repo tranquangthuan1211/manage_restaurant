@@ -11,6 +11,8 @@ export interface MenuItemProps {
 interface MenuProps {
   itemComponent: React.FC<MenuItemProps>;
   itemAdditionalParams?: Record<string, any>;
+  title ?: string;
+  subtitle ?: string;
 }
 
 interface QueryParams {
@@ -20,7 +22,7 @@ interface QueryParams {
   nameFilter: string;
 }
 
-const Menu: React.FC<MenuProps> = ({ itemComponent: ItemComponent, itemAdditionalParams }) => {
+const Menu: React.FC<MenuProps> = ({ itemComponent: ItemComponent, itemAdditionalParams, title, subtitle }) => {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [activeCuisine, setActiveCuisine] = useState<string>('all'); // Default cuisine
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -95,7 +97,7 @@ const Menu: React.FC<MenuProps> = ({ itemComponent: ItemComponent, itemAdditiona
     <div className="p-6 min-h-screen flex flex-col">
       {/* Header */}
       <div className="mb-6">
-        <PageHeader title="Menu" subtitle="Check out our tasty menu"/>
+        <PageHeader title={title || "Menu"} subtitle={subtitle || "Check out our tasty menu"}/>
 
         {/* Tabs */}
         <div className="grid grid-cols-2 md:flex md:justify-around mt-4">

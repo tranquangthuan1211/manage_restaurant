@@ -1,5 +1,5 @@
-import {CustomTableConfig } from 'src/components/custom-table';
-import {Complaint} from "src/types/complaint"
+import { CustomTableConfig } from 'src/components/custom-table';
+import { Complaint } from "src/types/complaint"
 import { format } from "date-fns";
 import { Appointment } from 'src/types/appointment';
 import { IconButton, Stack, Typography } from '@mui/material';
@@ -11,98 +11,116 @@ import appointment from 'src/api/appointment';
 type StatusUIItem = {
     name: string;
     variant: string;
-  };
+};
 export const CustomStatusUI = ({ status }: { status: string }) => {
     const listStatusUI: StatusUIItem[] = [
         { name: "completed", variant: "success" },
         { name: "Inactive", variant: "error" },
         { name: "Pending", variant: "warning" },
-      ];
-      const statusItem = listStatusUI.find((item) => item.name === status) || {
+    ];
+    const statusItem = listStatusUI.find((item) => item.name === status) || {
         name: "Unknown",
         variant: "grey",
-      };
+    };
     return (
-      <Box
-        sx={{
-            textAlign: "center",
-            backgroundColor: `${statusItem.variant}.lightest`,
-            borderRadius: "10px",
-            borderWidth: 1,
-            borderStyle: "solid",
-            borderColor: `${statusItem.variant}.main`,
-            padding: "2px 0px",
-        }}
-      >
-        <Typography variant="body2" fontWeight={600} color={`${statusItem.variant}.main`}>
-          {statusItem.name}
-        </Typography>
-      </Box>
+        <Box
+            sx={{
+                textAlign: "center",
+                backgroundColor: `${statusItem.variant}.lightest`,
+                borderRadius: "10px",
+                borderWidth: 1,
+                borderStyle: "solid",
+                borderColor: `${statusItem.variant}.main`,
+                padding: "2px 0px",
+            }}
+        >
+            <Typography variant="body2" fontWeight={600} color={`${statusItem.variant}.main`}>
+                {statusItem.name}
+            </Typography>
+        </Box>
     );
-  };
+};
 export const getAppointmentConfig = (
     {
         onEdit,
     }:
-    {
-        onEdit: (appointment: Appointment) => void
-    }
+        {
+            onEdit: (appointment: Appointment) => void
+        }
 ): CustomTableConfig<Appointment["id"], Appointment>[] => [
-    {
-        key: "table_number",
-        headerLabel: "số bàn",
-        type: "string",
-    },
-    {
-        key: "customer_name",
-        headerLabel: "Tên khách hàng",
-        type: "string",
-    },
-    {
-        key: "phone",
-        headerLabel: "Số điện thoại",
-        type: "string",
-    },
-    {
-        key: "date",
-        headerLabel: "Ngày",
-        type: "string",
-    },
-    {
-        key: "hours",
-        headerLabel: "Giờ",
-        type: "string",
-    },
-    {
-        key:"status",
-        headerLabel:"Trạng thái",
-        type:"string",
-        renderCell: (data) => (
-            <CustomStatusUI
-                status={data.status}
-            />
-        )
-    },
-    {
-        key:"edit",
-        headerLabel:"Chỉnh sửa",
-        type:"string",
-        renderCell:(data) => (
-            <Stack
-                direction="row"
-                alignItems="center"
-                justifyContent="center"
-                spacing="auto"
-                paddingLeft="25px"
-                paddingRight="25px"
-            >
-                <IconButton 
-                    color="success"
-                    onClick={() => onEdit(data)}
+        {
+            key: "table_number",
+            headerLabel: "số bàn",
+            type: "string",
+        },
+        // {
+        //     key: "num_of_people",
+        //     headerLabel: "People"
+        // },
+        {
+            key: "customer_name",
+            headerLabel: "Tên khách hàng",
+            type: "string",
+        },
+        {
+            key: "phone",
+            headerLabel: "Số điện thoại",
+            type: "string",
+        },
+        {
+            key: "date",
+            headerLabel: "Ngày",
+            type: "string",
+        },
+        {
+            key: "hours",
+            headerLabel: "Giờ",
+            type: "string",
+        },
+        // {
+        //     key: "date_time",
+        //     headerLabel: "Date & Time",
+        //     type: "string",
+        //     // Convert to: time - date (dd/MM/yyyy)
+        //     // Ex: 12:00 - 12/12/2022
+        //     renderCell: (data) => {
+        //         const appointment = data as any;
+        //         return (
+        //             <Typography>
+        //                 {format(new Date(appointment.date_time), "dd/MM/yyyy - h:mm a")}
+        //             </Typography>)
+        //     }
+        // },
+        {
+            key: "status",
+            headerLabel: "Trạng thái",
+            type: "string",
+            renderCell: (data) => (
+                <CustomStatusUI
+                    status={data.status}
+                />
+            )
+        },
+        {
+            key: "edit",
+            headerLabel: "Chỉnh sửa",
+            type: "string",
+            renderCell: (data) => (
+                <Stack
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="center"
+                    spacing="auto"
+                    paddingLeft="25px"
+                    paddingRight="25px"
                 >
-                    <CheckCircleOutlineIcon/>
-                </IconButton>
-            </Stack>
-        )
-    }
-]
+                    <IconButton
+                        color="success"
+                        onClick={() => onEdit(data)}
+                    >
+                        <CheckCircleOutlineIcon />
+                    </IconButton>
+                </Stack>
+            )
+        }
+    ]

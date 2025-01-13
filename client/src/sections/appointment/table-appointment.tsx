@@ -23,7 +23,7 @@ export const AppointmentTable = () => {
         return appointmentApi.data?.data || []
     },[appointmentApi.data])
     useEffect(() => {
-        console.log(appointments)
+        console.log("Appointments:\n" + JSON.stringify(appointments, null, 2));
     },[appointments])
     const confirmDialog = useDialog<Appointment>()
     const configs = getAppointmentConfig(
@@ -37,55 +37,56 @@ export const AppointmentTable = () => {
             <CustomTable
                 configs={configs}
                 rows={appointments}
-                additionalTopRow = {
-                    <TableRow
-                        sx={{
-                            ".MuiTableCell-root": {
-                            background: (theme) => theme.palette.neutral[100],
-                            },
-                        }}
-                        >
+                // HP: Idk what is this row for thou
+                // additionalTopRow = {
+                //     <TableRow
+                //         sx={{
+                //             ".MuiTableCell-root": {
+                //             background: (theme) => theme.palette.neutral[100],
+                //             },
+                //         }}
+                //         >
             
-                        <TableCell align="center">
-                            <NoLabelTextField
-                            fullWidth
-                            //   value={filter.name}
-                            //   onChange={(e) =>
-                            //     onChangeFilter({ ...filter, name: e.target.value })
-                            //   }
-                            ></NoLabelTextField>
-                        </TableCell>
+                //         <TableCell align="center">
+                //             <NoLabelTextField
+                //             fullWidth
+                //             //   value={filter.name}
+                //             //   onChange={(e) =>
+                //             //     onChangeFilter({ ...filter, name: e.target.value })
+                //             //   }
+                //             ></NoLabelTextField>
+                //         </TableCell>
             
-                        <TableCell align="center">
-                            <NoLabelTextField
-                            fullWidth
-                            ></NoLabelTextField>
-                        </TableCell>
+                //         <TableCell align="center">
+                //             <NoLabelTextField
+                //             fullWidth
+                //             ></NoLabelTextField>
+                //         </TableCell>
             
-                        <TableCell align="center">
-                            <NoLabelTextField
-                            fullWidth
-                            ></NoLabelTextField>
-                        </TableCell>
-                        <TableCell align="center">
-                            <NoLabelTextField
-                            fullWidth
-                            ></NoLabelTextField>
-                        </TableCell>
-                        <TableCell align="center">
-                            <NoLabelTextField
-                            fullWidth
-                            ></NoLabelTextField>
-                        </TableCell>
-                        <TableCell align="center">
-                            <NoLabelTextField
-                            fullWidth
-                            ></NoLabelTextField>
-                        </TableCell>
-                        <TableCell align="center"/>
+                //         <TableCell align="center">
+                //             <NoLabelTextField
+                //             fullWidth
+                //             ></NoLabelTextField>
+                //         </TableCell>
+                //         <TableCell align="center">
+                //             <NoLabelTextField
+                //             fullWidth
+                //             ></NoLabelTextField>
+                //         </TableCell>
+                //         <TableCell align="center">
+                //             <NoLabelTextField
+                //             fullWidth
+                //             ></NoLabelTextField>
+                //         </TableCell>
+                //         <TableCell align="center">
+                //             <NoLabelTextField
+                //             fullWidth
+                //             ></NoLabelTextField>
+                //         </TableCell>
+                //         <TableCell align="center"/>
                             
-                    </TableRow>
-                }
+                //     </TableRow>
+                // }
             />
             <TablePagination
                 component="div"

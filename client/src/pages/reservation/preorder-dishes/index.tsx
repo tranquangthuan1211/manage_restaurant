@@ -137,10 +137,10 @@ const Preorder: React.FC = () => {
 
         // Parse the reservation data
         const reservationData = storedReservation ? JSON.parse(storedReservation) : {};
-        if (!reservationData || preorderedItems.length === 0) {
-            alert('Reservation data or preordered items are missing.');
-            return;
-        }
+        // if (!reservationData || preorderedItems.length === 0) {
+        //     alert('Reservation data or preordered items are missing.');
+        //     return;
+        // }
 
         const total = preorderedItems.reduce(
             (sum, item) => sum + item.quantity * item.price,
@@ -253,17 +253,15 @@ const Preorder: React.FC = () => {
                     ))}
                     {preorderedItems.length === 0 && (
                         <div className="col-span-full text-center text-gray-500">
-                            Please pick items from the menu to preorder.
+                            <p>If you wish to preorder dishes, please select from the menu.</p>
+                            <p>If you are ready, click the "Confirm" button below.</p>
                         </div>
                     )}
                     <div className='col-span-full flex justify-center items-center'>
                         <button
-                            className={`button-outline-primary w-full h-fit ${preorderedItems.length > 0
-                                ? "enabled"
-                                : "disabled"
-                                }`}
+                            className={`button-outline-primary w-full h-fit`}
                             onClick={handleConfirm}
-                            disabled={preorderedItems.length === 0}
+                            //disabled={preorderedItems.length === 0}
                         >
                             Confirm
                         </button>

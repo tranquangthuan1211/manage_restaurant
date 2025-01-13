@@ -1,3 +1,4 @@
+// This file seems to be unused. Marked for deletion
 import { Request, Response, NextFunction } from 'express';
 import {verifyToken } from '../securities/jwt';
 import UsersDataBase from '../models/user-model';

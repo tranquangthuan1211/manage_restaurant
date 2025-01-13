@@ -27,7 +27,12 @@ export async function getAppointments(): Promise<AppointmentDetails[]> {
                 hours:1,
                 status: 1,        
                 created_at: 1,
-                updated_at: 1
+                updated_at: 1,
+                //HP: added from here
+                // An alternative for date & hours
+                date_time: 1,
+                special_request: 1,
+                num_of_people: 1
             }
         })
         const data = await AppointmentDataBase.appointment.aggregate(pipeline).toArray() as AppointmentDetails[]

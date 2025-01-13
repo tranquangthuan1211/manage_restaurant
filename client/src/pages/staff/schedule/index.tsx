@@ -34,22 +34,28 @@ const groupDatesByWeek = (dates: string[]) => {
   return Object.values(weeks);
 };
 
+// Group dates by week, each week is on one row
 const Page: PageType = () => {
   const { user } = useAuth();
+  // Get schedule for user
   const [scheduleData, setScheduleData] = useState<string[]>(user?.schedule || []);
 
   const weeklySchedules = useMemo(() => groupDatesByWeek(scheduleData), [scheduleData]);
 
   return (
     <>
-      <ContentHeader title="Lịch làm việc" />
+      <ContentHeader title="Work Schedule" />
       <Box sx={{ p: 1 }}>
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
               <TableRow>
                 {daysOfWeek.map((day) => (
-                  <TableCell key={day} align="center">
+                  <TableCell
+                    key={day}
+                    align="center"
+                    sx={{ width: `${100 / daysOfWeek.length}%`, fontSize: '0.875rem' }}
+                  >
                     {day}
                   </TableCell>
                 ))}
@@ -59,7 +65,12 @@ const Page: PageType = () => {
               {weeklySchedules.map((week, weekIndex) => (
                 <TableRow key={`week-${weekIndex}`}>
                   {week.map((day, dayIndex) => (
-                    <TableCell key={`day-${weekIndex}-${dayIndex}`} align="center">
+                    <TableCell
+                      key={`day-${weekIndex}-${dayIndex}`}
+                      align="center"
+                      // Equal widths
+                      sx={{ width: `${100 / daysOfWeek.length}%`, fontSize: '0.875rem' }}
+                    >
                       {day ? (
                         <Box
                           sx={{
@@ -67,6 +78,7 @@ const Page: PageType = () => {
                             borderRadius: 1,
                             p: 1,
                             textAlign: "center",
+                            fontSize: '0.875rem'
                           }}
                         >
                           {dayjs(day).format("DD/MM/YYYY")}
