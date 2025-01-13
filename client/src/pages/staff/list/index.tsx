@@ -3,7 +3,7 @@ import {Page as PageType} from "src/types/page"
 import { Layout } from "src/layouts/index"
 import ContentHeader from 'src/sections/dashboard/content-header';
 import { Stack, Box, Button, Tabs, Tab, useMediaQuery, Theme } from '@mui/material';
-import {ReservationTable} from "src/sections/appointment/table-appointment"
+import {ReservationTable} from "src/sections/appointment/reservatable-table"
 import AppointmentApi from "src/api/appointment";
 import useFunction from "src/hooks/use-function";
 import VirtualizedAppointmentList from "src/sections/appointment/scroll-windown-appointment"

@@ -59,7 +59,7 @@ const EmployeeProvider = ({children}:{children:React.ReactNode}) => {
                         })                 
                            
                 });
-                showSnackbarSuccess("Update employee success");
+                showSnackbarSuccess("Cập nhật nhân viên thành công");
             }
         } catch (error: any) {
             console.error(error);

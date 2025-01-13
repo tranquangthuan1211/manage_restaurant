@@ -6,15 +6,16 @@ import {ComplaintTable} from "src/sections/complaint/table-complaint"
 import ComplaintProvider, {useComplaint} from "src/contexts/complaint/complaint-context";
 import { useMemo,useEffect } from "react";
 import { get } from "lodash";
+import { ReviewsTable } from "src/sections/complaint/review-table";
 
 const Page:PageType = () => {
-    const {getComplaints} = useComplaint();
-    const complaints = useMemo(() => {
-        return getComplaints.data?.data || [];
-    },[getComplaints.data]);
-    useEffect(() => {
-        console.log(complaints);
-    },[complaints]);
+    // const {getComplaints} = useComplaint();
+    // const complaints = useMemo(() => {
+    //     return getComplaints.data?.data || [];
+    // },[getComplaints.data]);
+    // useEffect(() => {
+    //     console.log(complaints);
+    // },[complaints]);
     return (
         <Stack>
             <ContentHeader 
@@ -32,9 +33,7 @@ const Page:PageType = () => {
                     </Box>
                 }
             />
-            <ComplaintTable
-                complaints={complaints}
-            />
+            <ReviewsTable/>
         </Stack>
     )
 }

@@ -33,6 +33,7 @@ export const FoodTabel = ({
         {
             editFood: (food:Food) => editDrawer.handleOpen(food),
             deleteFood: (food:Food) => deleteDialog.handleOpen(food),
+            onView: (food: Food) => { /* Add your onView logic here */ },
         }
     );
     const pagination = usePagination({ count: foods.length });
@@ -46,46 +47,46 @@ export const FoodTabel = ({
                     pagination.page * pagination.rowsPerPage,
                     pagination.page * pagination.rowsPerPage + pagination.rowsPerPage
                 )}
-                additionalTopRow={
-                    <TableRow
-                        sx={{
-                            ".MuiTableCell-root": {
-                            background: (theme) => theme.palette.neutral[100],
-                            },
-                        }}
-                        >
-                        <TableCell align="center">
-                            <NoLabelTextField
-                            fullWidth
-                            ></NoLabelTextField>
-                        </TableCell>
-                        <TableCell align="center">
-                            <NoLabelTextField
-                                fullWidth
-                                  value={filter.name}
-                                  onChange={(e) =>
-                                    setFilter({ ...filter, name: e.target.value })
-                                  }
-                            ></NoLabelTextField>
-                        </TableCell>
+                // additionalTopRow={
+                //     <TableRow
+                //         sx={{
+                //             ".MuiTableCell-root": {
+                //             background: (theme) => theme.palette.neutral[100],
+                //             },
+                //         }}
+                //         >
+                //         <TableCell align="center">
+                //             <NoLabelTextField
+                //             fullWidth
+                //             ></NoLabelTextField>
+                //         </TableCell>
+                //         <TableCell align="center">
+                //             <NoLabelTextField
+                //                 fullWidth
+                //                   value={filter.name}
+                //                   onChange={(e) =>
+                //                     setFilter({ ...filter, name: e.target.value })
+                //                   }
+                //             ></NoLabelTextField>
+                //         </TableCell>
             
-                        <TableCell align="center">
-                            <NoLabelTextField
-                            fullWidth
-                            ></NoLabelTextField>
-                        </TableCell>
+                //         <TableCell align="center">
+                //             <NoLabelTextField
+                //             fullWidth
+                //             ></NoLabelTextField>
+                //         </TableCell>
             
-                        <TableCell align="center">
-                            <NoLabelTextField
-                            fullWidth
-                            ></NoLabelTextField>
-                        </TableCell>
-                        <TableCell align="center"/>
-                        <TableCell align="center"/>
-                        <TableCell align="center"/>
-                        <TableCell align="center"/>
-                    </TableRow>
-                }
+                //         <TableCell align="center">
+                //             <NoLabelTextField
+                //             fullWidth
+                //             ></NoLabelTextField>
+                //         </TableCell>
+                //         <TableCell align="center"/>
+                //         <TableCell align="center"/>
+                //         <TableCell align="center"/>
+                //         <TableCell align="center"/>
+                //     </TableRow>
+                // }
                     
             />
             <TablePagination

@@ -23,10 +23,10 @@ export const FoodEditDrawer = (
     }
 ) => {
     const chooseCategory = [
-        {label:"khai vị", value: "khai vị"},
-        {label: "món chính", value: "món chính"},
-        {label: "tráng miệng", value: "tráng miệng"}, 
-        {label:"Hải sản", value: "Hải sản"},  
+        {label:"Món Việt", value: "vietnam"},
+        {label: "Món Tây", value: "western"},
+        {label: "Thức tuống", value: "drinks"}, 
+        {label:"Tráng miệng", value: "dessert"},  
     ]
     const {updateFood} = useMenu();
     const handleSubmit = useCallback(
@@ -209,24 +209,7 @@ export const FoodEditDrawer = (
                                         fullWidth
                                         name="description"
                                         value={formik.values.description}
-                                    ></NoLabelTextField>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <Typography
-                                        sx={{
-                                        fontSize: "0.75rem",
-                                        lineHeight: "20px",
-                                        fontWeight: 500,
-                                        textTransform: "uppercase",
-                                        marginBottom: "8px",
-                                        }}
-                                    >
-                                        Đánh giá
-                                    </Typography>
-                                    <NoLabelTextField
-                                        fullWidth
-                                        name="evaluate"
-                                        value={formik.values.evaluate}
+                                        onChange={formik.handleChange}
                                     ></NoLabelTextField>
                                 </Grid>
                             </Grid>

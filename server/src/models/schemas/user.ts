@@ -9,6 +9,8 @@ export interface Users {
     email: string;
     password: string;
     role: string;
+    schedule?: string[];
+    salary?: number;
 }
 export const initialUser: Users = {
     name: "string",

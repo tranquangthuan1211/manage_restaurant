@@ -1,6 +1,7 @@
 import { Review } from "../models/schemas/review";
 import { Request, Response } from "express";
 import ReviewDataBase from "../models/review-model";
+import UsersDatabase from "../models/user-model";
 import { ObjectId } from "mongodb";
 import { Reservation } from "../models/schemas/reservation";
 import { extractId } from "../schema_util/schema_util";
@@ -10,6 +11,7 @@ import ReservationDatabase from "../models/reservation-model";
 interface ReviewDetails {
   id: string;
   userId: string;
+  userName: string; // added this
   reservationId: string;
   reservationDateTime: string; // added this
   overall: number;
@@ -24,10 +26,11 @@ interface ReviewDetails {
   createdAt: string;
 }
 
-const extractDetails = async (review: Review): Promise<ReviewDetails> => {
+const extractDetails = async (review: Review): Promise<ReviewDetails | null> => {
   const reviewDetails: ReviewDetails = {
     id: review.id || "",
     userId: review.userId,
+    userName: "", // added this
     reservationId: review.reservationId,
     reservationDateTime: "", // added this
     overall: review.overall,
@@ -41,15 +44,31 @@ const extractDetails = async (review: Review): Promise<ReviewDetails> => {
     feedback: review.feedback,
     createdAt: review.createdAt || "",
   };
-
-  console.log("Review ID: ", review.id);
-  console.log("Reservation ID: ", review.reservationId);
+  // Check if reservationId is a valid ObjectId
+  if (ObjectId.isValid(review.reservationId) === false) {
+    return null;
+  }
   // Join to find the reservation date-time
   const reservation = await ReservationDatabase.reservations.findOne({
     _id: new ObjectId(review.reservationId),
   });
   if (reservation) {
     reviewDetails.reservationDateTime = reservation.date_time;
+  } else {
+    return null;
+  }
+  // Check if userId is a valid ObjectId
+  if (ObjectId.isValid(review.userId) === false) {
+    return null;
+  }
+  // Join to find the user name
+  const user = await UsersDatabase.users.findOne({
+    _id: new ObjectId(review.userId),
+  });
+  if (user) {
+    reviewDetails.userName = user.name;
+  } else {
+    return null;
   }
 
   return reviewDetails;
@@ -158,6 +177,9 @@ class ReviewController {
         const review = extractId(reviewWithId) as Review;
         console.log(JSON.stringify(review, null, 2));
         const reviewDetails = await extractDetails(review);
+        if (reviewDetails === null) {
+          continue;
+        }
         reviewDetailsList.push(reviewDetails);
       }
 
@@ -178,8 +200,42 @@ class ReviewController {
         message: error.message,
       });
     }
-  }
+  };
 
+  async getReviews(req: Request, res: Response) {
+    try {
+      const reviews = await ReviewDataBase.reviews.find({});
+      if (!reviews) {
+        res.status(404).json({
+          error: 1,
+          message: "Reviews not found",
+        });
+        return;
+      }
+
+      const reviewDetailsList: ReviewDetails[] = [];
+      for await (const reviewWithId of reviews) {
+        const review = extractId(reviewWithId) as Review;
+        const reviewDetails = await extractDetails(review);
+        if (reviewDetails === null) {
+          continue;
+        }
+        reviewDetailsList.push(reviewDetails);
+      }
+
+      res.status(200).json({
+        error: 0,
+        data: {
+          items: reviewDetailsList,
+        },
+      });
+    } catch (error: any) {
+      res.status(500).json({
+        error: 1,
+        message: error.message,
+      });
+    }
+  }
 }
 
 export default new ReviewController();

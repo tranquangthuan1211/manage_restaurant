@@ -7,6 +7,7 @@ function useRouteReviews() {
     router.post('/', ReviewController.createReview);
     router.get('/by-reservation/:id', ReviewController.getReviewByReservation);
     router.get('/by-user/:id', ReviewController.getReviewsByUser);
+    router.get('/', ReviewController.getReviews);
     return router
 }
 

@@ -11,7 +11,7 @@ import {
   Tab,
   MenuItem,
 } from "@mui/material";
-import {Employee, initialEmployee,addSchedule} from "src/types/employee";
+import { Employee, initialEmployee, addSchedule } from "src/types/employee";
 import { Stack, styled } from "@mui/system";
 import React, { useCallback, useEffect, useState } from "react";
 import { useMenu } from "src/contexts/menu/menu-context";
@@ -37,21 +37,25 @@ function ScheduleSettingWorkDrawer({
   onClose: () => void;
   employees: Employee[];
 }) {
-  const {updateEmployee} = useEmployee();
-  const [date,setDate] = useState<string>(dayjs().toString());
+  const { updateEmployee } = useEmployee();
+  const [date, setDate] = useState<string>(dayjs().toString());
   const handleSubmit = useCallback(async (id: string) => {
+    // Prevent sumbit if no employee is selected
+    if (!id) {
+      throw new Error("Chưa chọn nhân viên");
+    }
+    
     if (employees) {
       console.log(id);
-      await updateEmployee(addSchedule(employees,date,id));
+      await updateEmployee(addSchedule(employees, date, id));
     }
+    
   }, [employees, date, updateEmployee]);
-  const handleSubmitHelper = useFunction(handleSubmit,{
-    successMessage: "Cập nhật thành công",
-  });
+  const handleSubmitHelper = useFunction(handleSubmit);
   const formik = useFormik<Employee>({
     initialValues: initialEmployee,
     onSubmit: async (values) => {
-      const {error} = await handleSubmitHelper.call(values._id);
+      const { error } = await handleSubmitHelper.call(values._id);
       if (!error) {
         onClose();
       }
@@ -99,12 +103,12 @@ function ScheduleSettingWorkDrawer({
             </Typography>
             <DateTimePicker
               defaultValue={dayjs()}
-              onChange={(date) => setDate(date ? date.toString(): "")}
+              onChange={(date) => setDate(date ? date.toString() : "")}
               shouldDisableMonth={isInCurrentMonth}
               views={['year', 'month', 'day', 'hours', 'minutes']}
             />
           </Stack>
-          <Stack spacing={"8px"} direction={"column"} width={1}>
+          {/* <Stack spacing={"8px"} direction={"column"} width={1}>
             <Typography fontSize={"12px"} fontWeight={500}>
               Thời gian kết thúc
             </Typography>
@@ -113,7 +117,7 @@ function ScheduleSettingWorkDrawer({
               shouldDisableMonth={isInCurrentMonth}
               views={['year', 'month', 'day', 'hours', 'minutes']}
             />
-          </Stack>
+          </Stack> */}
           <Stack spacing={"8px"} direction={"column"} width={1}>
             <Typography fontSize={"12px"} fontWeight={500}>
               Chọn nhân viên

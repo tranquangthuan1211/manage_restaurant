@@ -79,6 +79,10 @@ class UserController {
       if(!newUser.role){
         newUser.role = "user";
       }
+      if (newUser.role === "staff") {
+        newUser.schedule = [];
+        newUser.salary = 0;
+      }
       const user = await UsersDataBase.users.findOne({email: newUser.email});
       if(user) {
         throw new Error("Email is already exist");

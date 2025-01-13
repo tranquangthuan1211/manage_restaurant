@@ -18,6 +18,7 @@ export interface Review {
 export interface ReviewDetails {
   id: string;
   userId: string;
+  userName: string; // added this
   reservationId: string;
   reservationDateTime: string; // added this
   overall: number;
