@@ -27,9 +27,9 @@ const ScoreFields = {
   atmosphere: "Atmosphere",
   cleanliness: "Cleanliness",
   serviceQuality: "Service Quality",
-  serviceSpeed: "Service Speed",
+  serviceSipeed: "Service Speed",
   staffAppearance: "Staff Appearance",
-  staffAttitude: "Staff Attitude",
+  staffAttitude: "Staff Atttude",
   valueOfMoney: "Value of Money",
 };
 
@@ -212,4 +212,3 @@ const CustomerWriteReview: React.FC = () => {
   );
 };
 
-export default CustomerWriteReview;
