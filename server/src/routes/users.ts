@@ -7,6 +7,7 @@ const useRouteUser = () => {
     router.post('/login', UserController.login);
     router.post('/register', UserController.createUser);
     router.post('/check-email', UserController.createCodeNumber);
+    router.post('/update-user-info/:id', UserController.updateUserInfo);
     router.use(authMiddleware);
     router.get('/', UserController.getUser);
     router.patch('/:id', UserController.updateUser);

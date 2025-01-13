@@ -144,6 +144,29 @@ class UserController {
       });
     }
   }
+  // HP: 1 days before deadline
+  async updateUserInfo(req: Request, res: Response) {
+    try {
+      const userId = req.params.id;
+      const requestData = req.body;
+      console.log("Update request:", JSON.stringify(requestData, null, 2)); 
+      const result = await UsersDataBase.users.updateOne({_id: new ObjectId(userId)}, {$set: requestData});
+      if(!result.acknowledged) {
+        throw new Error("Can not update user");
+      }
+      return res.status(200).json({
+        error: 0,
+        message: "Update user successfully",
+        data: null,
+      });
+    } catch (error:any) {
+      return res.status(400).json({
+        error: 1,
+        message: error?.message,
+        data: null,
+      });
+    }
+  };
   async updateUser(req: Request, res: Response) {
     try {
       const id = req.params.id;
