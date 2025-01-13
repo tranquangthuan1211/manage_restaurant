@@ -148,7 +148,10 @@ class UserController {
       if(!user) {
         throw new Error("User not found");
       }
+      console.log("Body prints:",JSON.stringify(req.body, null, 2));
       const result = await UsersDataBase.users.updateOne({_id: new ObjectId(id)}, {$set: rest});
+      
+
       if(!result.acknowledged) {
         throw new Error("Can not update user");
       }
