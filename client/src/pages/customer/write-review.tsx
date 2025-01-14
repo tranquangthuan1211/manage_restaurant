@@ -6,6 +6,7 @@ import StarRating from "src/components/star-rating";
 import PageHeader from "src/components/page-header";
 import { apiGet, apiPost } from "src/api/api-requests";
 import { Review } from "src/types/review";
+import exp from "constants";
 
 // Reservation type
 export interface Reservation {
@@ -40,6 +41,7 @@ const SectionHeader: React.FC<{ title: string }> = ({ title }) => (
     <div className="flex-grow border-t border-slate-400"></div>
   </div>
 );
+
 
 const CustomerWriteReview: React.FC = () => {
   const { user, isAuthenticated } = useUser() || { user: null, isAuthenticated: false };
@@ -211,4 +213,6 @@ const CustomerWriteReview: React.FC = () => {
     </RootLayout>
   );
 };
+
+export default CustomerWriteReview;
 
