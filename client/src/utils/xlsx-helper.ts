@@ -244,14 +244,14 @@ export const updateCell = (
   XLSX.utils.sheet_add_aoa(ws, [[value]], { origin: pos });
 };
 
-export const sheet_add_title = (
-  worksheet: XLSX.WorkSheet,
-  {
-    currentStation,
-    title,
-    colSpan,
-  }: { currentStation?: Account; title: string; colSpan: number }
-) => {
+// export const sheet_add_title = (
+//   worksheet: XLSX.WorkSheet,
+//   {
+//     currentStation,
+//     title,
+//     colSpan,
+//   }: { currentStation?: Account; title: string; colSpan: number }
+// ) => {
   // if (currentStation) {
   //   XLSX.utils.sheet_add_aoa(
   //     worksheet,
@@ -294,7 +294,7 @@ export const sheet_add_title = (
   //     { s: { r: 3, c: 0 }, e: { r: 3, c: 12 } }, 
   //   ]
   // ];
-};
+// };
 
 // export const to_xlsx_populate = async (
 //   worksheet: XLSX.WorkSheet
