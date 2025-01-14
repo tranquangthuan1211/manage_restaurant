@@ -1,13 +1,13 @@
 import {Stack, Typography, TextField, Box, Drawer, CircularProgress } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import dynamic from 'next/dynamic';
-const StatPageContainer = dynamic(
-    () =>
-      import(
-        "src/sections/thong-ke/stat-page-container"
-      ).then((module) => module.StatPageContainer),
-    { ssr: false, loading: () => <CircularProgress sx={{ m: 2 }} /> }
-  );
+// const StatPageContainer = dynamic(
+//     () =>
+//       import(
+//         "src/sections/thong-ke/stat-page-container"
+//       ).then((module) => module.StatPageContainer),
+//     { ssr: false, loading: () => <CircularProgress sx={{ m: 2 }} /> }
+//   );
 interface HeaderHomeProps {
     nameUser: string;
     imageUser?: string;
