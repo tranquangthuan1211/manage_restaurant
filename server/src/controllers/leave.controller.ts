@@ -19,6 +19,7 @@ class LeaveController {
     async createLeave(req: Request, res: Response) {
         try {
             const leave = req.body;
+            leave.status = "pending";
             const newLeave = await LeaveDataBase.leave.insertOne(leave);
             res.status(201).json(newLeave);
         } catch (error:any) {
