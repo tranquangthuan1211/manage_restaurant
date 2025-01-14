@@ -2,8 +2,6 @@
 import { ReactNode, use, useEffect, useState } from 'react';
 import {getDashboardAdminConfigs} from './dashboard-admin-config';
 import {getDashboardStaffConfigs} from './dashboard-staff-config';
-import {getDashboardManagerConfigs} from './dashboard-manager-config';
-import {getDashboardPatientConfigs} from "./dashboard-patient-config"
 import { useAuth } from 'src/hooks/use-auth';
 export interface DashboardItem {
     disabled?: boolean;
