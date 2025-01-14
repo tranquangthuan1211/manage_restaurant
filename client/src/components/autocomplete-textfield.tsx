@@ -77,7 +77,7 @@ const AutocompleteTextField: React.FC<Props> = ({
       options={options}
       filterOptions={(options, state) => [
         ...options.filter((option) =>
-          option.label.toLowerCase().includes(state.inputValue.toLowerCase())
+          (option as any).label.toLowerCase().includes(state.inputValue.toLowerCase())
         ),
         ...(freeSolo && state.inputValue
           ? [

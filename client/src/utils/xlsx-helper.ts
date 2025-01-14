@@ -2,7 +2,7 @@ import _ from "lodash";
 import { CardTableConfig } from "src/components/card-table";
 import * as XLSX from "xlsx";
 import { getObjectValue } from "./obj-helper";
-import { Account } from "src/types/account";
+//import { Account } from "src/types/account";
 // import XlsxPopulate from "xlsx-populate";
 import { downloadFile } from "./url-handler";
 import { border } from "@mui/system";
@@ -273,27 +273,27 @@ export const sheet_add_title = (
   //     ],
   //   ];
   // }
-  XLSX.utils.sheet_add_aoa(
-    worksheet,
-    [
-      ["BỘ GIÁO DỤC VÀ ĐÀO TẠO", "", "", "","","","","", "CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM"],
-      ["TRƯỜNG ĐẠI HỌC CÔNG NGHỆ SÀI GÒN", "", "", "","","","","", "Độc lập - Tự do - Hạnh phúc"],
-      ["", "", "", "","","","","", `Thành phố Hồ Chí Minh, ngày ${new Date().getDate()} tháng ${new Date().getMonth()} năm ${new Date().getFullYear()}`],
-      [title],
-    ],
-    { origin: "A1" }
-  );
-  worksheet["!merges"] = [
-    ...(worksheet["!merges"] || []),
-    ...[
-      { s: { r: 0, c: 0 }, e: { r: 0, c: 5 } }, 
-      { s: { r: 0, c: 8 }, e: { r: 0, c: 12 } },
-      { s: { r: 1, c: 0 }, e: { r: 1, c: 5 } }, 
-      { s: { r: 1, c: 8 }, e: { r: 1, c: 12 } },  
-      { s: { r: 2, c: 8},  e: { r: 2, c: 12}},
-      { s: { r: 3, c: 0 }, e: { r: 3, c: 12 } }, 
-    ]
-  ];
+  // XLSX.utils.sheet_add_aoa(
+  //   worksheet,
+  //   [
+  //     ["BỘ GIÁO DỤC VÀ ĐÀO TẠO", "", "", "","","","","", "CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM"],
+  //     ["TRƯỜNG ĐẠI HỌC CÔNG NGHỆ SÀI GÒN", "", "", "","","","","", "Độc lập - Tự do - Hạnh phúc"],
+  //     ["", "", "", "","","","","", `Thành phố Hồ Chí Minh, ngày ${new Date().getDate()} tháng ${new Date().getMonth()} năm ${new Date().getFullYear()}`],
+  //     [title],
+  //   ],
+  //   { origin: "A1" }
+  // );
+  // worksheet["!merges"] = [
+  //   ...(worksheet["!merges"] || []),
+  //   ...[
+  //     { s: { r: 0, c: 0 }, e: { r: 0, c: 5 } }, 
+  //     { s: { r: 0, c: 8 }, e: { r: 0, c: 12 } },
+  //     { s: { r: 1, c: 0 }, e: { r: 1, c: 5 } }, 
+  //     { s: { r: 1, c: 8 }, e: { r: 1, c: 12 } },  
+  //     { s: { r: 2, c: 8},  e: { r: 2, c: 12}},
+  //     { s: { r: 3, c: 0 }, e: { r: 3, c: 12 } }, 
+  //   ]
+  // ];
 };
 
 // export const to_xlsx_populate = async (
