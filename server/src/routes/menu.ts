@@ -12,6 +12,7 @@ const useRouteMenu = () => {
 
     router.get('/:id', MenuController.getFood);
     router.use(managerMiddleware);
+    console.log(typeof uploadCloud, " ", JSON.stringify(uploadCloud, null, 2));
     router.post('/', uploadCloud.single('image'), MenuController.createFood);
     router.put('/:id', MenuController.updateFood);
     router.delete('/:id', MenuController.deleteFood);
