@@ -1,3 +1,4 @@
+<script src="https://www.paypal.com/sdk/js?client-id=AYKkbORfruXRonxOuYDY8XQl7J0iXy-klC8_l46kNxKZj-HU9wH7kJ2oG_r13Kh8NL2sHHRMqCXgfF39&currency=USD"></script>
 <div class="container my-4">
   <!-- Title -->
   <div class="text-center wow fadeInUp data-wow-delay=0.1s">
@@ -15,7 +16,7 @@
       </div>
     </div>
     <!-- Items and Check out -->
-    <form id="cart-checkout-section" onsubmit="handleCheckout()">
+    <form id="cart-checkout-section" onsubmit="handleCheckout(event)">
       <div id="cart-items-container">
         <% if (typeof cart !='undefined' && cart && cart.cartItems && cart.cartItems.length > 0) { %>
         <% cart.cartItems.forEach(item=> { %>
@@ -88,10 +89,11 @@
       </div>
       <!-- Checkout Button -->
       <div class="text-end mt-3">
-        <button type="submit" class="btn btn-primary">Checkout</button>
+        <button type="submit" class="btn btn-primary">Payment</button>
       </div>
     </form>
   </div>
+  <div id="paypal-button-container"></div>
 </div>
 </div>
 
@@ -203,32 +205,60 @@
     totalPrice.innerText = `\$${sum}`;
   }
 
-  async function handleCheckout() {
-    // Placeholder function for checkout process
-    console.log('Checkout button clicked');
-    const orderDetails = {
-      userId: '<%=user.id%>',
-      shippingMethod: document.getElementById('shippingMethod').value,
-      shippingAddress: document.getElementById('shippingAddress').value
-    };
+  async function handleCheckout(event) {
+  event.preventDefault(); // ✅ Ngăn reload form
 
-    // Example: Send a POST request to the checkout endpoint
-    const response = await fetch('/order/checkout', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(orderDetails)
-    })
-    if (response.ok) {
-      const data = await response.json();
-      console.log(JSON.stringify(data, null, 2));
-      // Redirect to the order confirmation page
-      window.location.href = '/order/checkout-success';
-    } else {
-      const err = await response.json();
-      console.error(JSON.stringify(err, null, 2));
+  paypal.Buttons({
+    createOrder: function () {
+      const shippingMethod = document.getElementById('shippingMethod').value;
+      const shippingAddress = document.getElementById('shippingAddress').value;
+
+      const orderDetails = {
+        userId: '<%= user.id %>',
+        shippingMethod,
+        shippingAddress
+      };
+
+      return fetch('/order/checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(orderDetails)
+      }).then(res => res.json())
+        .then(data => {
+          const amount = data.totalAmount || '10.00';
+
+          return fetch('/paypal/create-order', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ amount })
+          });
+        }).then(res => res.json())
+        .then(data => data.id);
+    },
+
+    onApprove: function (data) {
+      return fetch('/paypal/capture-order', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ orderID: data.orderID })
+      })
+        .then(res => res.json())
+        .then(orderData => {
+          alert('Thanh toán thành công! 🎉');
+          window.location.href = '/order/checkout-success';
+        });
+    },
+
+    onError: function (err) {
+      console.error('Lỗi thanh toán:', err);
+      alert('Có lỗi xảy ra trong quá trình thanh toán.');
     }
-
-  }
+  }).render('#paypal-button-container'); 
+}
 </script>
