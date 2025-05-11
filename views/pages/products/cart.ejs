@@ -93,7 +93,19 @@
       </div>
     </form>
   </div>
-  <div id="paypal-button-container"></div>
+  <div id="paypalModal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content p-3">
+        <div class="modal-header">
+          <h5 class="modal-title">Pay with PayPal</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div id="paypal-button-container"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 </div>
 
@@ -206,59 +218,57 @@
   }
 
   async function handleCheckout(event) {
-  event.preventDefault(); // ✅ Ngăn reload form
+    event.preventDefault();
 
-  paypal.Buttons({
-    createOrder: function () {
-      const shippingMethod = document.getElementById('shippingMethod').value;
-      const shippingAddress = document.getElementById('shippingAddress').value;
+    const modal = new bootstrap.Modal(document.getElementById('paypalModal'));
+    modal.show(); 
 
-      const orderDetails = {
-        userId: '<%= user.id %>',
-        shippingMethod,
-        shippingAddress
-      };
+    paypal.Buttons({
+      createOrder: function () {
+        const shippingMethod = document.getElementById('shippingMethod').value;
+        const shippingAddress = document.getElementById('shippingAddress').value;
 
-      return fetch('/order/checkout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(orderDetails)
-      }).then(res => res.json())
-        .then(data => {
-          const amount = data.totalAmount || '10.00';
+        const orderDetails = {
+          userId: '<%= user.id %>',
+          shippingMethod,
+          shippingAddress
+        };
 
-          return fetch('/paypal/create-order', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ amount })
-          });
+        return fetch('/order/checkout', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(orderDetails)
         }).then(res => res.json())
-        .then(data => data.id);
-    },
+          .then(data => {
+            const amount = data.totalAmount || '10.00';
+            return fetch('/paypal/create-order', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ amount })
+            });
+          }).then(res => res.json())
+            .then(data => data.id);
+      },
 
-    onApprove: function (data) {
-      return fetch('/paypal/capture-order', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ orderID: data.orderID })
-      })
-        .then(res => res.json())
-        .then(orderData => {
-          alert('Thanh toán thành công! 🎉');
-          window.location.href = '/order/checkout-success';
-        });
-    },
+      onApprove: function (data) {
+        return fetch('/paypal/capture-order', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ orderID: data.orderID })
+        }).then(res => res.json())
+          .then(orderData => {
+            alert('Thanh toán thành công! 🎉');
+            window.location.href = '/order/checkout-success';
+          });
+      },
 
-    onError: function (err) {
-      console.error('Lỗi thanh toán:', err);
-      alert('Có lỗi xảy ra trong quá trình thanh toán.');
-    }
-  }).render('#paypal-button-container'); 
-}
+      onError: function (err) {
+        console.error('Lỗi thanh toán:', err);
+        alert('Có lỗi xảy ra trong quá trình thanh toán.');
+      }
+    }).render('#paypal-button-container');
+  }
+
 </script>
