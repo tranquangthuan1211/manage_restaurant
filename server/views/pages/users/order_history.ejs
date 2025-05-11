@@ -1,0 +1,149 @@
+   <div id="order-list">
+    <table class="table mt-3">
+      <thead class="table-dark">
+        <tr>
+          <th>Order ID</th>
+          <th>Date</th>
+          <th>Total Amount</th>
+          <th>Status</th> <!-- Added Status Column -->
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="order-table-body">
+        <% orders.forEach(order => { %>
+          <tr>
+            <td><%= order.id %></td>
+            <td><%= new Date(order.createdAt).toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'short' }) %></td>
+            <td>$<%= order.totalAmount.toFixed(2) %></td>
+            <td><%= order.status %></td> <!-- Displaying Status -->
+            <td>
+              <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#orderDetails<%= order.id %>">
+                View Details
+              </button>
+            </td>
+          </tr>
+          <tr class="collapse" id="orderDetails<%= order.id %>">
+            <td colspan="5">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Subtotal</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% order.orderItems.forEach(item => { %>
+                    <tr>
+                      <td><%= item.product.name %></td>
+                      <td><%= item.quantity %></td>
+                      <td>$<%= item.price.toFixed(2) %></td>
+                      <td>$<%= (item.price * item.quantity).toFixed(2) %></td>
+                    </tr>
+                  <% }) %>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+  
+  <nav aria-label="Page navigation">
+    <ul class="pagination" id="pagination-controls">
+      <% for (let i = 1; i <= totalPages; i++) { %>
+        <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+          <a class="page-link" href="#" data-page="<%= i %>"><%= i %></a>
+        </li>
+      <% } %>
+    </ul>
+  </nav>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const loadOrders = (page = 1) => {
+        fetch(`/order-history?page=${page}&limit=5`, {
+          headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            const tbody = document.getElementById('order-table-body');
+            tbody.innerHTML = '';
+  
+            data.orders.forEach((order) => {
+              const orderRow = `
+                <tr>
+                  <td>${order.id}</td>
+                  <td>${new Date(order.createdAt).toLocaleString('vi-VN', {
+                    dateStyle: 'short',
+                    timeStyle: 'short',
+                  })}</td>
+                  <td>$${order.totalAmount.toFixed(2)}</td>
+                  <td>${order.status}</td> <!-- Adding status here -->
+                  <td>
+                    <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#orderDetails${order.id}">
+                      View Details
+                    </button>
+                  </td>
+                </tr>
+                <tr class="collapse" id="orderDetails${order.id}">
+                  <td colspan="5">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>Product</th>
+                          <th>Quantity</th>
+                          <th>Price</th>
+                          <th>Subtotal</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        ${order.orderItems
+                          .map(
+                            (item) => `
+                            <tr>
+                              <td>${item.product.name}</td>
+                              <td>${item.quantity}</td>
+                              <td>$${item.price.toFixed(2)}</td>
+                              <td>$${(item.price * item.quantity).toFixed(2)}</td>
+                            </tr>`
+                          )
+                          .join('')}
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              `;
+              tbody.innerHTML += orderRow;
+            });
+  
+            const pagination = document.getElementById('pagination-controls');
+            pagination.innerHTML = '';
+  
+            for (let i = 1; i <= data.totalPages; i++) {
+              pagination.innerHTML += `
+                <li class="page-item ${i === data.currentPage ? 'active' : ''}">
+                  <a class="page-link" href="#" data-page="${i}">${i}</a>
+                </li>
+              `;
+            }
+  
+            document.querySelectorAll('#pagination-controls .page-link').forEach((link) => {
+              link.addEventListener('click', (event) => {
+                event.preventDefault();
+                const page = parseInt(event.target.getAttribute('data-page'));
+                loadOrders(page);
+              });
+            });
+          })
+          .catch((error) => {
+            console.error('Error loading orders:', error);
+          });
+      };
+  
+      loadOrders();
+    });
+  </script>
+  

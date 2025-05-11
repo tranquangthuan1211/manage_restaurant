@@ -1,0 +1,9 @@
+<div class="mb-5">
+  <div class="row row-cols-1 row-cols-md-2 g-4">
+    <% reviews.forEach(function(review) { %>
+    <div class="col">
+      <%- include('review_item', { review: review }) %>
+    </div>
+    <% }); %>
+  </div>
+</div>

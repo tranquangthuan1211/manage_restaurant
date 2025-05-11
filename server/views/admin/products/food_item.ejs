@@ -1,0 +1,83 @@
+<tr id="product-row-<%= product.id %>" class="product-row">
+  <!-- Product Id -->
+  <td class="product-id text-center" style="width: 2%;">
+    <%= product.id %>
+  </td>
+
+  <!-- Product Image -->
+  <td style="width: 10%;">
+    <a class="product-details-link d-flex justify-content-center" href="/admin/products/<%= product.id %>">
+      <img class="product-img img-fluid rounded" width="100px" src="/img/food/menu-<%= product.id % 8 + 1 %>.jpg" alt="Product Image">
+    </a>
+  </td>
+
+  <!-- Product Name -->
+  <td style="width: 13%;" class="editable">
+    <span class="product-name"><%= product.name %></span>
+    <input type="text" class="product-name-input form-control d-none p-1" value="<%= product.name %>" style="width: 100%; font-size: small;">
+  </td>
+
+  <!-- Product Price -->
+  <td style="width: 8%;" class="editable text-end">
+    <span class="product-price">$<%= product.price %></span>
+    <input type="number" class="product-price-input form-control text-end d-none p-1" min="0" value="<%= product.price %>" style="width: 100%; font-size: small;">
+  </td>
+
+  <!-- Product Status -->
+  <td style="width: 12%;" class="editable text-end">
+    <span class="product-status"><%= product.status === "in_stock" ? "In Stock" : "Out of Stock" %></span>
+    <select class="product-status-input form-control d-none p-1" style="width: 100%; font-size: small;" value=<%= product.status === 'in_stock' %>>
+      <option class="product-status-in-stock" value="in_stock" <%= product.status === 'in_stock' ? 'selected' : '' %>>In Stock</option>
+      <option class="product-status-out-of-stock" value="out_of_stock" <%= product.status === 'out_of_stock' ? 'selected' : '' %>>Out of Stock</option>
+    </select>
+  </td>
+
+  <!-- Product Description -->
+  <td style="width: 25%;" class="editable">
+    <span class="product-description"><%= product.description %></span>
+    <textarea class="product-description-input form-control d-none p-1" style="width: 100%; height: 195px; font-size: small;"><%= product.description %></textarea>
+  </td>
+
+  <!-- Product Categories -->
+  <td style="width: 25%;">
+    <div class="product-categories">
+      <% product.category.forEach(category => { %>
+      <%- include('../../partials/admin/admin_category_badge', {category : category}) %>
+      <% }); %>
+    </div>
+    <!-- Add input and button (hidden by default) -->
+    <div class="category-add d-flex mt-2 d-none">
+      <input class="form-control flex-grow-1 p-1" style="font-size: small;" type="text" placeholder="Enter category"></input>
+      <button class="btn btn-sm btn-outline-secondary flex-shrink-1 btn-square mx-1 p-1" style="font-size: small;" onclick="addCategory(this)">
+        <%- include('../../partials/icons/add_icon') %>
+      </button>
+    </div>
+  </td>
+
+  <!-- Product Actions -->
+  <td class="product-actions" style="width: 5%;">
+    <div class="w-100 d-flex flex-column align-items-center gap-1">
+      <!-- Edit button -->
+      <button class="edit-btn btn-square btn btn-sm btn-outline-secondary p-1" onclick="editProduct(this)">
+        <%- include('../../partials/icons/edit_icon') %>
+      </button>
+      <!-- Save button (hidden by default) -->
+      <button class="save-btn btn-square btn btn-sm btn-outline-success d-none p-1" onclick="saveProductChanges(this)">
+        <%- include('../../partials/icons/save_icon') %>
+      </button>
+      <!-- Remove button (hidden by default)-->
+      <button class="remove-btn btn-square btn btn-sm btn-outline-danger d-none p-1" onclick="removeProduct(this)">
+        <%- include('../../partials/icons/trash_icon') %>
+      </button>
+      <!-- Cancel button (hidden by default) -->
+      <button class="cancel-btn btn-square btn btn-sm btn-outline-secondary d-none p-1" onclick="cancelEdit(this)">
+        <%- include('../../partials/icons/revert_icon') %>
+      </button>
+    </div>
+  </td>
+
+  <template id="category-badge-template">
+    <%- include('../../partials/admin/admin_category_badge', {category : "{{category}}"}) %>
+  </template>
+
+</tr>

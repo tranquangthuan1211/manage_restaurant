@@ -1,0 +1,116 @@
+   <div class="container">
+     <h2 class="mt-4">Manage Orders</h2>
+
+     <div class="row mb-3">
+       <div class="col-md-4">
+         <label for="status-filter" class="form-label">Filter by Status:</label>
+         <select id="status-filter" class="form-select">
+           <!-- All, Completed or Pending -->
+           <!-- Selection depending on queryData.status -->
+           <option value="">all</option>
+           <option value="completed" <%= queryData.status === 'completed' ? 'selected' : '' %>>completed</option>
+           <option value="pending" <%= queryData.status === 'pending' ? 'selected' : '' %>>pending</option>
+         </select>
+       </div>
+     </div>
+
+     <table class="table mt-3">
+       <thead class="table-dark">
+         <tr>
+           <th>Order ID</th>
+           <th>Date</th>
+           <th>Details</th>
+           <th>Total Amount</th>
+           <th>Status</th>
+           <th>Actions</th>
+         </tr>
+       </thead>
+       <tbody id="order-table-body">
+         <% orders.forEach(order => { %>
+         <tr id="row-<%= order.id %>">
+           <td><%= order.id %></td>
+           <td><%= new Date(order.createdAt).toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'short' }) %></td>
+           <td>
+              <% if (order.orderItems.length > 0) { %>
+                <% order.orderItems.forEach(item => { %>
+                  <div><b><%= item.product.name %></b> x <%= item.quantity %></div>
+                <% }) %>
+              <% } else { %>
+                <em>(No items)</em>
+              <% } %>   </td>
+           
+           <td>$<%= order.totalAmount.toFixed(2) %></td>
+           <td>
+             <span id="status-display-<%= order.id %>"><%= order.status %></span>
+             <select id="status-edit-<%= order.id %>" class="form-select d-none">
+               <option value="pending" <%= order.status === 'pending' ? 'selected' : '' %>>pending</option>
+               <option value="completed" <%= order.status === 'completed' ? 'selected' : '' %>>completed</option>
+             </select>
+           </td>
+           <td>
+            <button id="edit-btn-<%= order.id %>" class="btn btn-outline-warning btn-sm" onclick="enableEdit('<%= order.id %>')">
+              <i class="bi bi-pencil"></i>
+            </button>
+            <button id="save-btn-<%= order.id %>" class="btn btn-outline-success btn-sm d-none" onclick="saveChanges('<%= order.id %>')">
+              <i class="bi bi-save"></i>
+            </button>
+          </td>
+         </tr>
+         <% }) %>
+       </tbody>
+     </table>
+
+     <nav aria-label="Page navigation">
+       <ul class="pagination justify-content-center">
+         <% for (let i = 1; i <= totalPages; i++) { %>
+         <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+           <a class="page-link" href="<%= `/admin/orders?${new URLSearchParams({...queryData, page:i}).toString()}` %>"><%= i %></a>
+         </li>
+         <% } %>
+       </ul>
+     </nav>
+   </div>
+
+   <script>
+     document.getElementById('status-filter').addEventListener('change', () => {
+       const selectedStatus = document.getElementById('status-filter').value;
+       const queryParam = selectedStatus ? `?status=${selectedStatus}` : '';
+       window.location.href = `/admin/orders${queryParam}`;
+     });
+
+     const enableEdit = (orderId) => {
+       document.getElementById(`status-display-${orderId}`).classList.add('d-none');
+       document.getElementById(`status-edit-${orderId}`).classList.remove('d-none');
+       document.getElementById(`edit-btn-${orderId}`).classList.add('d-none');
+       document.getElementById(`save-btn-${orderId}`).classList.remove('d-none');
+     };
+
+     const saveChanges = (orderId) => {
+       const newStatus = document.getElementById(`status-edit-${orderId}`).value;
+
+       fetch(`/admin/orders/${orderId}/status`, {
+           method: 'PUT',
+           headers: {
+             'Content-Type': 'application/json'
+           },
+           body: JSON.stringify({
+             status: newStatus
+           }),
+         })
+         .then(response => response.json())
+         .then(data => {
+           if (data.message) {
+             document.getElementById(`status-display-${orderId}`).textContent = newStatus;
+             document.getElementById(`status-display-${orderId}`).classList.remove('d-none');
+             document.getElementById(`status-edit-${orderId}`).classList.add('d-none');
+             document.getElementById(`edit-btn-${orderId}`).classList.remove('d-none');
+             document.getElementById(`save-btn-${orderId}`).classList.add('d-none');
+             alert(data.message);
+           }
+         })
+         .catch(err => {
+           console.error(err);
+           alert('Failed to update status.');
+         });
+     };
+   </script>

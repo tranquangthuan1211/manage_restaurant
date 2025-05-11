@@ -1,0 +1,99 @@
+<!-- Sign In Start -->
+<div class="container-xxl py-5 px-0 wow fadeInUp" data-wow-delay="0.1s">
+    <div class="row g-0">
+        <div class="col-md-6 text-white d-flex  align-items-center p-5" style="background-image: linear-gradient(rgba(20, 20, 20, 0.8), rgba(20, 20, 20, 1.0)), url(img/about-2.jpg); background-size: cover; background-position: center;">
+            <div>
+                <h2 class="mt-2 mb-5 text-center text-white">Welcome Back to Virgo!</h2>
+                <p class="lead text-center ">Access your account to view your booking history, rate and review your meals and more!</p>
+                <br>
+                <p class="lead text-center"> Don't have an account yet? <a class="lead" href="users/signup"> Create one now!</a></p>
+            </div>
+        </div>
+        <div class="col-md-6 bg-dark d-flex align-items-center">
+            <div class="p-5 wow fadeInUp" data-wow-delay="0.2s">
+                <h5 class="section-title ff-secondary text-start text-primary fw-normal">Account </h5>
+                <h1 class="text-white mb-4">Sign In to Your Account</h1>
+                <form onsubmit="onSignInSubmit(event)">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label for="email" class="form-label text-white">Email</label>
+                            <input type="email" name="email" class="form-control" id="email" placeholder="Email">
+                            <div id="emailError" class="text-danger mt-1" style="display: none"></div>
+                        </div>
+                        <div class="col-12">
+                            <label for="password" class="form-label text-white">Password</label>
+                            <input type="password" name="password" class="form-control" id="password" placeholder="Password">
+                            <div id="passwordError" class="text-danger mt-1" style="display: none"></div>
+                        </div>
+                        <div id="generalError" class="alert alert-danger" style="display: none"></div>
+                        <div class="col-12 text-md-end mb-2">
+                            <a href="#">Forgot password?</a>
+                        </div>
+                        <div class="col-12">
+                            <button class="btn btn-primary w-100 py-3" type="submit">Sign In</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script> 
+    async function onSignInSubmit(event) {
+        event.preventDefault();
+        
+        // Reset error messages
+        document.getElementById('emailError').style.display = 'none';
+        document.getElementById('passwordError').style.display = 'none';
+        document.getElementById('generalError').style.display = 'none';
+
+        const form = event.target;
+        const formData = new FormData(form);
+        const formDataObject = Object.fromEntries(formData.entries());
+
+        try {
+            const response = await fetch('/users/signin', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formDataObject)
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                if (data.errors) {
+                    if (data.errors.email) {
+                        const emailError = document.getElementById('emailError');
+                        emailError.textContent = data.errors.email;
+                        emailError.style.display = 'block';
+                    }
+                    if (data.errors.password) {
+                        const passwordError = document.getElementById('passwordError');
+                        passwordError.textContent = data.errors.password;
+                        passwordError.style.display = 'block';
+                    }
+                } else {
+                    const generalError = document.getElementById('generalError');
+                    generalError.textContent = data.message || 'Authentication failed';
+                    generalError.style.display = 'block';
+                }
+            } else if (data.user){
+                const user = data.user;
+                console.log("User info: ", JSON.stringify(user, null, 2));
+                if (user && user.role === 'admin') {
+                    window.location.href = '/admin';
+                } else {
+                    window.location.href = '/';
+                }
+            }
+        } catch (error) {
+            const generalError = document.getElementById('generalError');
+            generalError.textContent = 'An error occurred. Please try again.';
+            generalError.style.display = 'block';
+        }
+    }
+</script>
+</script>
+<!-- Sign In End -->

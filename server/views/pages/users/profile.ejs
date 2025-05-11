@@ -1,0 +1,120 @@
+<!-- Header -->
+<div class="profile-header">
+  <h1>Welcome, <%= user.name %>!</h1>
+  <h3>Explore your personalized Virgo dashboard.</h3>
+</div>
+  
+<!-- Profile Card -->
+<div class="profile-card">
+  <img src="<%= user.avatar || 'img/team-1.jpg' %>" alt="Avatar" class="profile-avatar">
+  <div class="profile-info">
+    <h2>
+      <span id="NameText"><%= user.name %></span>
+      <input type="text" id="NameInput" class="form-control d-none" value="<%= user.name %>" />
+    </h2>
+    <p><strong>Email:</strong> <%= user.email %></p>
+
+    <p><strong>Joined:</strong> <%= new Date(user.createdAt).toLocaleDateString() %></p>
+
+    <p><strong>Gender:</strong>
+      <span id="GenderText"><%= user.gender %></span>
+      <select id="GenderInput" class="form-control d-none">
+        <option value="male" <%= user.gender === "male" ? "selected" : "" %>>Male</option>
+        <option value="female" <%= user.gender === "female" ? "selected" : "" %>>Female</option>
+      </select>
+    </p>
+    
+    <p><strong>Phone:</strong> 
+      <span id="PhoneText"><%= user.phoneNumber || '(Not provided)' %></span>
+      <input type="text" id="PhoneInput" class="form-control d-none" value="<%= user.phoneNumber || '' %>" />
+    </p>
+    <p><strong>Address:</strong> 
+      <span id="AddressText"><%= user.address || '(Not provided)' %></span>
+      <input type="text" id="AddressInput" class="form-control d-none" value="<%= user.address || '' %>" />
+    </p>
+    
+    <div class="profile-actions"></div>
+      <a href="javascript:void(0);" class="btn btn-custom" id="editProfile">Edit Profile</a>
+      <button id="saveButton" class="btn btn-success d-none">Save</button>
+      <button id="cancelButton" class="btn btn-dark d-none">Cancel</button>
+      
+      <a id="changePasswordLink" href="/users/change-password" class="btn btn-custom">Change Password</a>
+      <a id="logoutLink" href="/users/logout" class="btn btn-danger">Logout</a>
+    </div>
+  </div>
+</div>
+
+
+<!-- Order History Section -->
+<div class="container history">
+  <h5 class="mt-4">Order History</h5>
+  <a href="/orders/history" class="btn btn-custom">View Your Order History</a>
+</div>
+
+
+</div>
+
+<script>
+  document.getElementById("editProfile").addEventListener("click", function() {
+    toggleEditMode(true);
+  });
+
+  document.getElementById("cancelButton").addEventListener("click", function() {
+    toggleEditMode(false);
+  });
+  
+
+  document.getElementById("saveButton").addEventListener("click", async function() {
+    const userId = "<%= user.id %>";
+    const name = document.getElementById("NameInput").value;
+    const phone = document.getElementById("PhoneInput").value;
+    const address = document.getElementById("AddressInput").value;
+    const gender = document.getElementById("GenderInput").value;
+
+    const response = await fetch(`/users/update/${userId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        name: name,
+        phoneNumber: phone.length > 0 ? phone : null,
+        address: address.length > 0 ? address : null,
+        gender: gender
+      }),
+    });
+
+    if (response.ok) {
+      document.getElementById("NameText").innerText = name;
+      document.getElementById("PhoneText").innerText = phone;
+      document.getElementById("AddressText").innerText = address;
+      document.getElementById("GenderText").innerText = gender;
+
+      toggleEditMode(false);
+      alert("Profile updated successfully!");
+    } else {
+      alert("Profile update failed!");
+    }
+  });
+
+  function toggleEditMode(editMode) {
+    document.getElementById("editProfile").classList.toggle("d-none");
+    document.getElementById("changePasswordLink").classList.toggle("d-none");
+    document.getElementById("logoutLink").classList.toggle("d-none");
+    document.getElementById("cancelButton").classList.toggle("d-none");
+    const fields = ["Name", "Phone", "Address", "Gender"];
+    fields.forEach((field) => {
+      const textField = document.getElementById(`${field}Text`);
+      const inputField = document.getElementById(`${field}Input`);
+      if (editMode) {
+        textField.classList.add("d-none");
+        inputField.classList.remove("d-none");
+        document.getElementById("saveButton").classList.remove("d-none");
+      } else {
+        textField.classList.remove("d-none");
+        inputField.classList.add("d-none");
+        document.getElementById("saveButton").classList.add("d-none");
+      }
+    });
+  }
+</script>

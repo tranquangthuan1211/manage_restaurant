@@ -1,0 +1,131 @@
+<h1 class="text-center text-orange">
+  <i class="fas fa-user"></i> Admin Information
+</h1>
+<div class="card mt-4 shadow-lg">
+  <div class="card-header bg-orange text-white position-relative">
+    <h5 class="mb-0">
+      <i class="fas fa-address-card"></i> Details
+    </h5>
+
+    <div class="position-absolute top-50 end-0 translate-middle-y me-3" style="cursor: pointer;">
+      <i class="fas fa-edit text-dark" id="editAll"></i>
+    </div>
+  </div>
+  <div class="card-body">
+    <table class="table table-bordered">
+      <tbody>
+        <!-- Mã Nhân Viên -->
+        <tr>
+          <th scope="row" class="text-end w-25">Admin User ID: </th>
+          <td><%= user.id %></td>
+        </tr>
+        <!-- Họ Tên -->
+        <tr>
+          <th scope="row" class="text-end">Name: </th>
+          <td>
+            <span id="HoTenText"><%= user.name %></span>
+            <input type="text" id="HoTenInput" class="form-control d-none" value="<%= user.name %>" />
+          </td>
+        </tr>
+        <!-- Giới Tính -->
+        <tr>
+          <th scope="row" class="text-end">Gender: </th>
+          <td>
+            <span id="GioiTinhText"><%= user.gender %></span>
+            <select id="GioiTinhInput" class="form-control d-none">
+              <option value="male" <%= user.gender === "male" ? "selected" : "" %>>Male</option>
+              <option value="female" <%= user.gender === "female" ? "selected" : "" %>>Female</option>
+            </select>
+          </td>
+        </tr>
+        <!-- Điện Thoại -->
+        <tr>
+          <th scope="row" class="text-end">Phone Number:</th>
+          <td>
+            <span id="DienThoaiText"><%= user.phoneNumber || '(Not provided)'  %></span>
+            <input type="text" id="DienThoaiInput" class="form-control d-none" value="<%= user.phoneNumber || '' %>" />
+          </td>
+        </tr>
+        <!-- Email -->
+        <tr>
+          <th scope="row" class="text-end">Email:</th>
+          <td>
+            <span id="EmailText"><%= user.email %></span>
+            <input type="text" id="EmailInput" class="form-control d-none" value="<%= user.email %>" />
+          </td>
+        </tr>
+        <!-- Địa chỉ -->
+        <tr>
+          <th scope="row" class="text-end">Address:</th>
+          <td>
+            <span id="AddressText"><%= user.address || '(Not provided)' %></span>
+            <input type="text" id="AddressInput" class="form-control d-none" value="<%= user.address || '' %>" />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="text-center mt-3">
+      <button id="saveButton" class="btn btn-success d-none">Save</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+  document.getElementById("editAll").addEventListener("click", function() {
+    toggleEditMode(true);
+  });
+
+  document.getElementById("saveButton").addEventListener("click", async function() {
+    const maKhachHang = "<%= user.id %>";
+    const HoTen = document.getElementById("HoTenInput").value;
+    const GioiTinh = document.getElementById("GioiTinhInput").value;
+    const Address = document.getElementById("AddressInput").value;
+    const DienThoai = document.getElementById("DienThoaiInput").value;
+    //const Email = document.getElementById("EmailInput").value;
+
+    const response = await fetch(`/admin/users/update/${maKhachHang}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        name: HoTen,
+        gender: GioiTinh,
+        address: Address.length > 0 ? Address : null,
+        phoneNumber: DienThoai.length > 0 ? DienThoai : null,
+        //email: Email
+      }),
+    });
+
+    if (response.ok) {
+      document.getElementById("HoTenText").innerText = HoTen;
+      document.getElementById("GioiTinhText").innerText = GioiTinh;
+      document.getElementById("AddressText").innerText = Address;
+      document.getElementById("DienThoaiText").innerText = DienThoai;
+      //document.getElementById("EmailText").innerText = Email;
+
+      toggleEditMode(false);
+      alert("Cập nhật thành công!");
+    } else {
+      alert("Cập nhật thất bại!");
+    }
+  });
+
+  function toggleEditMode(editMode) {
+    const fields = ["HoTen", "GioiTinh", "Address", "DienThoai"];//, "Email"];
+    fields.forEach((field) => {
+      const textField = document.getElementById(`${field}Text`);
+      const inputField = document.getElementById(`${field}Input`);
+      if (editMode) {
+        textField.classList.add("d-none");
+        inputField.classList.remove("d-none");
+        document.getElementById("saveButton").classList.remove("d-none");
+      } else {
+        textField.classList.remove("d-none");
+        inputField.classList.add("d-none");
+        document.getElementById("saveButton").classList.add("d-none");
+      }
+    });
+  }
+</script>

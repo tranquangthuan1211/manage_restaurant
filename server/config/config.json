@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "new01",
+    "password": "pass01",
+    "database": "data01",
+    "host": "localhost",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "restaurant_4pv3_user",
+    "password": "4QRpeBmdmbuMddY3eVgmB845g7hLxkBm",
+    "database": "restaurant_4pv3",
+    "host": "dpg-d0g7l3ruibrs73fbctm0-a.singapore-postgres.render.com",
+    "dialect": "postgres",
+    "port": 5432,
+    "dialectOptions": {
+      "ssl": {
+        "require": true,
+        "rejectUnauthorized": false
+      }
+    }
+  }
+}   

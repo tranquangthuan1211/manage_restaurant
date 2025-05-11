@@ -1,0 +1,234 @@
+<div class="container my-4">
+  <!-- Title -->
+  <div class="text-center wow fadeInUp data-wow-delay=0.1s">
+    <h5 class="section-title ff-secondary text-center text-primary fw-normal">Food Delivery</h5>
+    <h1 class="mb-5">Your Cart</h1>
+  </div>
+  <!-- List of added items -->
+  <div class="card p-3 shadow-sm">
+    <!-- Empty Cart Message (Initially Hidden) -->
+    <div id="empty-cart-message" style="display: none">
+      <div class="text-center d-flex flex-column align-items-center">
+        <h5 class="fw-bold">Your cart is currently empty</h5>
+        <span class="lead mb-2"> Go to menu to grab your favourite food</span>
+        <a class="btn btn-outline-primary w-auto" href="/products"> Menu</a>
+      </div>
+    </div>
+    <!-- Items and Check out -->
+    <form id="cart-checkout-section" onsubmit="handleCheckout()">
+      <div id="cart-items-container">
+        <% if (typeof cart !='undefined' && cart && cart.cartItems && cart.cartItems.length > 0) { %>
+        <% cart.cartItems.forEach(item=> { %>
+        <div class="d-flex align-items-center m-4" id="product_<%= item.product.id %>">
+          <a href="/products/<%= item.product.id %>">
+            <img class="flex-shrink-0 img-fluid rounded rounded-3" src="/img/food/menu-<%= item.product.id % 8 + 1 %>.jpg" alt="" style="width: 100px;">
+          </a>
+          <div class="w-100 d-flex flex-column text-start ps-2">
+            <h5 class="d-flex justify-content-between border-bottom nunito-custom fw-bold">
+              <span><a href="/products/<%= item.product.id %>">
+                  <%= item.product.name %>
+                </a></span>
+              <span class="text-primary">$<%= item.product.price %></span>
+            </h5>
+            <div class="row g-3">
+              <small class="col-md-6 col-12 fst-italic">
+                <%= item.product.description %>
+              </small>
+              <!-- Buttons -->
+              <div class="col-md-6 col-12 d-flex justify-content-end align-items-center">
+                <!-- Remove Item -->
+                <button class="btn-remove me-2" onclick="removeFromCart('<%= item.product.id %>')">
+                  <%- include('../../partials/icons/remove_icon') %>
+                </button>
+                <!-- Descrease Button -->
+                <button class="btn-decrease" onclick="decreaseQuantity('<%= item.product.id %>')">
+                  <%- include('../../partials/icons/decrease_icon') %>
+                </button>
+                <!-- Quantity -->
+                <span class="w-25 text-quantity" id="productCount_<%= item.product.id %>">
+                  <%= item.quantity %>
+                </span>
+                <!-- Increase Button -->
+                <button class="btn-increase" onclick="increaseQuantity('<%= item.product.id %>')">
+                  <%- include('../../partials/icons/increase_icon') %>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <%}) %>
+        <%}%>
+      </div>
+      <hr/>
+      
+      <!-- Shipping Details -->
+      <div class="card card-body shadow-sm">
+        <h5>Shipping Details</h5> 
+        <div class="mb-3">
+          <label for="shippingMethod" class="form-label fw-bold">Method</label>
+          <select class="form-select" id="shippingMethod">
+            <option value="standard">Standard Shipping</option>
+            <option value="express">Express Shipping</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="shippingAddress" class="form-label fw-bold">Address</label>
+          <input type="text" class="form-control" id="shippingAddress" placeholder="Enter your shipping address" required>
+        </div>
+        <div class="d-flex justify-content-between">
+          <label class="form-label fw-bold">Fee</label>
+          <h5 class="fw-bold text-primary" id="shippingFee">$5.00</h5>
+        </div>
+      </div>
+      <hr/>
+      <!-- Total Price -->
+      <div class="d-flex justify-content-between">
+        <h5 class="fw-bold">Total</h5>
+        <h5 class="fw-bold text-primary" id="totalPrice">$<%= totalPrice + 5%></h5>
+      </div>
+      <!-- Checkout Button -->
+      <div class="text-end mt-3">
+        <button type="submit" class="btn btn-primary">Checkout</button>
+      </div>
+    </form>
+  </div>
+</div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    checkCartEmpty();
+  });
+
+  function checkCartEmpty() {
+    const cartItemsContainer = document.getElementById('cart-items-container');
+    const emptyCartMessage = document.getElementById('empty-cart-message');
+    const cartCheckoutSection = document.getElementById('cart-checkout-section');
+
+    if (!cartItemsContainer || cartItemsContainer.children.length === 0) {
+      // If no cart items exist, show the empty cart message
+      emptyCartMessage.style.display = "block"; // Show the message
+      cartCheckoutSection.style.display = "none"; // Hide the checkout section
+    } else {
+      emptyCartMessage.style.display = "none"; // Hide the message
+      cartCheckoutSection.style.display = "block"; // Show the checkout section
+    }
+  }
+
+  // Using fetch API
+  async function removeFromCart(productId) {
+    const data = {
+      productId
+    };
+    const response = await fetch('/cart/remove', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (response.ok) {
+      const result = await response.json();
+      console.log(`Total ejs: ${result.totalPrice}`);
+
+      if (result.totalPrice != null && result.totalPrice >= 0) {
+        const product = document.getElementById(`product_${productId}`);
+        product.remove();
+        fetchCartProductCount();
+        updateTotalPrice(result.totalPrice);
+        checkCartEmpty();
+      }
+    } else {
+      const err = await response.json();
+      console.error(err);
+    }
+  }
+
+  async function increaseQuantity(productId) {
+    const data = {
+      productId
+    };
+    const response = await fetch('/cart/increase', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (response.ok) {
+      const result = await response.json();
+      if (result.quantity && result.totalPrice != null && result.totalPrice >= 0) {
+        const productCount = document.getElementById(`productCount_${productId}`);
+        productCount.innerText = result.quantity;
+        fetchCartProductCount();
+        updateTotalPrice(result.totalPrice);
+      }
+    } else {
+      const err = await response.json();
+      console.error(err);
+    }
+  }
+
+  async function decreaseQuantity(productId) {
+    const data = {
+      productId
+    };
+    const response = await fetch('/cart/decrease', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (response.ok) {
+      const result = await response.json();
+      console.log(`Result: ${result}`);
+      if (result.totalPrice != null && result.totalPrice >= 0) {
+        const productCount = document.getElementById(`productCount_${productId}`);
+        productCount.innerText = result.quantity;
+        fetchCartProductCount();
+        updateTotalPrice(result.totalPrice);
+      }
+    } else {
+      const err = await response.json();
+      console.error(err);
+    }
+  }
+
+  function updateTotalPrice(sum) {
+    const totalPrice = document.getElementById('totalPrice');
+    totalPrice.innerText = `\$${sum}`;
+  }
+
+  async function handleCheckout() {
+    // Placeholder function for checkout process
+    console.log('Checkout button clicked');
+    const orderDetails = {
+      userId: '<%=user.id%>',
+      shippingMethod: document.getElementById('shippingMethod').value,
+      shippingAddress: document.getElementById('shippingAddress').value
+    };
+
+    // Example: Send a POST request to the checkout endpoint
+    const response = await fetch('/order/checkout', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(orderDetails)
+    })
+    if (response.ok) {
+      const data = await response.json();
+      console.log(JSON.stringify(data, null, 2));
+      // Redirect to the order confirmation page
+      window.location.href = '/order/checkout-success';
+    } else {
+      const err = await response.json();
+      console.error(JSON.stringify(err, null, 2));
+    }
+
+  }
+</script>

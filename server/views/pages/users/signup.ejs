@@ -1,0 +1,125 @@
+<!-- Sign Up Start -->
+<div class="container-xxl py-5 px-0 wow fadeInUp" data-wow-delay="0.1s">
+    <div class="p-5 row g-0">
+        <div class="col-md-6 text-white d-flex p-5" style="background-image: linear-gradient(rgba(20, 20, 20, 0.8), rgba(20, 20, 20, 1.0)), url(img/about-3.jpg); background-size: cover; background-position: center;">
+            <div>
+                <h5 class="section-title ff-secondary text-start text-primary fw-normal">Account</h5>
+                <h1 class="mb-4 text-white" id="create-your-account">Create Your Account</h1>
+                <p class="lead">Join the Virgo Family!</p>
+                <p class="lead">And enjoy <em>personalized features</em></p>
+            </div>
+        </div>
+
+        <% if (typeof errors != "undefined" && errors && errors.general) { %>
+            <div class="alert alert-danger"><%= errors.general %></div>
+        <% } %>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <form onsubmit="onUserSubmits(event)" oninput="onUserInputs(event)">
+                        <div class="row g-0">
+                            <div class="col-12 mb-3">
+                                <label for="name" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="name" name="name" value="<%= typeof values != "undefined" && values && values.name ? values.name : '' %>" required>
+                                <div id="nameError" class="text-danger" style="display: none">Username error!</div>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" value="<%= typeof values != "undefined" && values && values.email ? values.email : '' %>" required>
+                                <div id="emailError" class="text-danger" style="display: none">Email error!</div>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="password" name="password" required minlength="6">
+                                <div id="passwordError" class="text-danger" style="display: none">Password error!</div>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label for="confirm-password" class="form-label">Confirm Password</label>
+                                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                                <div id="confirmPasswordError" class="text-danger" style="display: none">Passwords error!</div>
+                            </div>
+                            <button type="submit" id="signupButton" class="btn btn-primary">Sign Up</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function onUserInputs(event){
+            const formElement = event.target;
+            const nameError = document.getElementById('nameError');
+            const emailError = document.getElementById('emailError');
+            const passwordError = document.getElementById('passwordError');
+            const confirmPasswordError = document.getElementById('confirmPasswordError');
+
+            if (formElement.name === 'name'){
+                nameError.style.display = 'none';
+            } else if (formElement.name === 'email'){
+                emailError.style.display = 'none';
+            } else if (formElement.name === 'password'){
+                passwordError.style.display = 'none';
+            } else if (formElement.name === 'confirmPassword'){
+                confirmPasswordError.style.display = 'none';
+            }
+        }
+
+        async function onUserSubmits(event){
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            const formDataObject = {}
+            for (const [key, value] of formData.entries()) {
+                formDataObject[key] = value;
+            }
+            const response = await fetch('/users/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    ...formDataObject,
+                    role: 'admin'
+                })
+            });
+            if (!response.ok){
+                const nameError = document.getElementById('nameError');
+                const emailError = document.getElementById('emailError');
+                const passwordError = document.getElementById('passwordError');
+                const confirmPasswordError = document.getElementById('confirmPasswordError');
+                const errors = await response.json();
+                console.log(errors);
+                if (errors.name != ""){
+                    nameError.innerText = errors.name;
+                    nameError.style.display = 'block';
+                } else {
+                    nameError.style.display = 'none';
+                }
+                if (errors.email != ""){
+                    emailError.innerText = errors.email;
+                    emailError.style.display = 'block';
+                } else {
+                    emailError.style.display = 'none';
+                }
+                if (errors.password != ""){
+                    passwordError.innerText = errors.password;
+                    passwordError.style.display = 'block';
+                } else {
+                    passwordError.style.display = 'none';
+                }
+                if (errors.confirmPasswordError != ""){
+                    confirmPasswordError.innerText = errors.confirmPassword;
+                    confirmPasswordError.style.display = 'block';
+                } else {
+                    confirmPasswordError.style.display = 'none';
+                }
+            } else {
+                window.location.href = 'users/success';
+                console.log('Good to go! ... Why are you not redirecting?');
+            }
+        }
+    </script>
+</div>
+<!-- Sign Up End -->

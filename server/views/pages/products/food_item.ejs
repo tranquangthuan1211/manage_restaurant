@@ -1,0 +1,25 @@
+<div class="col-lg-6 border-end pb-4">
+  <div class="d-flex align-items-center me-1">
+    <a href="/products/<%= product.id %>">
+      <img class="food-item-img flex-shrink-0 img-fluid rounded" src="/img/food/menu-<%= product.id % 8 + 1 %>.jpg" alt="" style="width: 100px;">
+    </a>
+    <div class="w-100 d-flex flex-column text-start ps-2">
+      <h5 class="d-flex justify-content-between border-bottom nunito-custom fw-bold">
+        <span><a class="food-item-link" href="/products/<%= product.id %>"><%= product.name %></a></span>
+        <span class="food-item-price text-primary">$<%= product.price %></span>
+      </h5>
+      <div class="row g-3">
+        <small class="food-item-description col-10 fst-italic"><%= product.description %></small>
+        <% if (product.status === 'in_stock') { %>
+        <button class="food-item-add-to-cart-btn btn btn-outline-primary col-2 pb-1 pt-0" onclick="addToCart('<%= product.id%>')">
+          <%- include('../../partials/icons/cart_icon.ejs') -%>
+        </button>
+        <% }; %>
+        <!-- Toggle in client -->
+        <span class="food-item-out-of-stock col-2 text-danger text-center small"
+          style=<%= product.status === 'in_stock' ? 'display:none' : 'display:block' %>;
+        >Out of Stock</span>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,211 @@
+<tr id="new-product-row" class="product-row">
+  <!-- Product Id -->
+  <td class="product-id text-center" style="width: 2%;">
+  </td>
+
+  <!-- Product Image -->
+  <td style="width: 10%;">
+    <div id="product-img-preview" class="py-1"></div>
+    <form id="upload-image" class="d-flex flex-column align-items-center">
+      <input id="product-img-file" type="file" class="product-image form-control p-1" style="width: 100%; font-size: x-small;" accept="image/*">
+      <input type="submit" class="btn btn-sm btn-outline-secondary mt-2" value="Upload" style="font-size: x-small;">
+    </form>
+  </td>
+
+  <!-- Product Name -->
+  <td style="width: 13%;">
+    <input type="text" class="product-name form-control p-1" placeholder="Name" style="width: 100%; font-size: small;">
+  </td>
+
+  <!-- Product Price -->
+  <td style="width: 8%;" class="text-end">
+    <input type="number" class="product-price form-control text-end p-1" min="0" placeholder="Price" style="width: 100%; font-size: small;">
+  </td>
+
+  <!-- Product Status -->
+  <td style="width: 12%;" class="text-end">
+    <select class="product-status form-control p-1" style="width: 100%; font-size: small;">
+      <option value="in_stock">In Stock</option>
+      <option value="out_of_stock">Out of Stock</option>
+    </select>
+  </td>
+
+  <!-- Product Description -->
+  <td style="width: 25%;">
+    <textarea class="product-description form-control p-1" placeholder="Description" style="width: 100%; height: 195px; font-size: small;"></textarea>
+  </td>
+
+  <!-- Product Categories -->
+  <td style="width: 25%;">
+    <div class="product-categories"></div>
+    <div class="category-add d-flex mt-2">
+      <input class="form-control flex-grow-1 p-1" style="font-size: small;" type="text" placeholder="Enter category"></input>
+      <button class="btn btn-sm btn-outline-secondary flex-shrink-1 btn-square" style="font-size: small;" onclick="newProductAddCategory(this)">
+        <%- include('../../partials/icons/add_icon') %>
+      </button>
+    </div>
+  </td>
+
+  <!-- Product Actions -->
+  <td class="product-actions" style="width: 5%;">
+    <div class="w-100 d-flex flex-column align-items-center gap-1">
+      <!-- Save button -->
+      <button class="save-btn btn-square btn btn-sm btn-outline-success p-1" onclick="newProductSaveProduct(this)">
+        <%- include('../../partials/icons/save_icon') %>
+      </button>
+    </div>
+  </td>
+
+  <template id="category-badge-template">
+    <%- include('../../partials/admin/admin_category_badge', {category : "{{category}}"}) %>
+  </template>
+
+  <script>
+    function newProductAddCategory(button) {
+      const row = button.closest('.product-row');
+      const categoryAddInput = row.querySelector('.category-add input');
+      const newCategory = categoryAddInput.value;
+      categoryAddInput.value = '';
+
+      // Validation
+      if (newCategory.length === 0) {
+        return;
+      }
+
+      const template = document.getElementById('category-badge-template');
+      const clone = template.content.cloneNode(true);
+      const categoryBadge = clone.querySelector('.category-badge');
+      const categoryBadgeLink = clone.querySelector('.category-badge-link');
+      const categoryRemoveButton = clone.querySelector('.category-remove');
+      categoryBadgeLink.textContent = newCategory;
+      categoryBadgeLink.href = '/admin/products?category=' + newCategory;
+      categoryRemoveButton.onclick = function() {
+        newProductRemoveCategory(this);
+      };
+      categoryRemoveButton.classList.remove('d-none');
+      const categoryContainer = row.querySelector('.product-categories');
+      categoryContainer.appendChild(categoryBadge);
+    }
+
+    function newProductRemoveCategory(button) {
+      const categoryBadge = button.closest('.category-badge');
+      categoryBadge.remove();
+    }
+
+    async function newProductSaveProduct(button) {
+      const row = button.closest('.product-row');
+      //const idInput = row.querySelector('.product-id input');
+      const nameInput = row.querySelector('.product-name');
+      const priceInput = row.querySelector('.product-price');
+      const descriptionTextarea = row.querySelector('.product-description');
+      const statusInput = row.querySelector('.product-status');
+      const imageInput = row.querySelector('.product-image');
+
+      // List of categories
+      const categories = [];
+      row.querySelectorAll('.category-badge-link').forEach(category => {
+        categories.push(category.textContent);
+      });
+
+      const productData = {
+        //id: idInput.value,
+        name: nameInput.value,
+        price: priceInput.value,
+        description: descriptionTextarea.value,
+        category: categories,
+        status: statusInput.value,
+        //image: imageInput.files[0] // Assuming you handle file upload separately
+      };
+
+      const response = await fetch(`/admin/products/create`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(productData),
+      });
+
+      if (response.ok === false) {
+        console.error(`Error creating product: ${response.err || response}`);
+        return;
+      }
+      console.log('Product created successfully');
+
+      // Clear it all
+      nameInput.value = '';
+      priceInput.value = '';
+      descriptionTextarea.value = '';
+      statusInput.value = 'in_stock';
+      imageInput.value = '';
+      row.querySelectorAll('.category-badge').forEach(categoryBadge => {
+        categoryBadge.remove();
+      });
+    }
+
+    //document.getElementById('product-img-file').addEventListener('click', newProductPreviewImage);
+    document.getElementById('upload-image').addEventListener('submit', newProductUploadImage);
+    document.getElementById('product-img-file').addEventListener('change', newProductPreviewImage)
+
+
+    function newProductPreviewImage(event) {
+      console.log('Uploading image...');
+
+      const preview = document.getElementById('product-img-preview');
+      const fileInput = document.getElementById('product-img-file');
+
+      if (fileInput.files.length == 0) {
+        console.log('No file selected');
+        return;
+      }
+      const file = fileInput.files[0];
+      preview.innerHTML = `<img src="${URL.createObjectURL(file)}" alt="Preview" width="100px"/>`;
+    }
+
+    async function newProductUploadImage(event) {
+      event.preventDefault();
+      const fileInput = document.getElementById('product-img-file');
+      const file = fileInput.files[0];
+      if (!file) {
+        console.log('No file selected');
+        return;
+      }
+
+      let signatureResponse = null;
+      try {
+        const response = await fetch('/admin/products/get-signature');
+        signatureResponse = await response.json();
+      } catch (error) {
+        console.error('Error getting signature:', error.message || error);
+        return;
+      }
+      console.log('Signature response: ', JSON.stringify(signatureResponse, null, 2));
+
+      const cloud_name = 'dumqviy8t';
+      const api_key = '235758998226884';
+
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('api_key', api_key);
+      formData.append('signature', signatureResponse.signature);
+      formData.append('timestamp', signatureResponse.timestamp);
+      formData.append('upload_preset', 'preset')
+
+      try {
+
+        const response = await fetch(`https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`, {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!response.ok) throw new Error('Upload failed');
+
+        const data = await response.json();
+        console.log('Upload successful:', data);
+        alert('Image uploaded successfully!');
+      } catch (error) {
+        console.error('Error uploading image:', error.message || error);
+        alert('Failed to upload image.');
+      }
+    }
+  </script>
+</tr>

@@ -1,0 +1,104 @@
+<div class="container my-4">
+  <div class="row mb-5 justify-content-center">
+    <div class="col-lg-10">
+      <div class="d-flex align-items-center shadow-sm p-3">
+        <!-- Image Section -->
+        <a href="/products/<%= product.id %>">
+          <img class="img-fluid rounded" src="/img/menu-<%= product.id % 8 + 1 %>.jpg" alt="<%= product.name %>" width="200" height="200" />
+        </a>
+        <!-- Product Details Section -->
+        <div class="ms-4 w-100">
+          <h5 class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2 fw-bold">
+            <a class="text-dark text-decoration-none" href="/products/<%= product.id %>"><%= product.name %></a>
+            <span class="text-primary">$<%= product.price %></span>
+          </h5>
+          <p class="text-muted mb-2" style="font-size: 0.9rem;">Description: <%= product.description %></p>
+          <button class="btn btn-outline-primary" onclick="addToCart('<%= product.id%>')">
+            <%- include('../../partials/icons/cart_icon') %>
+            <span class="align-text-top">
+              Add to cart
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Review Section -->
+  <h4 class="mb-2">Leave a Review</h4>
+  <div class="card card-body shadow-sm mb-5 pb-4">
+    <form onsubmit="submitReview(event)">
+      <div class="mb-3">
+        <!-- Warning panel -->
+        <div class="alert alert-danger d-none" id="review-warning" role="alert">
+          Please log in to leave a review.
+        </div>
+        <label for="rating" class="form-label">Rating</label>
+        <div class="rating-stars">
+          <input type="radio" id="star5" name="rating" value="5" />
+          <label for="star5" title="5 stars"><i class="bi bi-star-fill p-2"></i></label>
+          <input type="radio" id="star4" name="rating" value="4" />
+          <label for="star4" title="4 stars"><i class="bi bi-star-fill p-2"></i></label>
+          <input type="radio" id="star3" name="rating" value="3" />
+          <label for="star3" title="3 stars"><i class="bi bi-star-fill p-2"></i></label>
+          <input type="radio" id="star2" name="rating" value="2" />
+          <label for="star2" title="2 stars"><i class="bi bi-star-fill p-2"></i></label>
+          <input type="radio" id="star1" name="rating" value="1" />
+          <label for="star1" title="1 star"><i class="bi bi-star-fill p-2"></i></label>
+        </div>
+
+      </div>
+      <div class="mb-3">
+        <label for="comment" class="form-label">Comment</label>
+        <textarea class="form-control" id="comment" name="comment" rows="3" required></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit Review</button>
+    </form>
+  </div>
+
+  <!-- Other Reviews Section -->
+  <h4 class="mb-2">Reviews</h4>
+  <%- include('reviews', {reviews:product.reviews}) %>
+  
+  <!-- Recommendation Section -->
+  <div class="row g-3 wow fadeInUp">
+    <h4>People also like...</h4>
+    <%- include('food_list.ejs', {products:recommendations}) %>
+  </div>
+
+</div>
+
+<script>
+  async function submitReview(event) {
+    event.preventDefault();
+    const isAuthenticated = "<%= typeof user != 'undefined' %>";
+
+    if (isAuthenticated === "false") {
+      const warning = document.getElementById('review-warning');
+      warning.classList.remove('d-none');
+      return;
+    }
+
+    const rating = document.querySelector('input[name="rating"]:checked').value;
+    const comment = document.getElementById('comment').value;
+
+    const productId = '<%= product.id %>';
+    const response = await fetch(`/products/reviews/${productId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        rating,
+        comment
+      })
+    });
+    if (!response.ok) {
+      console.error('Failed to submit review', response.message || response);
+      return;
+    } else {
+      console.log('Review submitted successfully');
+      location.reload();
+      return;
+    }
+  }
+</script>

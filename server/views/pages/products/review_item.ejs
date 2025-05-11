@@ -1,0 +1,62 @@
+<div class="review-item border p-3 mb-3">
+  <div class="d-flex justify-content-between align-items-center">
+    <h5 class="mb-0"><%= review.userName %></h5>
+    <div class="rating">
+      <% for (let i = 1; i <= 5; i++) { %>
+      <% if (i <= review.rating) { %>
+      <i class="bi bi-star-fill text-warning"></i>
+      <% } else { %>
+      <i class="bi bi-star text-warning"></i>
+      <% } %>
+      <% } %>
+    </div>
+  </div>
+  <p class="mt-2"><%= review.comment %></p>
+  <div class="d-flex justify-content-end">
+    <div class="me-3">
+      <button class="btn btn-outline-success" id="helpful-<%= review.id %>" onclick="updateHelpful('<%= review.id %>', true)">
+        <i class="bi bi-hand-thumbs-up"></i> <span id="helpful-count-<%= review.id %>"><%= review.helpfulCount %></span>
+      </button>
+    </div>
+    <div>
+      <button class="btn btn-outline-danger" id="not-helpful-<%= review.id %>" onclick="updateHelpful('<%= review.id %>', false)">
+        <i class="bi bi-hand-thumbs-down"></i> <span id="not-helpful-count-<%= review.id %>"><%= review.notHelpfulCount %></span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  async function updateHelpful(reviewId, isHelpful) {
+    try {
+      const isAuthenticated = "<%= typeof user !== 'undefined' %>";
+      if (!isAuthenticated){
+        console.log('Please log in to leave a review.');
+        return;
+      }
+      const response = await fetch(`/products/reviews/update/helpfulness/${reviewId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ isHelpful }),
+      });
+      if (!response.ok){
+        console.error('Failed to update helpfulness', response.message || response);
+        return;
+      }
+      console.log('Review helpfulness updated');
+      const data = await response.json();
+      const helpfulCountElement = document.getElementById(`helpful-count-${reviewId}`);
+      const notHelpfulCountElement = document.getElementById(`not-helpful-count-${reviewId}`);
+      if (isHelpful) {
+        helpfulCountElement.innerText = parseInt(helpfulCountElement.innerText) + 1;
+      } else {
+        notHelpfulCountElement.innerText = parseInt(notHelpfulCountElement.innerText) + 1;
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+</script>
+</script>

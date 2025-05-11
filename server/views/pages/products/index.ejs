@@ -1,0 +1,265 @@
+<div class="container-xxl py-5">
+  <!-- Title -->
+  <div class="text-center wow fadeInUp data-wow-delay=0.1s">
+    <h5 class="section-title ff-secondary text-center text-primary fw-normal">Food Menu</h5>
+    <h1 class="mb-5">Choose your favorite food</h1>
+  </div>
+  <!--Form Filter Begin-->
+  <div class="container mb-5">
+    <form onsubmit="onSearchSubmits(event)">
+      <div class="mb-2 row">
+        <div class="col-md-10">
+          <div class="input-group">
+            <input type="text" id="nameSearch" name="name" class="form-control" placeholder="Search by name..." value="<%= queryData.filter.name %>" />
+            <button type="submit" class="btn btn-outline-primary">
+              <%- include('../../partials/icons/search_icon') -%>
+              Search
+            </button>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <button class="btn btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#filterPanel" aria-expanded="false" aria-controls="filterDropdown">
+            <%- include('../../partials/icons/filter_icon') -%>
+            Options
+          </button>
+        </div>
+      </div>
+
+      <div class="collapse card p-4 mb-4" id="filterPanel" style="transition: all 0.3s ease;">
+        <div class="row">
+          <!-- Sort Field -->
+          <div class="col-md-2">
+            <label for="sort" class="form-label lead">Sort By</label>
+            <select id="sort" name="sort" class="form-select">
+              <option value="name" <%= queryData.filter.sort === 'name' ? 'selected' : '' %>>Name</option>
+              <option value="price" <%= queryData.filter.sort === 'price' ? 'selected' : '' %>>Price</option>
+              <option value="default" <%= (!queryData.filter.sort || queryData.filter.sort === 'default') ? 'selected' : '' %>>Default</option>
+            </select>
+          </div>
+          <!-- Sort Asc or Desc -->
+          <div class="col-md-2 d-flex align-items-end">
+            <select id="sort-order" name="sort-order" class="form-select">
+              <option value="asc" <%= queryData.filter.sortOrder === 'asc' ? 'selected' : '' %>>A-Z</option>
+              <option value="desc" <%= queryData.filter.sortOrder === 'desc' ? 'selected' : '' %>>Z-A</option>
+            </select>
+          </div>
+          <!-- Description Field -->
+          <div class="col-md-4">
+            <label for="descSearch" class="form-label lead">Description</label>
+            <input type="text" id="descSearch" name="description" class="form-control" placeholder="Search by description..." value="<%= queryData.filter.description %>" />
+          </div>
+          <!-- Min Price Field -->
+          <div class="col-md-2">
+            <label for="minPrice" class="form-label lead">Min Price</label>
+            <input type="number" id="minPrice" name="minPrice" step="0.01" min="0" class="form-control" placeholder="Min Price" value="<%= queryData.filter.minPrice >= 0 ? queryData.filter.minPrice : '' %>" />
+          </div>
+          <!-- Max Price Field -->
+          <div class="col-md-2">
+            <label for="maxPrice" class="form-label lead">Max Price</label>
+            <input type="number" id="maxPrice" name="maxPrice" step="0.01" min="0" class="form-control" placeholder="Max Price" value="<%= queryData.filter.maxPrice >= 0 ? queryData.filter.maxPrice : '' %>" />
+          </div>
+          <hr class="mt-4">
+          <!-- Category Checkboxes Field-->
+          <div class="col-md-12">
+            <label class="form-label lead">Category</label>
+            <div class="row">
+              <% categories.forEach(category => { %>
+              <% if (category) {%>
+              <div class="col-md-2 form-check-inline">
+                <input class="form-check-input" type="checkbox" id="category_<%= category %>" value="" <%= queryData.filter.category.split(',').includes(category) ? 'checked' : '' %>>
+                <label for="category_<%= category %>" class="form-check-label ps-1"><%= category.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') %></label>
+              </div>
+              <% } %>
+              <% }); %> 
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <!--Form Filter End-->
+
+  <!-- List Begin -->
+  <div class="container">
+    <div id="productList" class="row">
+      <!-- For SSR -->
+      <%- include('food_list.ejs', {products:products}) %>
+    </div>
+    <!-- Pagination Display -->
+    <div class="col-lg-12 mt-4">
+      <nav aria-label="Products results">
+        <ul id="pageSelector" class="pagination justify-content-center">
+          <li class="page-item <%= queryData.pagination.currentPage == 1 ? 'disabled' : '' %>">
+            <a class="page-link" onclick="fetchPage('<%=queryData.pagination.currentPage - 1%>', '<%=filterQueryString%>')">
+              <span>Previous</span>
+            </a>
+          </li>
+          <% for (let i = 1; i <= queryData.pagination.totalPages; i++) { %>
+          <!-- Always show the first and last page -->
+          <% if (i == 1 || i == queryData.pagination.totalPages) { %>
+          <li class="page-item <%= i == queryData.pagination.currentPage ? 'disabled' : '' %>">
+            <a class="page-link" href="javascript:void(0)" onclick="fetchPage('<%=i%>', '<%=filterQueryString%>')"><%=i%></a>
+          </li>
+          <!-- Only show the current page and its two neighbors-->
+          <% } else if (i == queryData.pagination.currentPage - 1 || i == queryData.pagination.currentPage + 1) { %>
+          <li class="page-item">
+            <a class="page-link" href="javascript:void(0)" onclick="fetchPage('<%=i%>', '<%=filterQueryString%>')"><%=i%></a>
+          </li>
+          <% } else if (i == queryData.pagination.currentPage) { %>
+          <li class="page-item disabled">
+            <a class="page-link" href="javascript:void(0)" onclick="fetchPage('<%=i%>', '<%=filterQueryString%>')"><%=i%></a>
+          </li>
+          <% } else if ((i == 2 && queryData.pagination.currentPage > 3) || (i == queryData.pagination.totalPages - 1 && queryData.pagination.currentPage < queryData.pagination.totalPages - 2)) { %>
+          <li class="page-item disabled">
+            <a class="page-link" href="javascript:void(0)" onclick="fetchPage('<%=i%>', '<%=filterQueryString%>')">...</a>
+          </li>
+          <% } %>
+          <% } %>
+          <li class="page-item <%= queryData.pagination.currentPage == queryData.pagination.totalPages ? 'disabled' : '' %>">
+            <a class="page-link" href="javascript:void(0)" onclick="fetchPage('<%=queryData.pagination.currentPage + 1%>', '<%=filterQueryString%>')">
+              <span>Next</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <template id="foodItemTemplate">
+      <%- include('food_item', {product: {id: '{{id}}', name: '{{name}}', price: '{{price}}', description: '{{description}}', category: '{{category}}', status: 'in_stock'}}) %>
+    </template>
+  </div>
+  <!-- List End -->
+
+  <script>
+    function onSearchSubmits(event) {
+      event.preventDefault();
+      const name = document.getElementById('nameSearch').value;
+      const description = document.getElementById('descSearch').value;
+      const minPrice = document.getElementById('minPrice').value;
+      const maxPrice = document.getElementById('maxPrice').value;
+      const categories = document.querySelectorAll('input[type="checkbox"]:checked');
+      const categoryValues = Array.from(categories).map(category => category.id.slice("category_".length)); //Remove prefix 'category_' here
+      const sort = document.getElementById('sort').value;
+      const sortOrder = document.getElementById('sort-order').value;
+
+      const filterQueryString = `&name=${name}&description=${description}&minPrice=${minPrice}&maxPrice=${maxPrice}&category=${categoryValues.join(',')}&sort=${sort}&sortOrder=${sortOrder}`;
+      window.location.href = `/products?${filterQueryString}`;
+    }
+
+    function updateURL(toURL) {
+      history.pushState(null, '', toURL);
+    }
+
+    async function fetchPage(page, queryString) {
+      const url = `/products?page=${page}${queryString}`;
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        renderProductGrid(data.products);
+        renderPagination(data.pagination, queryString);
+        updateURL(url);
+      } else {
+        const err = await response.json();
+        alert(err || "Failed to fetch data.");
+      }
+    }
+
+    function renderProductGrid(products) {
+      const gridContainer = document.getElementById("productList");
+      gridContainer.innerHTML = ""; // Clear previous content
+
+      if (products.length === 0) {
+        gridContainer.innerHTML = `
+            <div class="col-lg-12 d-flex justify-content-center mb-4">
+                <span class="text-center lead">(No products found)</span>
+            </div>`;
+        return;
+      }
+
+      products.forEach(product => {
+        const foodItem = document.getElementById("foodItemTemplate").content.cloneNode(true);
+        foodItem.querySelector(".food-item-img").src = `/img/food/menu-${product.id % 8 + 1}.jpg`;
+        foodItem.querySelector(".food-item-link").href = `/products/${product.id}`;
+        foodItem.querySelector(".food-item-link").textContent = product.name;
+        // Only in stock products can be added to cart
+        if (product.status !== 'in_stock') {
+          foodItem.querySelector(".food-item-add-to-cart-btn").remove();
+          foodItem.querySelector(".food-item-out-of-stock").style.display = "block";
+          foodItem.querySelector(".food-item-out-of-stock")
+        } else {
+          foodItem.querySelector(".food-item-add-to-cart-btn").onclick = () => addToCart(product.id);
+        }
+        foodItem.querySelector(".food-item-price").textContent = `$${product.price}`;
+        foodItem.querySelector(".food-item-description").textContent = product.description;
+        gridContainer.appendChild(foodItem);
+      });
+    }
+
+    function renderPagination(pagination, queryString) {
+      const paginationContainer = document.getElementById("pageSelector");
+      paginationContainer.innerHTML = ""; // Clear previous content
+
+      const createPageItem = (page, label, disabled = false, active = false) => `
+        <li class="page-item ${disabled ? 'disabled' : ''} ${active ? 'active' : ''}">
+            <a class="page-link" href="javascript:void(0)" onclick="fetchPage(${page}, '${queryString}')">${label}</a>
+        </li>`;
+
+      // Helper to insert ellipses
+      const createEllipsis = () => `
+        <li class="page-item disabled">
+            <span class="page-link">...</span>
+        </li>`;
+
+      // Add "Previous" button
+      if (pagination.currentPage > 1) {
+        paginationContainer.insertAdjacentHTML(
+          "beforeend",
+          createPageItem(pagination.currentPage - 1, "Previous")
+        );
+      }
+
+      const totalPages = pagination.totalPages;
+      const currentPage = pagination.currentPage;
+      const delta = 2; // Number of pages before and after the current page to display
+
+      let range = [];
+      for (let i = Math.max(1, currentPage - delta); i <= Math.min(totalPages, currentPage + delta); i++) {
+        range.push(i);
+      }
+
+      // Include first and last pages if they're not in the range
+      if (range[0] > 1) {
+        range = [1, "ellipsis", ...range];
+      }
+      if (range[range.length - 1] < totalPages) {
+        range = [...range, "ellipsis", totalPages];
+      }
+
+      // Generate pagination items
+      range.forEach((page, index) => {
+        if (page === "ellipsis") {
+          paginationContainer.insertAdjacentHTML("beforeend", createEllipsis());
+        } else {
+          paginationContainer.insertAdjacentHTML(
+            "beforeend",
+            createPageItem(page, page, false, page === currentPage)
+          );
+        }
+      });
+
+      // Add "Next" button
+      if (pagination.currentPage < totalPages) {
+        paginationContainer.insertAdjacentHTML(
+          "beforeend",
+          createPageItem(pagination.currentPage + 1, "Next")
+        );
+      }
+    }
+  </script>
+</div>

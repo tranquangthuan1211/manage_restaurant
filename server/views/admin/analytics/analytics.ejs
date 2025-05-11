@@ -1,0 +1,140 @@
+     <div class="container mt-5">
+       <h2 class="mb-4">Revenue Analytics</h2>
+
+       <form id="filterForm" class="row g-3">
+         <div class="col-md-3">
+           <label for="reportType" class="form-label">Select Report Type:</label>
+           <select id="reportType" name="reportType" class="form-select" required>
+             <option value="revenueAnalytics">Revenue Analytics</option>
+             <option value="revenueByProduct">Revenue by Product</option>
+           </select>
+         </div>
+   
+         <div class="col-md-3">
+           <label for="startDate" class="form-label">Start Date:</label>
+           <input
+             type="date"
+             id="startDate"
+             name="startDate"
+             class="form-control"
+             required
+           />
+         </div>
+   
+         <div class="col-md-3">
+           <label for="endDate" class="form-label">End Date:</label>
+           <input
+             type="date"
+             id="endDate"
+             name="endDate"
+             class="form-control"
+             required
+           />
+         </div>
+   
+         <div class="col-md-3">
+           <label for="groupBy" class="form-label">Group By:</label>
+           <select id="groupBy" name="groupBy" class="form-select" required>
+             <option value="day">Day</option>
+             <option value="month">Month</option>
+             <option value="year">Year</option>
+           </select>
+         </div>
+   
+         <div class="col-md-12 d-flex justify-content-end">
+           <button type="submit" class="btn btn-primary">Generate Report</button>
+         </div>
+       </form>
+   
+       <div id="results" class="mt-5">
+         <p class="text-muted">
+           Please select report type and filter criteria to view the report.
+         </p>
+       </div>
+     </div>
+   
+     <script>
+       document.addEventListener("DOMContentLoaded", () => {
+         const filterForm = document.getElementById("filterForm");
+         const resultsDiv = document.getElementById("results");
+
+         filterForm.addEventListener("submit", async (e) => {
+           e.preventDefault();
+   
+           const formData = new FormData(filterForm);
+           const reportType = formData.get("reportType");
+           const startDate = formData.get("startDate");
+           const endDate = formData.get("endDate");
+           const groupBy = formData.get("groupBy");
+
+           if (!startDate || !endDate || new Date(startDate) > new Date(endDate)) {
+             resultsDiv.innerHTML = '<p class="text-danger">Invalid date range.</p>';
+             return;
+           }
+
+           const endpoint = `${
+             reportType === "revenueByProduct"
+               ? "/admin/revenue-by-product"
+               : "/admin/analytics"
+           }?startDate=${startDate}&endDate=${endDate}&groupBy=${groupBy}`;
+   
+           try {
+             const response = await fetch(endpoint, {
+               method: "GET",
+               headers: { "X-Requested-With": "XMLHttpRequest" },
+             });
+   
+             if (!response.ok) {
+               throw new Error("Failed to fetch data from the server.");
+             }
+   
+             const data = await response.json();
+   
+             if (data.revenueData && data.revenueData.length > 0) {
+               let tableHtml = `
+                 <div class="table-responsive">
+                   <table class="table table-striped mt-3">
+                     <thead>
+                       <tr>
+                         ${
+                           reportType === "revenueByProduct"
+                             ? "<th>Product</th>"
+                             : ""
+                         }
+                         <th>Date</th>
+                         <th>Total Revenue</th>
+                       </tr>
+                     </thead>
+                     <tbody>
+               `;
+               data.revenueData.forEach((row) => {
+                 tableHtml += `
+                   <tr>
+                     ${
+                       reportType === "revenueByProduct"
+                         ? `<td>${row.productName}</td>`
+                         : ""
+                     }
+                     <td>${row.groupedDate}</td>
+                     <td>$${parseFloat(row.totalRevenue).toLocaleString("en-US", {
+                       style: "currency",
+                       currency: "USD",
+                     })}</td>
+                   </tr>
+                 `;
+               });
+               tableHtml += "</tbody></table></div>";
+               resultsDiv.innerHTML = tableHtml;
+             } else {
+               resultsDiv.innerHTML =
+                 '<p class="text-muted">No data found for the selected range.</p>';
+             }
+           } catch (err) {
+             console.error("Error fetching report data:", err);
+             resultsDiv.innerHTML =
+               '<p class="text-danger">Error loading data. Please try again later.</p>';
+           }
+         });
+       });
+     </script>
+   

@@ -1,0 +1,11 @@
+<div class="row">
+    <% if (products.length === 0) { %>
+    <div class="col-lg-12 d-flex justify-content-center mb-4">
+        <span class="text-center lead">(No products found)</span>
+    </div>
+    <% } else { %>
+        <% products.forEach(product => { %>
+        <%- include('food_item', { product: product }); %>
+        <% }); %>
+    <% }; %>
+</div>

@@ -1,0 +1,241 @@
+
+<div class="container">
+  <h2 class="mt-4">Manage Users</h2>
+  <div class="row mt-4">
+    <div class="col-md-6">
+      <input type="text" id="search-input" class="form-control" placeholder="Search by name or email">
+    </div>
+    <div class="col-md-2">
+      <button class="btn btn-primary" onclick="searchUsers()">Search</button>
+    </div>
+  </div>
+
+  <table class="table mt-3">
+    <thead class="table-dark">
+      <tr>
+        <th>
+          User ID
+          <button class="btn btn-link p-0" onclick="sortTable('id')">
+            <i class="bi <%= queryData.sort === 'id' ? queryData.order === 'asc' ? 'bi-arrow-down' : 'bi-arrow-up' : 'bi-arrow-down-up' %>"></i>
+          </button>
+        </th>
+        <th>
+          Name
+          <button class="btn btn-link p-0" onclick="sortTable('name')">
+            <i class="bi <%= queryData.sort === 'name' ? queryData.order === 'asc' ? 'bi-arrow-down' : 'bi-arrow-up' : 'bi-arrow-down-up' %>"></i>
+          </button>
+        </th>
+        <th>
+          Email
+          <button class="btn btn-link p-0" onclick="sortTable('email')">
+            <i class="bi <%= queryData.sort === 'email' ? queryData.order === 'asc' ? 'bi-arrow-down' : 'bi-arrow-up' : 'bi-arrow-down-up' %>"></i>
+          </button>
+        </th>
+        <th>
+          Phone
+          <button class="btn btn-link p-0" onclick="sortTable('phoneNumber')">
+            <i class="bi <%= queryData.sort === 'phoneNumber' ? queryData.order === 'asc' ? 'bi-arrow-down' : 'bi-arrow-up' : 'bi-arrow-down-up' %>"></i>
+          </button>
+        </th>
+        <th>
+          Status
+          <button class="btn btn-link p-0" onclick="sortTable('status')">
+            <i class="bi <%= queryData.sort === 'status' ? queryData.order === 'asc' ? 'bi-arrow-down' : 'bi-arrow-up' : 'bi-arrow-down-up' %>"></i>
+          </button>
+        </th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="user-table-body small">
+      <% users.forEach(account => { %>
+      <tr id="row-<%= account.id %>">
+        <!-- 8 first characters -->
+        <td><%= account.id.substring(0, 8) %></td>
+        <td>
+          <%= account.name %>
+          <% if (user.id === account.id) { %>
+            <em>(you)</em>
+          <% } %>
+        </td>
+        <td><%= account.email %></td>
+        <td><%= account.phone_number %></td>
+        <td>
+          <span id="status-display-<%= account.id %>"><%= account.status %></span>
+          <select id="status-edit-<%= account.id %>" class="form-select d-none">
+            <option value="active" class="text-success" <%= account.status === 'active' ? 'selected' : '' %>>active</option>
+            <option value="inactive" class="text-danger" <%= account.status === 'inactive' ? 'selected' : '' %>>inactive</option>
+          </select>
+        </td>
+        <td>
+          <!-- Edit/Save -->
+          <button id="edit-btn-<%= account.id %>" class="btn btn-outline-warning btn-sm" onclick="enableEdit('<%= account.id %>')">
+            <i class="bi bi-pencil"></i>
+          </button>
+          <button id="save-btn-<%= account.id %>" class="btn btn-outline-success btn-sm d-none" onclick="saveChanges('<%= account.id %>')">
+            <i class="bi bi-save"></i>
+          </button>
+          <!-- View Details -->
+          <button id="view-btn_<%= account.id %>" class="btn btn-outline-info btn-sm view-btn">
+            <i class="bi bi-eye"></i>
+          </button>
+        </td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+
+  <nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+      <% for (let i = 1; i <= totalPages; i++) { %>
+      <li class="page-item <%= i === currentPage ? 'active' : '' %>"></li>
+      <a class="page-link" href="<%= `/admin/accounts?${new URLSearchParams({...queryData, page:i}).toString()}` %>"><%= i %></a>
+      </li>
+      <% } %>
+    </ul>
+  </nav>
+</div>
+
+<script>
+  const enableEdit = (userId) => {
+    if (userId == '<%= user.id %>') {
+      alert('You cannot edit your own status.');
+      return;
+    }
+    document.getElementById(`status-display-${userId}`).classList.add('d-none');
+    document.getElementById(`status-edit-${userId}`).classList.remove('d-none');
+    document.getElementById(`edit-btn-${userId}`).classList.add('d-none');
+    document.getElementById(`save-btn-${userId}`).classList.remove('d-none');
+  };
+
+  const saveChanges = (userId) => {
+    const newStatus = document.getElementById(`status-edit-${userId}`).value;
+
+    fetch(`/admin/accounts/update/${userId}/status`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          status: newStatus
+        }),
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.message) {
+          document.getElementById(`status-display-${userId}`).textContent = newStatus;
+          document.getElementById(`status-display-${userId}`).classList.remove('d-none');
+          document.getElementById(`status-edit-${userId}`).classList.add('d-none');
+          document.getElementById(`edit-btn-${userId}`).classList.remove('d-none');
+          document.getElementById(`save-btn-${userId}`).classList.add('d-none');
+          alert(data.message);
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        alert('Failed to update status.');
+      });
+  };
+
+  const sortTable = (attribute) => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentSort = urlParams.get('sort');
+    const currentOrder = urlParams.get('order') || 'asc';
+    const newOrder = currentSort === attribute && currentOrder === 'asc' ? 'desc' : 'asc';
+
+    urlParams.set('sort', attribute);
+    urlParams.set('order', newOrder);
+
+    window.location.search = urlParams.toString();
+  };
+
+  const searchUsers = () => {
+    const searchQuery = document.getElementById('search-input').value;
+    const urlParams = new URLSearchParams(window.location.search);
+
+    urlParams.set('search', searchQuery);
+    window.location.search = urlParams.toString();
+  };
+</script>
+<!-- Modal -->
+<div class="modal fade" id="userDetailModal" tabindex="-1" aria-labelledby="userDetailModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="userDetailModalLabel">User Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-bordered">
+          <tbody>
+            <tr>
+              <th>ID</th>
+              <td id="modal-user-id"></td>
+            </tr>
+            <tr>
+              <th>Name</th>
+              <td id="modal-user-name"></td>
+            </tr>
+            <tr>
+              <th>Email</th>
+              <td id="modal-user-email"></td>
+            </tr>
+            <tr>
+              <th>Phone Number</th>
+              <td id="modal-user-phone"></td>
+            </tr>
+            <tr>
+              <th>Address</th>
+              <td id="modal-user-address"></td>
+            </tr>
+            <tr>
+              <th>Role</th>
+              <td id="modal-user-role"></td>
+            </tr>
+            <tr>
+              <th>Gender</th>
+              <td id="modal-user-gender"></td>
+            </tr>
+            <tr>
+              <th>Status</th>
+              <td id="modal-user-status"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const showUserDetails = (account) => {
+    console.log(account);
+    document.getElementById('modal-user-id').textContent = account.id;
+    document.getElementById('modal-user-name').textContent = account.name;
+    document.getElementById('modal-user-email').textContent = account.email;
+    document.getElementById('modal-user-phone').textContent = account.phoneNumber;
+    document.getElementById('modal-user-address').textContent = account.address;
+    document.getElementById('modal-user-role').textContent = account.role;
+    document.getElementById('modal-user-gender').textContent = account.gender;
+    document.getElementById('modal-user-status').textContent = account.status;
+
+    const userDetailModal = new bootstrap.Modal(document.getElementById('userDetailModal'));
+    userDetailModal.show();
+  };
+
+  document.querySelectorAll('.view-btn').forEach(button => {
+    button.addEventListener('click', (event) => {
+      event.preventDefault();
+      const userId = button.id.split('_').pop();
+      const users = JSON.parse('<%- JSON.stringify(users) %>');
+      console.log(users);
+      console.log(userId);
+      const account = users.find(a => a.id === userId);
+      console.log(account);
+
+      showUserDetails(account);
+    });
+  });
+</script>
