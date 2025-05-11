@@ -2,6 +2,10 @@
 # Project-ExJS-Postgres
 How to run:  
 1. `npm install` to install all the dependencies
+2.  Create .env File
+- NODE_ENV=production
+- DATABASE_URL=postgresql://your_user:your_password@localhost:5432/your_database
+- CLOUDINARY_URL=cloudinary://your_key:your_secret@your_cloud_name
 2. Create database and user in PostgreS:
 
 ```
