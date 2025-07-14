@@ -12,7 +12,7 @@ const serviceRoutes = require('./routes/serviceRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
 const cartRoutes = require('./routes/cartRoutes');
 const orderRoutes = require('./routes/orderRoutes');
-
+const paymentRoutes = require('./routes/paymentRoute');
 const adminRoutes = require('./routes/admin/adminRoutes');
 const adminOrdersRouter = require('./routes/admin/adminOrders');
 
@@ -74,6 +74,7 @@ app.use('/cart', cartRoutes);
 app.use('/order', orderRoutes);
 app.use('/orders', orderRoutes);
 app.use('/admin', adminRoutes);
+app.use('/paypal', paymentRoutes);
 app.use(express.static('public'));
 app.use('/admin', adminOrdersRouter);
 app.get("/", indexRoutes);

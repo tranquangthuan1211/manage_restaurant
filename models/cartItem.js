@@ -7,7 +7,7 @@ const Product = require("./product");
 module.exports = (sequelize, DataTypes) => {
   const CartItem = sequelize.define('CartItem', {
     id: {
-      type: DataTypes.UUID,
+      type:DataTypes.UUID,
       autoIncrement: true,
       primaryKey: true,
       allowNull: false,

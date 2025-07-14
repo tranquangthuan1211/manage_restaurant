@@ -6,7 +6,7 @@ exports.createOrder = async (orderDetails) => {
   console.log(JSON.stringify(orderDetails));
 
   // Retrieve the user's cart and cart items
-  const cart = await Cart.findOne({ where: { userId }, include: [CartItem] });
+  const cart = await Cart.findOne({ where: { id: "14be65ba-0795-4372-98ad-217d3750196d" }, include: [CartItem] });
 
   if (!cart) {
     throw new Error('Cart not found');

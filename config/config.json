@@ -7,10 +7,10 @@
     "dialect": "postgres"
   },
   "production": {
-    "username": "restaurant_4pv3_user",
-    "password": "4QRpeBmdmbuMddY3eVgmB845g7hLxkBm",
-    "database": "restaurant_4pv3",
-    "host": "dpg-d0g7l3ruibrs73fbctm0-a.singapore-postgres.render.com",
+    "username": "restaurant-db_owner",
+    "password": "npg_yVBwdGv7lu5g",
+    "database": "restaurant-db",
+    "host": "ep-frosty-haze-a427ux9k-pooler.us-east-1.aws.neon.tech",
     "dialect": "postgres",
     "port": 5432,
     "dialectOptions": {

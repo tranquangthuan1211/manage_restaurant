@@ -3,9 +3,10 @@ const passport = require('passport');
 const bcrypt = require('bcryptjs');
 const User = require('../models').User;
 const { Op } = require('sequelize');
+const { Cart } = require('../models')
 
 exports.authenticateUser = async (req, res, next) => {
-  passport.authenticate('local', (err, user, info) => {
+  passport.authenticate('local', async(err, user, info) => {
     if (err) {
       return res.status(500).json({ message: 'Internal server error' });
     }
@@ -13,6 +14,8 @@ exports.authenticateUser = async (req, res, next) => {
       return res.status(401).json({ message: info.message });
     }
     console.log("User: ", user);
+    const existingCart = await Cart.findOne({ where: { userId: user.id } });
+    console.log("Existing cart: ", existingCart);
     req.logIn(user, (err) => {
       if (err) {
         return res.status(500).json({ message: 'Internal server error' });

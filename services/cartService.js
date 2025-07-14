@@ -1,11 +1,9 @@
-const userService = require('../services/userService')
+const userService = require('./userService')
 const { Cart, CartItem, product, User, sequelize } = require('../models')
 const { Op, Sequelize } = require('sequelize');
 
 exports.findCartByUserId = async (userId) => {
-  const cart = await Cart.findOne({
-    where: { userId: userId },
-  });
+  const cart = await Cart.findOne({ where: { userId: userId } });
   return cart;
 }
 
@@ -16,8 +14,9 @@ exports.addProductToCart = async (userId, productId, quantity) => {
     console.log('User not found');
     return;
   }
+  console.log("user for cart",user);
   // Create a cart for the user if it doesn't exist
-  const cart = await this.findCartByUserId(userId);
+  const cart = await this.findCartByUserId(user.id);
   if (!cart) {
     const newCart = await Cart.create({ userId: user.id });
     console.log('New cart created:', newCart);
@@ -36,11 +35,14 @@ exports.addProductToCart = async (userId, productId, quantity) => {
       productId: prod.id,
     },
   });
-  if (cartItem) {
+  console.log('Cart item found:', cartItem);
+  if (cartItem != null) {
     cartItem.quantity += 1;
     await cartItem.save();
   } else {
+    const maxId = await CartItem.max('id');
     cartItem = await CartItem.create({
+      id: maxId + 1,
       cartId: cart.id,
       productId: prod.id,
       quantity: quantity,
@@ -98,7 +100,7 @@ exports.getCart = async (userId) => {
       replacements: { userId },
       type: sequelize.QueryTypes.SELECT,
     });
-    // console.log(result);
+    console.log(result);
 
     if (!result) {
       console.log('User not found');
